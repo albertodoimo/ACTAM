@@ -51,10 +51,6 @@ function setup() {
 
 //-------------------------------------------------------------------------------------
 
-function changeBG() {
-  let val = random(255);
-  background(val);
-}
 
 
 
@@ -66,7 +62,7 @@ function planet(orbitWidth, orbitHeight, tilt, revolution, rotation, skin, diame
   rotateX(PI/2);
   noFill();
   stroke(255); 
-  strokeWeight(5);
+  strokeWeight(2);
   ellipse(0, 0, orbitWidth*2, orbitHeight*2, 50);
   rotateX(-PI/2);
   
@@ -101,14 +97,16 @@ function draw() {
 
   //CAMERA
   if (bool==0){
-    camera(0,-2000, 4000);}
+    camera(0,-1200, 1700);
+    //orbitControl([1],[1],[0.01]);
+  }
   else {
-    camera(0,-5000, 1);
+    camera(0,-2000, 0.00001);
   }
 
   //BACKGROUND
   background(2);
-  //orbitControl([1],[1],[0.01]);
+  
   
   
   //STARS
