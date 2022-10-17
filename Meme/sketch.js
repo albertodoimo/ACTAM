@@ -39,6 +39,7 @@ camera([0], [-1800], [3000], [0], [0], [0]);
 
 //BACKGROUND
 background(2);
+orbitControl();
 
 //STARS
 fill(255);
