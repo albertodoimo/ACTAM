@@ -2,6 +2,7 @@
 //PERCHE' ABBIANO VISIBILITA' ANCHE NELLE ALTRE FUNZIONI
 let imgEarth;
 let imgSun;
+let imgMoon;
 //let imgBackground;
 let imgPlanets = [];
 let bool;
@@ -10,6 +11,7 @@ let bool;
 function preload() {
   imgEarth = loadImage('./plani.jpg');
   imgSun = loadImage('./sun.jpg');
+  imgMoon = loadImage('./moon.jpg');
 for(i=0; i<8; i++){
   imgPlanets[i] = loadImage('./' + (i+1).toString(10) + '.jpg');
 }
@@ -91,9 +93,8 @@ function planet(orbitWidth, orbitHeight, tilt, revolution, rotation, skin, diame
   rotateZ(-tilt);
   translate(-sin(frameCount*revolution)*orbitWidth, 0, -[cos(frameCount*revolution)*orbitHeight]);
     
-}
-
-//---------------------------------------------------------------------------------------------------------
+  }
+  //---------------------------------------------------------------------------------------------------------
 
 function draw() {
 
@@ -119,24 +120,36 @@ function draw() {
     point(random()*50000-10000, random()*40000-10000);
   }*/
 
-  //SUN
-  noStroke();
-  rotateY(PI);
-  rotateY(frameCount * 0.005);
-  texture(imgSun);
-  sphere(250);
-  rotateY(-frameCount * 0.005);
-  rotateY(-PI);
+//SUN
+noStroke();
+rotateY(PI);
+rotateY(frameCount * 0.005);
+texture(imgSun);
+sphere(100); 
+rotateY(-frameCount * 0.005);
+rotateY(-PI);
 
   //LIGHT
   ambientLight(60);
   pointLight(255, 255, 255, 0, 0, 0);
 
-  planet(1000, 500, 0, 0.08, 0.005, imgPlanets[0],150);
-  planet(1200, 600, -25, 0.01, 0.01, imgPlanets[1], 200);
-  planet(2000, 800, 0, 0.022, 0.02, imgPlanets[2], 300);
-  planet(3200, 1000, 0, 0.01, 0.03, imgPlanets[3], 400);
-  planet(4200, 1600, 0, 0.011, 0.04, imgPlanets[4], 500);
-  planet(5200, 2600, 0, 0.012, 0.01, imgPlanets[5], 600);
+//PLANETS
+planet(150, 100, 0, 0.1, 0.005, imgPlanets[0], 25);
+planet(300, 200, 0, 0.08, 0.01, imgPlanets[1], 50);
+
+//MOON
+push();
+translate(-sin(frameCount*0.02+PI)*500, 0, -[cos(frameCount*0.02+PI)*333]);
+rotateY(-frameCount * 0.015);
+planet(100, 100, 0, 0.1, 0.005, imgMoon, 15);
+pop();
+
+
+planet(500, 333, -25, 0.02, 0.015, imgPlanets[2], 75);
+planet(800, 533, 0, 0.01, 0.02, imgPlanets[3], 100);
+planet(1050, 700, 0, 0.005, 0.025, imgPlanets[4], 125);
+planet(1300, 866.5, 0, 0.001, 0.030, imgPlanets[5], 125);
+planet(1600, 1066, 0, 0.0005, 0.035, imgPlanets[6], 100);
+planet(1900, 1266, 0, 0.0001, 0.040, imgPlanets[7], 200);
 
 }
