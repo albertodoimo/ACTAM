@@ -1,6 +1,15 @@
 button{
     height: 80px;
     width: 300px;
+    cursor: pointer;
+}
+
+
+.center{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 
