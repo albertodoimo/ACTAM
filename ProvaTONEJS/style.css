@@ -2,8 +2,10 @@ button{
     height: 80px;
     width: 300px;
     cursor: pointer;
+    transition: 0.25s;
+    background-color: #fff;
+    color:#000;
 }
-
 
 .center{
     position: absolute;
@@ -14,11 +16,16 @@ button{
 
 
 .blob{
-    background-color: #ff1d70;
+    background-color: #fff;
 }
 
 
-
+.fill:hover,
+.fill:focus {
+  box-shadow: inset 0 0 0 3em #a972cb;   
+  border-color: #a972cb;
+  color: #fff;
+}
 
 
 
