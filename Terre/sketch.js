@@ -59,12 +59,12 @@ function setup() {
 function planet(orbitWidth, orbitHeight, tilt, revolution, rotation, skin, diameter){
 
   //ELLIPSE
-  rotateX(PI/2);
-  noFill();
-  stroke(255); 
-  strokeWeight(2);
-  ellipse(0, 0, orbitWidth*2, orbitHeight*2, 50);
-  rotateX(-PI/2);
+ rotateX(PI/2);
+ noFill();
+ stroke(255); 
+ strokeWeight(2);
+ ellipse(0, 0, orbitWidth*2, orbitHeight*2, 50);
+ rotateX(-PI/2);
   
   
   //ROTATION
