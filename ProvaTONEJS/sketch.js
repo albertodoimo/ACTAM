@@ -1,24 +1,33 @@
 console.clear();
 
-const synthFM = new Tone.AMSynth();
+const synthFM = new Tone.NoiseSynth();
 synthFM.toDestination();
 
-const now = Tone.now()
+const now = Tone.now();
 
+var melody = ["G4", "E4", "B5"];
+var rhythm = ["4n", "4n", "4n"];
+
+var arpeggio = mergeDurationsAndPitch(rhythm, melody);
 
 
 function playSound(){
     const loop = new Tone.Loop(time => {
-        synthFM.triggerAttackRelease("G4", "8n", time)
-        synthFM.triggerAttackRelease("B4", "8n", time + 0.5)
-        synthFM.triggerAttackRelease("E5", "8n", time + 1)
-        synthFM.triggerAttackRelease("B4", "8n", time + 1.5)
-    }, "n").start(0);
-    Tone.Transport.start()
+        var part = new Tone.Part(
+            function(time, value){
+                synthFM.triggerAttackRelease(value.note, value.duration, time);
+            }, arpeggio).start(0);
+    }, "2n + 4n").start(0);
+    Tone.Transport.start();
 }
  
 
-
+function playSo(){
+    var part = new Tone.Part(
+        function(time, value){
+            synthFM.triggerAttackRelease(value.note, value.duration, time);
+        }, arpeggio).start(0);
+}
 
 
 
