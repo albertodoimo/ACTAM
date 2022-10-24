@@ -8,7 +8,7 @@ let song;
 
 //CARICO LE IMMAGINI
 function preload() {
-  imgEarth = loadImage('./plani.jpg');
+  imgEarth = loadImage('./DeSicaBoldi.jpg');
   //SI PUO' FARE background(image) 
   //MA NON FUNZIONA, MAGARI PERCHE' SIAMO IN 3D
   imgBackground = loadImage('./bg.jpg');
