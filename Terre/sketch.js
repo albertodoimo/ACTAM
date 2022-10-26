@@ -43,9 +43,7 @@ function setup() {
   perspective(PI / 2, width / height, 0.1, 10000);
   textureWrap(CLAMP);
 
-  easycam = createEasyCam() // creazione oggetto easycam con distanza iniziale
-  easycam.mouseDragPan(0);
-  
+  easycam = createEasyCam() // creazione oggetto easycam con distanza iniziale  
 
   document.oncontextmenu = function() { return false; } // necessari per il controllo da mouse della camera
   document.onmousedown   = function() { return false; }
