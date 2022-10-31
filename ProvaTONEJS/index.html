@@ -9,21 +9,33 @@
     body {
       padding: 0;
       margin: 0;
+      background-color: #222;
     }
   </style>
   <link rel="stylesheet" href="style.css">  
   <script src="./p5.js"></script>
   <script src="./Tone.js"></script>
   <script src="./Tone.js.map"></script>
-  <script src="https://unpkg.com/tone"></script>
-  <script src="https://unpkg.com/@tonejs/ui"></script>
+  <!-- <script src="https://unpkg.com/tone"></script>
+  <script src="https://unpkg.com/@tonejs/ui"></script> -->
   <!-- <script src="../addons/p5.sound.js"></script> -->
   <script src="sketch.js"></script>
 </head>
 
 <body>
   <main>
-    <button onclick="playSound()" class="center fill"> CLICCAMI! </button>
+    <div class="centerB">  
+      <rect id="maj" class="white title centerH"> MAJOR CHORDS </rect>
+
+      <button id="C4M" onclick="playChord('C4')" class="fill"> C4 </button>
+      <button onclick="playChord('D4')" class="fill"> D4 </button>
+      <button onclick="playChord('E4')" class="fill"> E4 </button>
+      <button onclick="playChord('F4')" class="fill"> F4 </button>
+      <button onclick="playChord('G4')" class="fill"> G4 </button>
+      <button onclick="playChord('A4')" class="fill"> A4 </button>
+      <button onclick="playChord('B4')" class="fill"> B4 </button>
+    </div>
+  <button style="background-color: green; width: 1px; height: 800px;" class="centerH"></button>
   </main>
 </body>
 

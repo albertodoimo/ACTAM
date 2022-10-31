@@ -3,20 +3,54 @@ button{
     width: 300px;
     cursor: pointer;
     transition: 0.25s;
-    background-color: #fff;
+    background-color: #ccc;
     color:#000;
+    display: inline-block;
 }
 
-.center{
+.centerB{
     position: absolute;
-    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-40%, 20%);
 }
 
+.centerH{
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+rect{
+    width: 100px;
+    height: 50px;
+    border: solid aqua 3px;
+    border-radius: 10%;
+}
+
+#maj{
+    width: fit-content 110%;
+    height: fit-content 110%;
+    transform: translate(0%, 50%);
+}
+/* 
+#C4M{
+    transform: translate(10%);
+} */
 
 .blob{
     background-color: #fff;
+}
+
+.white{
+    color: #fff;
+}
+
+.title{
+    font: optional;
+    font-size: x-large;
+    font-weight: 500;
+    border-color: solid aqua 3px;
+    border-radius: 20%;
 }
 
 
