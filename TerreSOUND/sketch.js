@@ -1,4 +1,4 @@
-// DICHIARO LE IMMAGINI FUORI DALLA FUNZIONE PRELOAD
+// DICHIARO LE VARIABILI FUORI DALLA FUNZIONI
 // PERCHE' ABBIANO VISIBILITA' ANCHE NELLE ALTRE FUNZIONI
 
 let imgEarth;
@@ -6,16 +6,19 @@ let imgSun;
 let imgMoon;
 let imgPlanets = [];
 let bool = false;
-var easycam;  // creo la variabile easycam, che conterrà l'oggetto corrispondente
+let easycam;  // creo la variabile easycam, che conterrà l'oggetto corrispondente
+//SOUND VARIABLES
 let reverb, pingpong;
 let synths=[];
+let loop=[];
 let playIsOff=true;
+let bpm = 50;
+//1= MEASURE, 4=BEAT
+let planetRatios = [8, 7, 6, 5, 4, 3, 2, 1];
+let planetNotes = ["C2", "G2", "E3", "B3", "C4", "D4", "G4", "B4"];
+let planetNotesDuration = ["8n", "32n", "32n", "32n", "32n", "32n", "32n", "2n"];
 
 
-
-
-
-//CARICO LE IMMAGINI
 
 function preload() {
 
@@ -93,7 +96,6 @@ function setup() {
   //SOUND -----------------------------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------------------------
   
-  
   reverb = new Tone.Reverb(3, 100, 1);
   pingpong = new Tone.PingPongDelay(0.4, 0.3);
  
@@ -112,8 +114,8 @@ function setup() {
     }
   });
 
-
   /*
+  CHOICE PER SELEZIONARE IL TIPO DI OSCILLATORE MA NON FUNZIONA
   oscChoice = createSelect();
   oscChoice.position(300, 40);
   oscChoice.option('fmsine');
@@ -132,14 +134,61 @@ function setup() {
     synths[i].volume.value=-100;
     synths[i].oscillator.set({type: "fmsine"});
   }
+
+  /*
+  SE COLLASSO LA PARTE SOTTOSTANTE INDENTATA IN UN CICLO FOR COME IL SEGUENTE NON FUNZIONA
+  
+  for(i=0; i<8; i++){
+    loop[i] = new Tone.Loop(time => {
+              synths[i].triggerAttackRelease(planetNotes[i], planetNotesDuration[i], time);
+            }, planetRatios[i].toString()+"n").start(0);
+  }
+  */ 
+          loop[0] = new Tone.Loop(time => {
+            synths[0].triggerAttackRelease(planetNotes[0], planetNotesDuration[0], time);
+          }, planetRatios[0].toString()+"n").start(0);
+
+          loop[1] = new Tone.Loop(time => {
+            synths[1].triggerAttackRelease(planetNotes[1], planetNotesDuration[1], time);
+          }, planetRatios[1].toString()+"n").start(0);
+
+          loop[2] = new Tone.Loop(time => {
+            synths[2].triggerAttackRelease(planetNotes[2], planetNotesDuration[2], time);
+          }, planetRatios[2].toString()+"n").start(0);
+
+          loop[3] = new Tone.Loop(time => {
+            synths[3].triggerAttackRelease(planetNotes[3], planetNotesDuration[3], time);
+          }, planetRatios[3].toString()+"n").start(0);
+
+          loop[4] = new Tone.Loop(time => {
+            synths[4].triggerAttackRelease(planetNotes[4], planetNotesDuration[4], time);
+          }, planetRatios[4].toString()+"n").start(0);
+
+          loop[5] = new Tone.Loop(time => {
+            synths[5].triggerAttackRelease(planetNotes[5], planetNotesDuration[5], time);
+          }, planetRatios[5].toString()+"n").start(0);
+
+          loop[6] = new Tone.Loop(time => {
+            synths[6].triggerAttackRelease(planetNotes[6], planetNotesDuration[6], time);
+          }, planetRatios[6].toString()+"n").start(0);
+
+          loop[7] = new Tone.Loop(time => {
+            synths[7].triggerAttackRelease(planetNotes[7], planetNotesDuration[7], time);
+          }, planetRatios[7].toString()+"n").start(0);
   
 
+  Tone.Transport.start();
+  Tone.Transport.bpm.value=bpm;
+  
+  /*
+  SLIDER PER SELEZIONARE IL NUMERO DI PIANETI MA NON FUNZIONA
+  setNumPlanets = createSlider(1, 8, 1, 1);
+  setNumPlanets.position(100, 100);
+  */
 }
 
 
-function planet(orbitWidth, orbitHeight, tilt, revolution, rotation, skin, diameter, numSynth, note, delta){
-  
-  
+function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifier){
   push();
 
   //ELLIPSE
@@ -150,12 +199,15 @@ function planet(orbitWidth, orbitHeight, tilt, revolution, rotation, skin, diame
     ellipse(0, 0, orbitWidth*2, orbitHeight*2, 50);
     rotateX(-PI/2);
   
-
   //ROTATION
-    translate(sin(frameCount*revolution)*orbitWidth, 0, [cos(frameCount*revolution)*orbitHeight]);
+  //Tone.Transport.seconds  TRASCORRERE DEI SECONDI
+  //Tone.Transport.bpm.value BPM
+  //Tone.Transport.bpm.value/60/4 MEASURES PER SECOND (1n in Tone transport reference)
+  //2*Math.PI
+    var revolutionRate = (2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*modifier));
+    translate(sin(revolutionRate)*orbitWidth, 0, [cos(revolutionRate)*orbitHeight]);
     rotateZ(tilt);
     rotateY(frameCount * rotation);
-  
   
   //AXIS
     /*fill(255);
@@ -168,13 +220,6 @@ function planet(orbitWidth, orbitHeight, tilt, revolution, rotation, skin, diame
     sphere(diameter);
 
   pop();
-  
-  //SOUND
-    if (sin(frameCount*revolution)<=delta && sin(frameCount*revolution)>=-delta &&
-    cos(frameCount*revolution)>=(1-delta)){
-    synths[numSynth].triggerAttackRelease(note, "8n");
-    //pointLight(255, 255, 255, 500, 0, 3000);
-    }
 }
 
 
@@ -217,28 +262,30 @@ function draw() {
 
     //MOON
     push();
-    translate(-sin(frameCount*0.02+PI)*500, 0, -[cos(frameCount*0.02+PI)*333]);
+    translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
     rotateY(-frameCount * 0.015);
-    planet(100, 100, 0, 0.1, 0.005, imgMoon, 15);
+    planet(100, 100, 0, 0.005, imgMoon, 15, 6)
     pop();
     
     //PLANETS
-    planet(150, 100, 0, 0.1, 0.005, imgPlanets[0], 25, 0, "C2", 0.05);
-    planet(300, 200, 0, 0.08, 0.01, imgPlanets[1], 50, 1, "G2", 0.05);
-    planet(500, 333, -25, 0.02, 0.015, imgPlanets[2], 75, 2, "E3", 0.01);
-    planet(800, 533, 0, 0.015, 0.02, imgPlanets[3], 100, 3, "B3", 0.01);
-    planet(1050, 700, 0, 0.01, 0.025, imgPlanets[4], 125, 4, "C4", 0.008);
-    planet(1300, 866.5, 0, 0.008, 0.030, imgPlanets[5], 125, 5, "D4", 0.008);
-    planet(1600, 1066, 0, 0.004, 0.035, imgPlanets[6], 100, 6, "G4", 0.004);
-    planet(1900, 1266, 0, 0.002, 0.040, imgPlanets[7], 200, 7, "B4", 0.002);
+    planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
+    planet(300, 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
+    planet(500, 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
+    planet(800, 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
+    planet(1050, 700, 0, 0.025, imgPlanets[4], 125, planetRatios[4]);
+    planet(1300, 866.5, 0, 0.030, imgPlanets[5], 125, planetRatios[5]);
+    planet(1600, 1066, 0, 0.035, imgPlanets[6], 100, planetRatios[6]);
+    planet(1900, 1266, 0, 0.040, imgPlanets[7], 200, planetRatios[7]);
   
 }
 
+
 function playSound(){
   for(i=0; i<8; i++){
-  synths[i].volume.value=0;
+  synths[i].volume.value=-12;
   }
 }
+
 
 function stopSound(){
   for(i=0; i<8; i++){
