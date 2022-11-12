@@ -45,15 +45,37 @@ function buildMajorChord(tonic){
     chord = [notes[t], notes[t+3], notes[t+7]];
     return chord;
 }
+ let dur = '8n'
 
-
-function playChord(tonic){
+function playChord(tonic, dur){
     let chord = buildMajorChord(tonic);
     const chordSynth = new Tone.PolySynth().toDestination();
+
     // set the attributes across all the voices using 'set'
     chordSynth.set({ detune: -1200 });
+
     // play a chord
-    chordSynth.triggerAttackRelease(chord, 1);
+    chordSynth.triggerAttackRelease(chord, dur);
+}
+
+
+
+
+
+function setup(){
+    let loopBeat;
+    let bassSynth;
+    
+
+    loopBeat = new Tone.Loop(song, '4n');
+    Tone.Transport.start();
+    loopBeat.start(0);
+}
+
+function song(time){
+    bassSynth = new Tone.MembraneSynth().toDestination();
+    bassSynth.triggerAttackRelease('c1', '8n', time);
+    playChord(tonic, '8n');
 }
 
 
