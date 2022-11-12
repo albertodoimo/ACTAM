@@ -16,7 +16,7 @@ let bpm = 50;
 //1= MEASURE, 4=BEAT
 let planetRatios = [8, 7, 6, 5, 4, 3, 2, 1];
 let planetNotes = ["C2", "G2", "E3", "B3", "C4", "D4", "G4", "B4"];
-let planetNotesDuration = ["8n", "32n", "32n", "32n", "32n", "32n", "32n", "2n"];
+let planetNotesDuration = ["8n", "32n", "32n", "32n", "32n", "32n", "32n", "4n"];
 
 
 
