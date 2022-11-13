@@ -243,14 +243,45 @@ function draw() {
     pop()
     
     //SOUNDLINE
-    push();
+    /* push();
     stroke(255, 100, 100);
     strokeWeight(5);
     fill(255);
     rotateX(PI/2);
     rotateZ(PI/4);
     line(0, 0, 894, 894);
-    pop();
+    pop(); */
+
+    let x, y, z = 0;
+
+    if (playIsOff) {
+      push();
+      stroke(255, 100, 100);
+      strokeWeight(5);
+      fill(255);
+      rotateX(PI/2);
+      rotateZ(PI/4);
+      line(0, 0, 894, 894);
+      pop();
+    } 
+    else {
+      push();
+      beginShape();
+      stroke(255, 100, 100);
+      strokeWeight(5);
+      noFill(255);
+      curveVertex(0, 0, 0);
+      curveVertex(0, 0, 0);
+      for (let i = 1; i < 5; i++) {
+        x = getRndInteger(-25, 25);
+        y = i * 270;
+        curveVertex(x, 0, y); 
+      }
+      curveVertex(0, 0, 1263);
+      curveVertex(0, 0, 1263);
+      endShape();
+      pop();
+    }
 
     //SUN
     noStroke();
@@ -296,4 +327,8 @@ function stopSound(){
   for(i=0; i<8; i++){
     synths[i].volume.value=-100;
     }
+}
+
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
