@@ -1,6 +1,5 @@
 // DICHIARO LE VARIABILI FUORI DALLA FUNZIONI
 // PERCHE' ABBIANO VISIBILITA' ANCHE NELLE ALTRE FUNZIONI
-
 let imgEarth;
 let imgSun;
 let imgMoon;
@@ -12,11 +11,11 @@ let reverb, pingpong;
 let synths=[];
 let loop=[];
 let playIsOff=true;
-let bpm = 50;
+let bpm = 20;
 //1= MEASURE, 4=BEAT
 let planetRatios = [8, 7, 6, 5, 4, 3, 2, 1];
-let planetNotes = ["C2", "G2", "E3", "B3", "C4", "D4", "G4", "B4"];
-let planetNotesDuration = ["8n", "32n", "32n", "32n", "32n", "32n", "32n", "4n"];
+let planetNotes = ["C2", "G2", "E3", "B3", "C4", "D4", "D4", "B4"];
+let planetNotesDuration = ["8n", "32n", "32n", "32n", "32n", "32n", "32n", "32n"];
 
 
 
@@ -216,10 +215,16 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
 
   //TEXTURE
     texture(skin);
+    //COLORE ROSSO QUANDO PASSA PER L'AZIMUTH
+    if(sin(revolutionRate)<=0.2 && sin(revolutionRate)>=-0.2 && cos(revolutionRate)>=0.8)
+    {
+      emissiveMaterial(255, 50, 50);
+    }
     noStroke();
     sphere(diameter);
-
+    
   pop();
+
 }
 
 
