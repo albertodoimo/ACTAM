@@ -16,7 +16,8 @@ let bpm = 20;
 let planetRatios = [8, 7, 6, 5, 4, 3, 2, 1];
 let planetNotes = ["C2", "G2", "E3", "B3", "C4", "D4", "D4", "B4"];
 let planetNotesDuration = ["8n", "32n", "32n", "32n", "32n", "32n", "32n", "32n"];
-
+let lineWobble = 0;
+let wobbleArray = [];
 
 
 function preload() {
@@ -216,9 +217,12 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
   //TEXTURE
     texture(skin);
     //COLORE ROSSO QUANDO PASSA PER L'AZIMUTH
-    if(sin(revolutionRate)<=0.2 && sin(revolutionRate)>=-0.2 && cos(revolutionRate)>=0.8)
-    {
+    if(sin(revolutionRate)<=0.2 && sin(revolutionRate)>=-0.2 && cos(revolutionRate)>=0.8){
       emissiveMaterial(255, 50, 50);
+      wobbleArray[modifier-1] = 1;
+    }
+    else{
+      wobbleArray[modifier-1] = 0;
     }
     noStroke();
     sphere(diameter);
@@ -243,45 +247,11 @@ function draw() {
     pop()
     
     //SOUNDLINE
-    /* push();
-    stroke(255, 100, 100);
-    strokeWeight(5);
-    fill(255);
-    rotateX(PI/2);
-    rotateZ(PI/4);
-    line(0, 0, 894, 894);
-    pop(); */
-
-    let x, y, z = 0;
-
-    if (playIsOff) {
-      push();
-      stroke(255, 100, 100);
-      strokeWeight(5);
-      fill(255);
-      rotateX(PI/2);
-      rotateZ(PI/4);
-      line(0, 0, 894, 894);
-      pop();
-    } 
-    else {
-      push();
-      beginShape();
-      stroke(255, 100, 100);
-      strokeWeight(5);
-      noFill(255);
-      curveVertex(0, 0, 0);
-      curveVertex(0, 0, 0);
-      for (let i = 1; i < 5; i++) {
-        x = getRndInteger(-25, 25);
-        y = i * 270;
-        curveVertex(x, 0, y); 
-      }
-      curveVertex(0, 0, 1263);
-      curveVertex(0, 0, 1263);
-      endShape();
-      pop();
+    for(i=0; i<7; i++){
+      lineWobble = lineWobble + wobbleArray[i];
     }
+    soundLine(lineWobble);
+    lineWobble = 0;
 
     //SUN
     noStroke();
@@ -331,4 +301,37 @@ function stopSound(){
 
 function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
+function soundLine(lineWobble){
+  let x, y, z = 0;
+  if (lineWobble<1) {
+    push();
+    stroke(255, 100, 100);
+    strokeWeight(5);
+    fill(255);
+    rotateX(PI/2);
+    rotateZ(PI/4);
+    line(0, 0, 894, 894);
+    pop();
+  } 
+  else {
+    console.log(wobbleArray);
+    push();
+    beginShape();
+    stroke(255, 100, 100);
+    strokeWeight(5);
+    noFill(255);
+    curveVertex(0, 0, 0);
+    curveVertex(0, 0, 0);
+    for (let i = 1; i < 5; i++) {
+      x = getRndInteger(-25, 25);
+      y = i * 270;
+      curveVertex(x, 0, y); 
+    }
+    curveVertex(0, 0, 1263);
+    curveVertex(0, 0, 1263);
+    endShape();
+    pop();
+  }
 }
