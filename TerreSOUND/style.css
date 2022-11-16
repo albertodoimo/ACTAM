@@ -70,3 +70,32 @@ button:after {
     100% { background-position: 0 0; }
 }
 
+.mySliders{
+    width: 150px;
+    background-color: transparent;
+    /* Removes some defaults */
+    -webkit-appearance: none;
+}
+/* This is the "track" that the slider sits on  */
+.mySliders::-webkit-slider-runnable-track {
+    background: #a229ff;
+    height: 10px;
+    border-radius: 5px;
+    -webkit-appearance: none;
+    cursor: pointer;
+}
+/* This is the moveable bit of the slider, known as the "thumb"*/
+.mySliders::-webkit-slider-thumb {
+    width: 50px;
+    height: 50px;
+    background-image: url('./moon.jpg');
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-top: -20px;
+    border-radius: 50%;
+}
+
+
+
+
+

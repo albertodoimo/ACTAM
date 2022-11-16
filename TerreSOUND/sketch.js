@@ -174,9 +174,11 @@ function setup() {
   //CONTROLS
   setNumPlanets = createSlider(1, 8, 1, 1);
   setNumPlanets.position(200, 40);
+  setNumPlanets.addClass("mySliders");
   
   setBPM = createSlider(20, 200, 1, 1);
   setBPM.position(400, 40);
+  setBPM.addClass("mySliders");
 
   oscChoice = createSelect();
   oscChoice.position(windowWidth/2-oscChoice.width/2, 40);
@@ -187,6 +189,7 @@ function setup() {
   oscChoice.option('square');
   oscChoice.option('pwm');
   oscChoice.option('pulse');
+  //oscChoice.addClass("myDropDowns");
 }
 
 
