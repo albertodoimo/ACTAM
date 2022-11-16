@@ -15,9 +15,10 @@ let bpm = 20;
 //1= MEASURE, 4=BEAT
 let planetRatios = [8, 7, 6, 5, 4, 3, 2, 1];
 let planetNotes = ["C2", "G2", "E3", "B3", "C4", "D4", "D4", "B4"];
-let planetNotesDuration = ["8n", "32n", "32n", "32n", "32n", "32n", "32n", "32n"];
+let planetNotesDuration = ["32n", "32n", "32n", "32n", "32n", "32n", "32n", "32n"];
 let lineWobble = 0;
 let wobbleArray = [];
+
 
 
 function preload() {
@@ -42,15 +43,17 @@ function windowResized() {
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
-  frameRate(60);
+  frameRate(30);
   setAttributes('antialias', true);
   perspective(PI / 2, width / height, 0.1, 10000);
   textureWrap(CLAMP);
 
   easycam = createEasyCam() // creazione oggetto easycam con distanza iniziale  
 
+  /*
   document.oncontextmenu = function() { return false; } // necessari per il controllo da mouse della camera
   document.onmousedown   = function() { return false; }
+  */
 
   button1 = createButton('2D');     // creazione bottoni per switching 2D/3D
   button1.position(20, 20);
@@ -114,25 +117,12 @@ function setup() {
     }
   });
 
-  /*
-  CHOICE PER SELEZIONARE IL TIPO DI OSCILLATORE MA NON FUNZIONA
-  oscChoice = createSelect();
-  oscChoice.position(300, 40);
-  oscChoice.option('fmsine');
-  oscChoice.option('sine');
-  oscChoice.option('sawtooth');
-  oscChoice.option('triangle');
-  oscChoice.option('square');
-  oscChoice.option('pwm');
-  oscChoice.option('pulse');
-  oscChoice.changed(function(){for(i=0; i<8; i++){synths[i].oscillator.set({type: "sine"});}})
-*/
+
 
   for(i=0; i<8; i++){
     synths[i] = new Tone.Synth({oscillator: {type : "fmsine"}}).toDestination();
     synths[i].chain(reverb, pingpong, Tone.Destination);
     synths[i].volume.value=-100;
-    synths[i].oscillator.set({type: "fmsine"});
   }
 
   /*
@@ -180,11 +170,23 @@ function setup() {
   Tone.Transport.start();
   Tone.Transport.bpm.value=bpm;
   
-  /*
-  SLIDER PER SELEZIONARE IL NUMERO DI PIANETI MA NON FUNZIONA
+  
+  //CONTROLS
   setNumPlanets = createSlider(1, 8, 1, 1);
-  setNumPlanets.position(100, 100);
-  */
+  setNumPlanets.position(200, 40);
+  
+  setBPM = createSlider(20, 200, 1, 1);
+  setBPM.position(400, 40);
+
+  oscChoice = createSelect();
+  oscChoice.position(windowWidth/2-oscChoice.width/2, 40);
+  oscChoice.option('fmsine');
+  oscChoice.option('sine');
+  oscChoice.option('sawtooth');
+  oscChoice.option('triangle');
+  oscChoice.option('square');
+  oscChoice.option('pwm');
+  oscChoice.option('pulse');
 }
 
 
@@ -238,6 +240,7 @@ function draw() {
     background(2);
     fill(255);
     stroke(255);
+    
 
     // SKYBOX
     push()
@@ -245,6 +248,7 @@ function draw() {
     texture(imgSky);
     sphere(4000);
     pop()
+    
     
     //SOUNDLINE
     for(i=0; i<7; i++){
@@ -266,23 +270,191 @@ function draw() {
     ambientLight(60);
     pointLight(255, 255, 255, 0, 0, 0);
 
+    //CONTROLS AND DRAW PLANETS
+    let val = setNumPlanets.value();
+    
+    switch(val){
+      case 1:
+        planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
+        
+        for(i=1; i<8; i++){
+          synths[i].volume.value=-100;
+        }
+        
+        if(!playIsOff){
+          for(i=0; i>=0; i--){
+            synths[i].volume.value=-12;
+          }
+        }
+        break;
+        
+        case 2:
+        planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
+        planet(300, 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
+        for(i=2; i<8; i++){
+          synths[i].volume.value=-100;
+        }
+        if(!playIsOff){
+          for(i=1; i>=0; i--){
+            synths[i].volume.value=-12;
+          }
+        }
+        break;
+        case 3:
+        planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
+        planet(300, 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
+        planet(500, 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
+        //MOON
+        push();
+        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
+        rotateY(-frameCount * 0.015);
+        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
+        pop();
+        for(i=3; i<8; i++){
+          synths[i].volume.value=-100;
+        }
+        if(!playIsOff){
+          for(i=2; i>=0; i--){
+            synths[i].volume.value=-12;
+          }
+        }
+        break;
+        case 4:
+        planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
+        planet(300, 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
+        planet(500, 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
+        //MOON
+        push();
+        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
+        rotateY(-frameCount * 0.015);
+        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
+        pop();
+        planet(800, 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
+        for(i=4; i<8; i++){
+          synths[i].volume.value=-100;
+        }
+        if(!playIsOff){
+          for(i=3; i>=0; i--){
+            synths[i].volume.value=-12;
+          }
+        }
+        break;
+        case 5:
+        planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
+        planet(300, 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
+        planet(500, 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
+        //MOON
+        push();
+        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
+        rotateY(-frameCount * 0.015);
+        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
+        pop();
+        planet(800, 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
+        planet(1050, 700, 0, 0.025, imgPlanets[4], 125, planetRatios[4]);
+        for(i=5; i<8; i++){
+          synths[i].volume.value=-100;
+        }
+        if(!playIsOff){
+          for(i=4; i>=0; i--){
+            synths[i].volume.value=-12;
+          }
+        }
+        break;
+        case 6:
+        planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
+        planet(300, 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
+        planet(500, 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
+        //MOON
+        push();
+        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
+        rotateY(-frameCount * 0.015);
+        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
+        pop();
+        planet(800, 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
+        planet(1050, 700, 0, 0.025, imgPlanets[4], 125, planetRatios[4]);
+        planet(1300, 866.5, 0, 0.030, imgPlanets[5], 125, planetRatios[5]);
+        for(i=6; i<8; i++){
+          synths[i].volume.value=-100;
+        }
+        if(!playIsOff){
+          for(i=5; i>=0; i--){
+            synths[i].volume.value=-12;
+          }
+        }
+        break;
+        case 7:
+        planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
+        planet(300, 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
+        planet(500, 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
+        //MOON
+        push();
+        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
+        rotateY(-frameCount * 0.015);
+        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
+        pop();
+        planet(800, 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
+        planet(1050, 700, 0, 0.025, imgPlanets[4], 125, planetRatios[4]);
+        planet(1300, 866.5, 0, 0.030, imgPlanets[5], 125, planetRatios[5]);
+        planet(1600, 1066, 0, 0.035, imgPlanets[6], 100, planetRatios[6]);
+        for(i=7; i<8; i++){
+          synths[i].volume.value=-100;
+        }
+        if(!playIsOff){
+          for(i=6; i>=0; i--){
+            synths[i].volume.value=-12;
+          }
+        }
+        break;
+        case 8:
+        planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
+        planet(300, 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
+        planet(500, 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
+        //MOON
+        push();
+        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
+        rotateY(-frameCount * 0.015);
+        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
+        pop();
+        planet(800, 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
+        planet(1050, 700, 0, 0.025, imgPlanets[4], 125, planetRatios[4]);
+        planet(1300, 866.5, 0, 0.030, imgPlanets[5], 125, planetRatios[5]);
+        planet(1600, 1066, 0, 0.035, imgPlanets[6], 100, planetRatios[6]);
+        planet(1900, 1266, 0, 0.040, imgPlanets[7], 200, planetRatios[7]);
+        if(!playIsOff){
+          for(i=7; i>=0; i--){
+            synths[i].volume.value=-12;
+          }
+        }
+        break;
+      
+    }
+
+    /*
+    //PLANETS
+    planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
+    planet(300, 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
+    planet(500, 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
     //MOON
     push();
     translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
     rotateY(-frameCount * 0.015);
     planet(100, 100, 0, 0.005, imgMoon, 15, 6)
     pop();
-    
     //PLANETS
-    planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
-    planet(300, 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
-    planet(500, 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
     planet(800, 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
     planet(1050, 700, 0, 0.025, imgPlanets[4], 125, planetRatios[4]);
     planet(1300, 866.5, 0, 0.030, imgPlanets[5], 125, planetRatios[5]);
     planet(1600, 1066, 0, 0.035, imgPlanets[6], 100, planetRatios[6]);
     planet(1900, 1266, 0, 0.040, imgPlanets[7], 200, planetRatios[7]);
-  
+    */
+   
+    oscChoice.changed(function(){for(i=0; i<8; i++){synths[i].oscillator.set({type: oscChoice.value().toString()});}});
+
+    setBPM.changed(function(){
+      Tone.Transport.bpm.value=setBPM.value();
+      Tone.Transport.stop();
+      Tone.Transport.start();
+    });
 }
 
 
