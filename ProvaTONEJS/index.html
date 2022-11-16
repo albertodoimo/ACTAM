@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PROVA</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+      background-color: #222;
+    }
+  </style>
+  <link rel="stylesheet" href="style.css">  
+  <script src="./p5.js"></script>
+  <script src="./Tone.js"></script>
+  <script src="./Tone.js.map"></script>
+  <!-- <script src="https://unpkg.com/tone"></script>
+  <script src="https://unpkg.com/@tonejs/ui"></script> -->
+  <!-- <script src="../addons/p5.sound.js"></script> -->
+  <script src="sketch.js"></script>
+</head>
+
+<body>
+  <main>
+    <div class="centerB">  
+      <rect id="maj" class="white title centerH"> MAJOR CHORDS </rect>
+
+      <button id="C4M" onclick="playChord('C4')" class="fill"> C4 </button>
+      <button onclick="tonic = 'D4' " class="fill"> D4 </button>
+      <button onclick="tonic = 'E4' " class="fill"> E4 </button>
+      <button onclick="tonic = 'F4' " class="fill"> F4 </button>
+      <button onclick="tonic = 'G4' " class="fill"> G4 </button>
+      <button onclick="tonic = 'A4' " class="fill"> A4 </button>
+      <button onclick="tonic = 'B4' " class="fill"> B4 </button>
+    </div>
+  <button style="background-color: green; width: 1px; height: 800px;" class="centerH"></button>
+  </main>
+</body>
+
+</html>
+
