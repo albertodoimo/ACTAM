@@ -176,7 +176,7 @@ function setup() {
   setNumPlanets.position(200, 40);
   setNumPlanets.addClass("mySliders");
   
-  setBPM = createSlider(20, 200, 1, 1);
+  setBPM = createSlider(5, 70, 15, 10);
   setBPM.position(400, 40);
   setBPM.addClass("mySliders");
 
