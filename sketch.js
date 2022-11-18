@@ -201,6 +201,7 @@ function setup() {
 }
 
 
+
 function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifier){
   push();
 
@@ -218,7 +219,7 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
   //Tone.Transport.bpm.value/60/4 MEASURES PER SECOND (1n in Tone transport reference)
   //2*Math.PI
     var revolutionRate = (2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*modifier));
-    translate(sin(revolutionRate)*orbitWidth, 0, [cos(revolutionRate)*orbitHeight]);
+    translate(sin(revolutionRate)*orbitWidth, 0, cos(revolutionRate)*orbitHeight);
     rotateZ(tilt);
     rotateY(frameCount * rotation);
   
@@ -282,164 +283,7 @@ function draw() {
     pointLight(255, 255, 255, 0, 0, 0);
 
     //CONTROLS AND DRAW PLANETS
-    let val = setNumPlanets.value();
-   /* 
-    switch(val){
-      case 1:
-        planet(planetOrbWidth[0], 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
-        
-        for(i=1; i<8; i++){
-          synths[i].volume.value=-100;
-        }
-        
-        if(!playIsOff){
-          for(i=0; i>=0; i--){
-            synths[i].volume.value=-12;
-          }
-        }
-        break;
-        
-        case 2:
-        planet(planetOrbWidth[0], 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
-        planet(planetOrbWidth[1], 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
-        for(i=2; i<8; i++){
-          synths[i].volume.value=-100;
-        }
-        if(!playIsOff){
-          for(i=1; i>=0; i--){
-            synths[i].volume.value=-12;
-          }
-        }
-        break;
-        case 3:
-        planet(planetOrbWidth[0], 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
-        planet(planetOrbWidth[1], 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
-        planet(planetOrbWidth[2], 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
-        //MOON
-        push();
-        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
-        rotateY(-frameCount * 0.015);
-        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
-        pop();
-        for(i=3; i<8; i++){
-          synths[i].volume.value=-100;
-        }
-        if(!playIsOff){
-          for(i=2; i>=0; i--){
-            synths[i].volume.value=-12;
-          }
-        }
-        break;
-        case 4:
-        planet(planetOrbWidth[0], 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
-        planet(planetOrbWidth[1], 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
-        planet(planetOrbWidth[2], 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
-        //MOON
-        push();
-        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
-        rotateY(-frameCount * 0.015);
-        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
-        pop();
-        planet(planetOrbWidth[3], 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
-        for(i=4; i<8; i++){
-          synths[i].volume.value=-100;
-        }
-        if(!playIsOff){
-          for(i=3; i>=0; i--){
-            synths[i].volume.value=-12;
-          }
-        }
-        break;
-        case 5:
-        planet(planetOrbWidth[0], 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
-        planet(planetOrbWidth[1], 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
-        planet(planetOrbWidth[2], 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
-        //MOON
-        push();
-        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
-        rotateY(-frameCount * 0.015);
-        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
-        pop();
-        planet(planetOrbWidth[3], 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
-        planet(planetOrbWidth[4], 700, 0, 0.025, imgPlanets[4], 125, planetRatios[4]);
-        for(i=5; i<8; i++){
-          synths[i].volume.value=-100;
-        }
-        if(!playIsOff){
-          for(i=4; i>=0; i--){
-            synths[i].volume.value=-12;
-          }
-        }
-        break;
-        case 6:
-        planet(planetOrbWidth[0], 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
-        planet(planetOrbWidth[1], 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
-        planet(planetOrbWidth[2], 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
-        //MOON
-        push();
-        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
-        rotateY(-frameCount * 0.015);
-        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
-        pop();
-        planet(planetOrbWidth[3], 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
-        planet(planetOrbWidth[4], 700, 0, 0.025, imgPlanets[4], 125, planetRatios[4]);
-        planet(planetOrbWidth[5], 866.5, 0, 0.030, imgPlanets[5], 125, planetRatios[5]);
-        for(i=6; i<8; i++){
-          synths[i].volume.value=-100;
-        }
-        if(!playIsOff){
-          for(i=5; i>=0; i--){
-            synths[i].volume.value=-12;
-          }
-        }
-        break;
-        case 7:
-        planet(planetOrbWidth[0], 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
-        planet(planetOrbWidth[1], 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
-        planet(planetOrbWidth[2], 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
-        //MOON
-        push();
-        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
-        rotateY(-frameCount * 0.015);
-        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
-        pop();
-        planet(planetOrbWidth[3], 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
-        planet(planetOrbWidth[4], 700, 0, 0.025, imgPlanets[4], 125, planetRatios[4]);
-        planet(planetOrbWidth[5], 866.5, 0, 0.030, imgPlanets[5], 125, planetRatios[5]);
-        planet(planetOrbWidth[6], 1066, 0, 0.035, imgPlanets[6], 100, planetRatios[6]);
-        for(i=7; i<8; i++){
-          synths[i].volume.value=-100;
-        }
-        if(!playIsOff){
-          for(i=6; i>=0; i--){
-            synths[i].volume.value=-12;
-          }
-        }
-        break;   
-        case 8:
-        planet(planetOrbWidth[0], 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
-        planet(planetOrbWidth[1], 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
-        planet(planetOrbWidth[2], 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
-        //MOON
-        push();
-        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
-        rotateY(-frameCount * 0.015);
-        planet(100, 100, 0, 0.005, imgMoon, 15, 6)
-        pop();
-        planet(planetOrbWidth[3], 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
-        planet(planetOrbWidth[4], 700, 0, 0.025, imgPlanets[4], 125, planetRatios[4]);
-        planet(planetOrbWidth[5], 866.5, 0, 0.030, imgPlanets[5], 125, planetRatios[5]);
-        planet(planetOrbWidth[6], 1066, 0, 0.035, imgPlanets[6], 100, planetRatios[6]);
-        planet(planetOrbWidth[7], 1266, 0, 0.040, imgPlanets[7], 200, planetRatios[7]);
-        if(!playIsOff){
-          for(i=7; i>=0; i--){
-            synths[i].volume.value=-12;
-          }
-        }
-        break;
-      
-    }*/
-    
+    let val = setNumPlanets.value();    
     for(i=0; i<val; i++){
       planet(planetOrbWidth[i], planetOrbHeight[i], planetTilt[i], planetRotation[i], imgPlanets[i], planetDiameter[i], planetRatios[i]);
       if(i==2){   //MOON
@@ -455,25 +299,6 @@ function draw() {
     for(i=val; i<8; i++){
       synths[i].volume.value=-100;
     }
-
-    /*
-    //PLANETS
-    planet(150, 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
-    planet(300, 200, 0, 0.01, imgPlanets[1], 50, planetRatios[1]);
-    planet(500, 333, -25, 0.015, imgPlanets[2], 75, planetRatios[2]);
-    //MOON
-    push();
-    translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
-    rotateY(-frameCount * 0.015);
-    planet(100, 100, 0, 0.005, imgMoon, 15, 6)
-    pop();
-    //PLANETS
-    planet(800, 533, 0, 0.02, imgPlanets[3], 100, planetRatios[3]);
-    planet(1050, 700, 0, 0.025, imgPlanets[4], 125, planetRatios[4]);
-    planet(1300, 866.5, 0, 0.030, imgPlanets[5], 125, planetRatios[5]);
-    planet(1600, 1066, 0, 0.035, imgPlanets[6], 100, planetRatios[6]);
-    planet(1900, 1266, 0, 0.040, imgPlanets[7], 200, planetRatios[7]);
-    */
    
     oscChoice.changed(function(){for(i=0; i<8; i++){synths[i].oscillator.set({type: oscChoice.value().toString()});}});
 
