@@ -193,7 +193,6 @@ function setup() {
   oscChoice.style('background-color', '#a229ff');
   oscChoice.style('border-radius', '3px');
   oscChoice.style('width', '150px');
-  oscChoice.style('padding', '0.5em');
   //oscChoice.addClass("myDropDowns");
 }
 
@@ -280,7 +279,7 @@ function draw() {
 
     //CONTROLS AND DRAW PLANETS
     let val = setNumPlanets.value();
-    
+   /* 
     switch(val){
       case 1:
         planet(planetOrbWidth[0], 100, 0, 0.005, imgPlanets[0], 25, planetRatios[0]);
@@ -435,6 +434,22 @@ function draw() {
         }
         break;
       
+    }*/
+    
+    for(i=0; i<val; i++){
+      planet(planetOrbWidth[i], planetOrbHeight[i], planetTilt[i], planetRotation[i], imgPlanets[i], planetDiameter[i], planetRatios[i]);
+      if(i==2){   //MOON
+        push();
+        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
+        rotateY(-frameCount * 0.015);
+        planet(100, 100, 0, 0.005, imgMoon, 15, 6);
+        pop();
+      }
+      synths[i].volume.value=-12;
+    }
+
+    for(i=val; i<8; i++){
+      synths[i].volume.value=-100;
     }
 
     /*
