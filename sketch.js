@@ -198,6 +198,8 @@ function setup() {
   oscChoice.style('border-radius', '3px');
   oscChoice.style('width', '150px');
   //oscChoice.addClass("myDropDowns");
+
+  console.log(Tone.Transport.seconds);
 }
 
 
@@ -217,8 +219,9 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
   //Tone.Transport.bpm.value BPM
   //Tone.Transport.bpm.value/60/4 MEASURES PER SECOND (1n in Tone transport reference)
   //2*Math.PI
-    var revolutionRate = (2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*modifier));
-    translate(sin(revolutionRate)*orbitWidth, 0, [cos(revolutionRate)*orbitHeight]);
+    var revolutionRate = (2*(Math.PI)*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*modifier));
+    console.log(Tone.Clock.seconds);
+    translate(sin(revolutionRate)*orbitWidth, 0, cos(revolutionRate)*orbitHeight);
     rotateZ(tilt);
     rotateY(frameCount * rotation);
   
@@ -246,7 +249,7 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
 
 
 function draw() {
-
+  
     //BACKGROUND
     background(2);
     fill(255);
@@ -440,6 +443,7 @@ function draw() {
       
     }*/
     
+    
     for(i=0; i<val; i++){
       planet(planetOrbWidth[i], planetOrbHeight[i], planetTilt[i], planetRotation[i], imgPlanets[i], planetDiameter[i], planetRatios[i]);
       if(i==2){   //MOON
@@ -449,12 +453,18 @@ function draw() {
         planet(100, 100, 0, 0.005, imgMoon, 15, 6);
         pop();
       }
-      synths[i].volume.value=-12;
+      if(!playIsOff){
+        synths[i].volume.value=-12;
+      }
+      else{
+        synths[i].volume.value=-100;
+      }
     }
 
     for(i=val; i<8; i++){
       synths[i].volume.value=-100;
     }
+  
 
     /*
     //PLANETS
@@ -515,7 +525,7 @@ function soundLine(lineWobble){
     pop();
   } 
   else {
-    console.log(wobbleArray);
+    //console.log(wobbleArray);
     push();
     beginShape();
     stroke(255, 100, 100);
