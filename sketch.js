@@ -24,17 +24,15 @@ let planetNotesDuration = ["32n", "32n", "32n", "32n", "32n", "32n", "32n", "32n
 let lineWobble = 0;
 let wobbleArray = [];
 
-
-
 function preload() {
 
-  imgEarth = loadImage('./plani.jpg');
-  imgSun = loadImage('./sun.jpg');
-  imgMoon = loadImage('./moon.jpg');
-  imgSky = loadImage('./bg.jpg');
+  imgEarth = loadImage('img/plani.jpg');
+  imgSun = loadImage('img/sun.jpg');
+  imgMoon = loadImage('img/moon.jpg');
+  imgSky = loadImage('img/bg.jpg');
 
   for(i=0; i<8; i++){
-    imgPlanets[i] = loadImage('./' + (i+1).toString(10) + '.jpg');
+    imgPlanets[i] = loadImage('img/' + (i+1).toString(10) + '.jpg');
   }
 }
 
@@ -227,9 +225,9 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
     rotateY(frameCount * rotation);
   
   //AXIS
-    /*fill(255);
-    stroke(255); 
-    line(0, 400, 0, 0, -400,  0); */ 
+    //fill(255);
+    //stroke(255); 
+    //line(0, 400, 0, 0, -400,  0); 
 
   //TEXTURE
     texture(skin);
@@ -247,6 +245,7 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
   pop();
 
 }
+
 
 
 function draw() {
@@ -312,8 +311,8 @@ function draw() {
 
     setBPM.changed(function(){
       Tone.Transport.bpm.value=setBPM.value();
-      Tone.Transport.stop();
-      Tone.Transport.start();
+      //Tone.Transport.stop();
+      //Tone.Transport.start();
     });
 }
 
