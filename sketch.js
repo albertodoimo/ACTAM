@@ -136,7 +136,8 @@ function setup() {
               synths[i].triggerAttackRelease(planetNotes[i], planetNotesDuration[i], time);
             }, planetRatios[i].toString()+"n").start(0);
   }
-  */ 
+  */
+ 
   loop[0] = new Tone.Loop(time => {
     synths[0].triggerAttackRelease(planetNotes[0], planetNotesDuration[0], time);
   }, planetRatios[0].toString()+"n").start(0);
