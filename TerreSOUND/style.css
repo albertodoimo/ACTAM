@@ -105,7 +105,7 @@ button:after {
     width: 50px;
     height: 50px;
     background-image: url('./moon.jpg');
-    border: 2px solid rgb(255, 255, 255);
+    border: 2px solid rgb(0, 0, 0);
     cursor: pointer;
     -webkit-appearance: none;
     margin-top: -20px;
@@ -115,7 +115,7 @@ button:after {
 
 .mySliders::-webkit-slider-thumb:hover {
     background-image: url('./darkmoon.jpg');
-    border: 2px solid rgb(255, 115, 0);
+    border: 2px solid rgb(0, 255, 183);
 }
 
 .mySliders::-webkit-slider-runnable-track:hover {

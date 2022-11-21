@@ -223,7 +223,7 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
   //TEXTURE
     texture(skin);
     //COLORE ROSSO QUANDO PASSA PER L'AZIMUTH
-    if(sin(revolutionRate)<=0.2 && sin(revolutionRate)>=-0.2 && cos(revolutionRate)>=0.8){
+    if(sin(revolutionRate)<=0.1 && sin(revolutionRate)>=-0.1 && cos(revolutionRate)>=0.8){
       emissiveMaterial(255, 50, 50);
       wobbleArray[modifier-1] = 1;
     }
