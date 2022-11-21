@@ -137,7 +137,7 @@ function setup() {
             }, planetRatios[i].toString()+"n").start(0);
   }
   */
- 
+
   loop[0] = new Tone.Loop(time => {
     synths[0].triggerAttackRelease(planetNotes[0], planetNotesDuration[0], time);
   }, planetRatios[0].toString()+"n").start(0);
@@ -176,11 +176,11 @@ function setup() {
   
   
   //CONTROLS
-  setNumPlanets = createSlider(1, 8, 1, 1);
+  setNumPlanets = createSlider(1, 8, 8, 1);
   setNumPlanets.position(200, 40);
   setNumPlanets.addClass("mySliders");
   
-  setBPM = createSlider(20, 200, 1, 1);
+  setBPM = createSlider(20, 70, 35, 5);
   setBPM.position(400, 40);
   setBPM.addClass("mySliders");
 
