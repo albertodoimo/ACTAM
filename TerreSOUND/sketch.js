@@ -78,7 +78,7 @@ function setup() {
 
   let bi = {
     center: [0, 0, 0],
-    distance: 1600,
+    distance: 1900,
     rotation: [0.2, -0.2, 0, 0],
   }
 
@@ -134,6 +134,7 @@ function setup() {
             }, planetRatios[i].toString()+"n").start(0);
   }
   */ 
+
           loop[0] = new Tone.Loop(time => {
             synths[0].triggerAttackRelease(planetNotes[0], planetNotesDuration[0], time);
           }, planetRatios[0].toString()+"n").start(0);
