@@ -14,6 +14,7 @@ let easycam;  // creo la variabile easycam, che conterrà l'oggetto corrisponden
 //SOUND VARIABLES
 let reverb, pingpong;
 let synths=[];
+let samples=[];
 let loop=[];
 let playIsOff=true;
 let bpm = 20;
@@ -120,13 +121,15 @@ function setup() {
     }
   });
 
-
-
   for(i=0; i<8; i++){
+    const player = new Tone.Player("samples/" + (i+1).toString(10) + ".wav").toDestination();
+  }
+
+  /* for(i=0; i<8; i++){
     synths[i] = new Tone.Synth({oscillator: {type : "fmsine"}}).toDestination();
     synths[i].chain(reverb, pingpong, Tone.Destination);
     synths[i].volume.value=-100;
-  }
+  } */
 
   /*
   SE COLLASSO LA PARTE SOTTOSTANTE INDENTATA IN UN CICLO FOR COME IL SEGUENTE NON FUNZIONA
@@ -137,7 +140,7 @@ function setup() {
             }, planetRatios[i].toString()+"n").start(0);
   }
   */
- 
+
   loop[0] = new Tone.Loop(time => {
     synths[0].triggerAttackRelease(planetNotes[0], planetNotesDuration[0], time);
   }, planetRatios[0].toString()+"n").start(0);
@@ -169,6 +172,39 @@ function setup() {
   loop[7] = new Tone.Loop(time => {
     synths[7].triggerAttackRelease(planetNotes[7], planetNotesDuration[7], time);
   }, planetRatios[7].toString()+"n").start(0);
+
+
+  /* loop[0] = new Tone.Loop(time => {
+    synths[0].triggerAttackRelease(planetNotes[0], planetNotesDuration[0], time);
+  }, planetRatios[0].toString()+"n").start(0);
+
+  loop[1] = new Tone.Loop(time => {
+    synths[1].triggerAttackRelease(planetNotes[1], planetNotesDuration[1], time);
+  }, planetRatios[1].toString()+"n").start(0);
+
+  loop[2] = new Tone.Loop(time => {
+    synths[2].triggerAttackRelease(planetNotes[2], planetNotesDuration[2], time);
+  }, planetRatios[2].toString()+"n").start(0);
+
+  loop[3] = new Tone.Loop(time => {
+    synths[3].triggerAttackRelease(planetNotes[3], planetNotesDuration[3], time);
+  }, planetRatios[3].toString()+"n").start(0);
+
+  loop[4] = new Tone.Loop(time => {
+    synths[4].triggerAttackRelease(planetNotes[4], planetNotesDuration[4], time);
+  }, planetRatios[4].toString()+"n").start(0);
+
+  loop[5] = new Tone.Loop(time => {
+    synths[5].triggerAttackRelease(planetNotes[5], planetNotesDuration[5], time);
+  }, planetRatios[5].toString()+"n").start(0);
+
+  loop[6] = new Tone.Loop(time => {
+    synths[6].triggerAttackRelease(planetNotes[6], planetNotesDuration[6], time);
+  }, planetRatios[6].toString()+"n").start(0);
+
+  loop[7] = new Tone.Loop(time => {
+    synths[7].triggerAttackRelease(planetNotes[7], planetNotesDuration[7], time);
+  }, planetRatios[7].toString()+"n").start(0); */
   
 
   Tone.Transport.start();
@@ -176,11 +212,11 @@ function setup() {
   
   
   //CONTROLS
-  setNumPlanets = createSlider(1, 8, 1, 1);
+  setNumPlanets = createSlider(1, 8, 8, 1);
   setNumPlanets.position(200, 40);
   setNumPlanets.addClass("mySliders");
   
-  setBPM = createSlider(20, 200, 1, 1);
+  setBPM = createSlider(20, 70, 35, 5);
   setBPM.position(400, 40);
   setBPM.addClass("mySliders");
 
@@ -361,8 +397,8 @@ function soundLine(lineWobble){
       y = i * (planetOrbWidth[setNumPlanets.value()-1]/10);
       curveVertex(x, 0, y); 
     }
-    curveVertex(0, 0, (planetOrbWidth[setNumPlanets.value()]/2)*1.05);
-    curveVertex(0, 0, (planetOrbWidth[setNumPlanets.value()]/2)*1.05);
+    curveVertex(0, 0, (planetOrbWidth[setNumPlanets.value() - 1]/2)*1.05);
+    curveVertex(0, 0, (planetOrbWidth[setNumPlanets.value() - 1]/2)*1.05);
     endShape();
     pop();
   }
