@@ -1,4 +1,7 @@
 // DICHIARO LE VARIABILI FUORI DALLA FUNZIONI
+/* 
+const { Tone } = require("./Tone/Tone");
+ */
 // PERCHE' ABBIANO VISIBILITA' ANCHE NELLE ALTRE FUNZIONI
 let imgEarth;
 let imgSun;
@@ -15,15 +18,17 @@ let easycam;  // creo la variabile easycam, che conterrà l'oggetto corrisponden
 let reverb, pingpong;
 let synths=[];
 let samples=[];
-let loop=[];
+let loops=[];
 let playIsOff=true;
 let bpm = 20;
 //1= MEASURE, 4=BEAT
 let planetRatios = [8, 7, 6, 5, 4, 3, 2, 1];
 let planetNotes = ["C2", "G2", "E3", "B3", "C4", "D4", "D4", "B4"];
 let planetNotesDuration = ["32n", "32n", "32n", "32n", "32n", "32n", "32n", "32n"];
+let s1, s2, s3, s4, amp4, amp2;
 let lineWobble = 0;
 let wobbleArray = [];
+
 
 function preload() {
 
@@ -46,6 +51,12 @@ function windowResized() {
 
 
 function setup() {
+
+  document.querySelector('button')?.addEventListener('click', async () => {
+    await Tone.start();
+    console.log('audio is ready');
+  })
+
   createCanvas(windowWidth, windowHeight, WEBGL);
   frameRate(30);
   setAttributes('antialias', true);
@@ -121,91 +132,78 @@ function setup() {
     }
   });
 
-  for(i=0; i<8; i++){
-    const player = new Tone.Player("samples/" + (i+1).toString(10) + ".wav").toDestination();
-  }
+/*   for(i=0; i<1; i++){
+    samples[i] = new Tone.Player("samples/" + (i+1).toString(10) + ".wav").toDestination();
+  } */
+/* 
+s4 = new Tone.Synth({ 
+  oscillator : {
+    type : sine
+    } ,
+    envelope : {
+    attack : 0.001 ,
+    decay : 1.5 ,
+    sustain : 0.0,
+    release : 0.04
+    }
+})
+ */
 
-  /* for(i=0; i<8; i++){
+
+
+  for(i=0; i<8; i++){
     synths[i] = new Tone.Synth({oscillator: {type : "fmsine"}}).toDestination();
     synths[i].chain(reverb, pingpong, Tone.Destination);
     synths[i].volume.value=-100;
-  } */
+  }
 
-  /*
-  SE COLLASSO LA PARTE SOTTOSTANTE INDENTATA IN UN CICLO FOR COME IL SEGUENTE NON FUNZIONA
+  
+/*  // SE COLLASSO LA PARTE SOTTOSTANTE INDENTATA IN UN CICLO FOR COME IL SEGUENTE NON FUNZIONA
   
   for(i=0; i<8; i++){
     loop[i] = new Tone.Loop(time => {
               synths[i].triggerAttackRelease(planetNotes[i], planetNotesDuration[i], time);
             }, planetRatios[i].toString()+"n").start(0);
-  }
-  */
+  } */
+ 
 
-  loop[0] = new Tone.Loop(time => {
-    synths[0].triggerAttackRelease(planetNotes[0], planetNotesDuration[0], time);
-  }, planetRatios[0].toString()+"n").start(0);
+/*   loop[0] = new Tone.Loop(time => {
+    var player = new Tone.Player().toDestination();
+    var buffer = new Tone.Buffer("samples/1.wav", function(){player = buffer.get();});
+    player.start(time);
+    //samples[0].start(time);
+  }, planetRatios[2].toString()+"n").start(0);
+   */
 
-  loop[1] = new Tone.Loop(time => {
+  loops[1] = new Tone.Loop(time => {
     synths[1].triggerAttackRelease(planetNotes[1], planetNotesDuration[1], time);
   }, planetRatios[1].toString()+"n").start(0);
 
-  loop[2] = new Tone.Loop(time => {
+  loops[2] = new Tone.Loop(time => {
     synths[2].triggerAttackRelease(planetNotes[2], planetNotesDuration[2], time);
   }, planetRatios[2].toString()+"n").start(0);
 
-  loop[3] = new Tone.Loop(time => {
+  loops[3] = new Tone.Loop(time => {
     synths[3].triggerAttackRelease(planetNotes[3], planetNotesDuration[3], time);
   }, planetRatios[3].toString()+"n").start(0);
 
-  loop[4] = new Tone.Loop(time => {
+  loops[4] = new Tone.Loop(time => {
     synths[4].triggerAttackRelease(planetNotes[4], planetNotesDuration[4], time);
   }, planetRatios[4].toString()+"n").start(0);
 
-  loop[5] = new Tone.Loop(time => {
+  loops[5] = new Tone.Loop(time => {
     synths[5].triggerAttackRelease(planetNotes[5], planetNotesDuration[5], time);
   }, planetRatios[5].toString()+"n").start(0);
 
-  loop[6] = new Tone.Loop(time => {
+  loops[6] = new Tone.Loop(time => {
     synths[6].triggerAttackRelease(planetNotes[6], planetNotesDuration[6], time);
   }, planetRatios[6].toString()+"n").start(0);
 
-  loop[7] = new Tone.Loop(time => {
+  loops[7] = new Tone.Loop(time => {
     synths[7].triggerAttackRelease(planetNotes[7], planetNotesDuration[7], time);
   }, planetRatios[7].toString()+"n").start(0);
 
 
-  /* loop[0] = new Tone.Loop(time => {
-    synths[0].triggerAttackRelease(planetNotes[0], planetNotesDuration[0], time);
-  }, planetRatios[0].toString()+"n").start(0);
-
-  loop[1] = new Tone.Loop(time => {
-    synths[1].triggerAttackRelease(planetNotes[1], planetNotesDuration[1], time);
-  }, planetRatios[1].toString()+"n").start(0);
-
-  loop[2] = new Tone.Loop(time => {
-    synths[2].triggerAttackRelease(planetNotes[2], planetNotesDuration[2], time);
-  }, planetRatios[2].toString()+"n").start(0);
-
-  loop[3] = new Tone.Loop(time => {
-    synths[3].triggerAttackRelease(planetNotes[3], planetNotesDuration[3], time);
-  }, planetRatios[3].toString()+"n").start(0);
-
-  loop[4] = new Tone.Loop(time => {
-    synths[4].triggerAttackRelease(planetNotes[4], planetNotesDuration[4], time);
-  }, planetRatios[4].toString()+"n").start(0);
-
-  loop[5] = new Tone.Loop(time => {
-    synths[5].triggerAttackRelease(planetNotes[5], planetNotesDuration[5], time);
-  }, planetRatios[5].toString()+"n").start(0);
-
-  loop[6] = new Tone.Loop(time => {
-    synths[6].triggerAttackRelease(planetNotes[6], planetNotesDuration[6], time);
-  }, planetRatios[6].toString()+"n").start(0);
-
-  loop[7] = new Tone.Loop(time => {
-    synths[7].triggerAttackRelease(planetNotes[7], planetNotesDuration[7], time);
-  }, planetRatios[7].toString()+"n").start(0); */
-  
 
   Tone.Transport.start();
   Tone.Transport.bpm.value=bpm;
@@ -221,7 +219,7 @@ function setup() {
   setBPM.addClass("mySliders");
 
   oscChoice = createSelect();
-  oscChoice.position(600, 30);
+  oscChoice.position(600, 36);
   oscChoice.option('fmsine');
   oscChoice.option('sine');
   oscChoice.option('sawtooth');
@@ -234,7 +232,7 @@ function setup() {
   oscChoice.style('width', '150px');
   //oscChoice.addClass("myDropDowns");
 
-  console.log(Tone.Transport.seconds);
+ // console.log(Tone.Transport.seconds);
 }
 
 
@@ -256,7 +254,7 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
   //Tone.Transport.bpm.value/60/4 MEASURES PER SECOND (1n in Tone transport reference)
   //2*Math.PI
     var revolutionRate = (2*(Math.PI)*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*modifier));
-    console.log(Tone.Clock.seconds);
+    //  console.log(Tone.Clock.seconds);
     translate(sin(revolutionRate)*orbitWidth, 0, cos(revolutionRate)*orbitHeight);
     rotateZ(tilt);
     rotateY(frameCount * rotation);
@@ -332,7 +330,7 @@ function draw() {
         planet(100, 100, 0, 0.005, imgMoon, 15, 6);
         pop();
       }
-      if(!playIsOff){
+   if(!playIsOff){
         synths[i].volume.value=-12;
       }
       else{
