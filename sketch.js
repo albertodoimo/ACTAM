@@ -6,6 +6,7 @@ const { Tone } = require("./Tone/Tone");
 let imgEarth;
 let imgSun;
 let imgMoon;
+var imgSky;
 let imgPlanets = [];
 let planetOrbWidth = [150, 300, 500, 800, 1050, 1300, 1600, 1900];
 let planetOrbHeight = [100, 200, 333, 533, 700, 866.5, 1066, 1266];
@@ -28,6 +29,18 @@ let planetNotesDuration = ["32n", "32n", "32n", "32n", "32n", "32n", "32n", "32n
 let s1, s2, s3, s4, amp4, amp2;
 let lineWobble = 0;
 let wobbleArray = [];
+
+let tri = {
+  center: [0, 0, 0],
+  distance: 2300,
+  rotation: [1,-0.3 , 0, 0],
+}
+
+let bi = {
+  center: [0, 0, 0],
+  distance: 1600,
+  rotation: [0.2, -0.2, 0, 0],
+}
 
 
 function preload() {
@@ -57,10 +70,12 @@ function setup() {
     console.log('audio is ready');
   })
 
+  
   createCanvas(windowWidth, windowHeight, WEBGL);
+
   frameRate(30);
   setAttributes('antialias', true);
-  perspective(PI / 2, width / height, 0.1, 10000);
+  perspective(PI / 2, width / height, 0.1, 15000);
   textureWrap(CLAMP);
 
   easycam = createEasyCam() // creazione oggetto easycam con distanza iniziale  
@@ -85,17 +100,6 @@ function setup() {
     console.log(stato)
   } */
 
-  let tri = {
-    center: [0, 0, 0],
-    distance: 2300,
-    rotation: [0.9494219246202699, -0.31387447442855826, 0.008966193303751967, -0.0006563003769737552],
-  }
-
-  let bi = {
-    center: [0, 0, 0],
-    distance: 1600,
-    rotation: [0.2, -0.2, 0, 0],
-  }
 
   easycam.setState(tri);    // stato iniziale prospettico
   easycam.setDistanceMax(2900);
@@ -286,18 +290,27 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
 function draw() {
   
     //BACKGROUND
-    background(2);
-    fill(255);
-    stroke(255);
-    
+    background(0,0,0,0);
+    //fill(255);
+    //stroke(255);
+
+    //muro invisibile per limiti della sfera
+    let currentDist = Math.sqrt((easycam.getPosition()[0])**2+ (easycam.getPosition()[1])**2+ (easycam.getPosition()[2])**2);
+    //console.log(currentDist);
+    if(currentDist>3000.0){
+      easycam.setState(tri, 400);
+    } 
+    else{}
+
 
     // SKYBOX
+  
     push()
     noStroke()
     texture(imgSky);
     sphere(4000);
     pop()
-    
+
     
     //SOUNDLINE
     for(i=0; i<7; i++){
