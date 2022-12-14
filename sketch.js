@@ -1,7 +1,4 @@
 // DICHIARO LE VARIABILI FUORI DALLA FUNZIONI
-/* 
-const { Tone } = require("./Tone/Tone");
- */
 // PERCHE' ABBIANO VISIBILITA' ANCHE NELLE ALTRE FUNZIONI
 let imgEarth;
 let imgSun;
@@ -17,6 +14,10 @@ let bool = false;
 let easycam;  // creo la variabile easycam, che conterrà l'oggetto corrispondente
 //SOUND VARIABLES
 let reverb, pingpong;
+let env1;
+let env2;
+let filter1;
+let filter2;
 let synths=[];
 let samples=[];
 let loops=[];
@@ -29,18 +30,19 @@ let planetNotesDuration = ["32n", "32n", "32n", "32n", "32n", "32n", "32n", "32n
 let s1, s2, s3, s4, amp4, amp2;
 let lineWobble = 0;
 let wobbleArray = [];
+//ENVIRONMENT
+let border=10;
+let topBorder=100;
+let button=[];
+let loadTimer;
+let fontazzo;
+let numSelected=0;
+let environmentSelected=0;
+let environmentSelectedImg;
+let mean;
+let maximum;
 
-let tri = {
-  center: [0, 0, 0],
-  distance: 2300,
-  rotation: [1,-0.3 , 0, 0],
-}
 
-let bi = {
-  center: [0, 0, 0],
-  distance: 1600,
-  rotation: [0.2, -0.2, 0, 0],
-}
 
 
 function preload() {
@@ -48,11 +50,13 @@ function preload() {
   imgEarth = loadImage('img/plani.jpg');
   imgSun = loadImage('img/sun.jpg');
   imgMoon = loadImage('img/moon.jpg');
-  imgSky = loadImage('img/bg.jpg');
+  //imgSky = loadImage('img/bg.jpg');
+  fontazzo=loadFont('img/Montserrat-Bold.ttf');
 
   for(i=0; i<8; i++){
     imgPlanets[i] = loadImage('img/' + (i+1).toString(10) + '.jpg');
   }
+  
 }
 
 
@@ -65,6 +69,23 @@ function windowResized() {
 
 function setup() {
 
+    let envWidth = (windowWidth-4*border-topBorder)/3;
+    let envHeight =(windowHeight-4*border-topBorder)/3;
+
+    for(i=0; i<9; i++){
+      button[i] = createImg('img/env/' + (i+1).toString(10) + '.jpg');
+      button[i].size(envWidth, envHeight);
+    }
+    button[0].position(border+topBorder/3.5, border+topBorder);
+    button[1].position(border+topBorder/3.5*2+envWidth, border+topBorder);
+    button[2].position(border+topBorder/3.5*3+envWidth*2, border+topBorder);
+    button[3].position(border+topBorder/3.5, border*2+envHeight+topBorder);
+    button[4].position(border+topBorder/3.5*2+envWidth, border*2+envHeight+topBorder);
+    button[5].position(border+topBorder/3.5*3+envWidth*2, border*2+envHeight+topBorder);
+    button[6].position(border+topBorder/3.5, border*3+envHeight*2+topBorder);
+    button[7].position(border+topBorder/3.5*2+envWidth, border*3+envHeight*2+topBorder);
+    button[8].position(border+topBorder/3.5*3+envWidth*2, border*3+envHeight*2+topBorder);
+  
   document.querySelector('button')?.addEventListener('click', async () => {
     await Tone.start();
     console.log('audio is ready');
@@ -78,7 +99,7 @@ function setup() {
   perspective(PI / 2, width / height, 0.1, 15000);
   textureWrap(CLAMP);
 
-  easycam = createEasyCam() // creazione oggetto easycam con distanza iniziale  
+  
 
   /*
   document.oncontextmenu = function() { return false; } // necessari per il controllo da mouse della camera
@@ -87,7 +108,7 @@ function setup() {
 
   button1 = createButton('2D');     // creazione bottoni per switching 2D/3D
   button1.position(20, 20);
-
+  
   button2 = createButton('3D');
   button2.position(20, 80);
 
@@ -101,9 +122,6 @@ function setup() {
   } */
 
 
-  easycam.setState(tri);    // stato iniziale prospettico
-  easycam.setDistanceMax(2900);
-  easycam.setDistanceMin(200);
 
   function set2d() {        // setter vista 2d
     easycam.setState(bi, 700)
@@ -118,8 +136,6 @@ function setup() {
   //SOUND -----------------------------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------------------------
   
-  reverb = new Tone.Reverb(3, 100, 1);
-  pingpong = new Tone.PingPongDelay(0.4, 0.3);
  
   button3 = createButton('Play');
   button3.position(windowWidth-90, 20);
@@ -152,12 +168,305 @@ s4 = new Tone.Synth({
     }
 })
  */
+  
+  //CONTROLS
+  setNumPlanets = createSlider(1, 8, 8, 1);
+  setNumPlanets.position(200, 40);
+  setNumPlanets.addClass("mySliders");
+  
+  setBPM = createSlider(20, 70, 35, 5);
+  setBPM.position(400, 40);
+  setBPM.addClass("mySliders");
+
+  oscChoice = createSelect();
+  oscChoice.position(600, 36);
+  oscChoice.option('fmsine');
+  oscChoice.option('sine');
+  oscChoice.option('sawtooth');
+  oscChoice.option('triangle');
+  oscChoice.option('square');
+  oscChoice.option('pwm');
+  oscChoice.option('pulse');
+  oscChoice.style('background-color', '#a229ff');
+  oscChoice.style('border-radius', '3px');
+  oscChoice.style('width', '150px');
+  //oscChoice.addClass("myDropDowns");
+}
 
 
+function draw() {
+  //_________________________________SELECT ENVIRONMENT WIEW_________________________________________________________
+  if(environmentSelected==0)
+  {
+
+    button1.hide();
+    button2.hide();
+    button3.hide();
+    oscChoice.hide();
+    setNumPlanets.hide();
+    setBPM.hide();
+
+    push();
+    background(20);
+    fill(255);
+    stroke(255);
+    textFont(fontazzo);
+    textSize(42);
+    textAlign(CENTER);
+    text('CHOOSE ENVIRONMENT', 0, -windowHeight/2-170);
+    textSize(24);
+    text('The environment will affect the sound design of the machine', 0, -windowHeight/2-110);
+    
+    //OVVIAMENTE LA PARTE SOTTOSTANTE ANDREBBE COLLASSATA IN UN CICLO FOR
+    //QUANDO CI HO PROVATO IO NON ANDAVA
+      button[0].mouseClicked(function(){
+        numSelected=0;
+        environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
+        mean = getMeanMax()[0];
+        maximum = getMeanMax()[1];
+        soundDesign();
+        loadTimer=millis();
+        environmentSelected=1;
+      });
+      button[1].mouseClicked(function(){
+        numSelected=1;
+        environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
+        mean = getMeanMax()[0];
+        maximum = getMeanMax()[1];
+        soundDesign();
+        loadTimer=millis();
+        environmentSelected=1;
+      });
+      button[2].mouseClicked(function(){
+        numSelected=2;
+        environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
+        mean = getMeanMax()[0];
+        maximum = getMeanMax()[1];
+        soundDesign();
+        loadTimer=millis();
+        environmentSelected=1;
+      });
+      button[3].mouseClicked(function(){
+        numSelected=3;
+        environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
+        mean = getMeanMax()[0];
+        maximum = getMeanMax()[1];  
+        soundDesign();  
+        loadTimer=millis();
+        environmentSelected=1;
+      });
+      button[4].mouseClicked(function(){
+        numSelected=4;
+         environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
+        mean = getMeanMax()[0];
+        maximum = getMeanMax()[1];
+        soundDesign();
+        loadTimer=millis();
+        environmentSelected=1;
+      });
+      button[5].mouseClicked(function(){
+        numSelected=5;
+        environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
+        mean = getMeanMax()[0];
+        maximum = getMeanMax()[1]; 
+        soundDesign(); 
+        loadTimer=millis();
+        environmentSelected=1;
+      });
+      button[6].mouseClicked(function(){
+        numSelected=6;
+         environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
+        mean = getMeanMax()[0];
+        maximum = getMeanMax()[1]; 
+        soundDesign();
+        loadTimer=millis();
+        environmentSelected=1;
+      });
+      button[7].mouseClicked(function(){
+        numSelected=7;
+        environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
+        mean = getMeanMax()[0];
+        maximum = getMeanMax()[1]; 
+        soundDesign();
+        loadTimer=millis();
+        environmentSelected=1;
+      });
+      button[8].mouseClicked(function(){
+        numSelected=8;
+        environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
+        mean = getMeanMax()[0];
+        maximum = getMeanMax()[1]; 
+        soundDesign();
+        loadTimer=millis();
+        environmentSelected=1;
+      });
+
+    
+    pop();
+  }//_________________________________________LOADING WIEW____________________________________________________________
+  else if (environmentSelected==1)
+  {
+
+    for(i=0; i<9; i++){
+      button[i].hide();
+    }
+    
+    push();
+    background(20);
+    stroke(255);
+    fill(255);
+    textSize(60);
+    textFont(fontazzo);
+    textAlign(CENTER);
+    text('LOADING...', 0, windowHeight/2-300);
+    stroke(200);
+    strokeWeight(5);
+    noFill();
+    rect(-300, windowHeight/2-500, 600, 100);
+    noStroke();
+    fill(100);
+    rect(-300, windowHeight/2-500, (millis()-loadTimer)/5000*597, 100);
+  
+    if ((millis()-loadTimer)/5000>=1){
+      
+      easycam = createEasyCam(tri) // creazione oggetto easycam con distanza iniziale 
+      easycam.setState(tri);    // stato iniziale prospettico
+      easycam.setDistanceMax(2900);
+      easycam.setDistanceMin(200);
+      environmentSelected=2;
+    }
+    pop();
+  }
+  //__________________________________________SPACE WIEW______________________________________________________________
+  else if(environmentSelected==2)
+  {
+
+    button1.show();
+    button2.show();
+    button3.show();
+    oscChoice.show();
+    setNumPlanets.show();
+    setBPM.show();
+
+    //BACKGROUND
+    background(0,0,0,0);
+    //fill(255);
+    //stroke(255);
+
+    //muro invisibile per limiti della sfera
+    let currentDist = Math.sqrt((easycam.getPosition()[0])**2+ (easycam.getPosition()[1])**2+ (easycam.getPosition()[2])**2);
+    if(currentDist>3000.0){
+      easycam.setState(tri, 400);
+    } 
+    else{}
+
+
+    // SKYBOX
+    push();
+    noStroke();
+    texture(environmentSelectedImg);
+    sphere(4000);
+    pop();
+
+    
+    //SOUNDLINE
+    for(i=0; i<7; i++){
+      lineWobble = lineWobble + wobbleArray[i];
+    }
+    soundLine(lineWobble);
+    lineWobble = 0;
+
+    //SUN
+    noStroke();
+    rotateY(PI);
+    rotateY(frameCount * 0.005);
+    texture(imgSun);
+    sphere(100); 
+    rotateY(-frameCount * 0.005);
+    rotateY(-PI);
+
+    //LIGHT
+    ambientLight(60);
+    pointLight(255, 255, 255, 0, 0, 0);
+
+    //CONTROLS AND DRAW PLANETS
+    let val = setNumPlanets.value();    
+    for(i=0; i<val; i++){
+      planet(planetOrbWidth[i], planetOrbHeight[i], planetTilt[i], planetRotation[i], imgPlanets[i], planetDiameter[i], planetRatios[i]);
+      if(i==2){   //MOON
+        push();
+        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
+        rotateY(-frameCount * 0.015);
+        planet(100, 100, 0, 0.005, imgMoon, 15, 6);
+        pop();
+      }
+   if(!playIsOff){
+        synths[i].volume.value=-12;
+      }
+      else{
+        synths[i].volume.value=-100;
+      }
+    }
+
+    for(i=val; i<8; i++){
+      synths[i].volume.value=-100;
+    }
+   
+    oscChoice.changed(function(){for(i=0; i<8; i++){synths[i].oscillator.set({type: oscChoice.value().toString()});}});
+
+    setBPM.changed(function(){
+      Tone.Transport.bpm.value=setBPM.value();
+      //Tone.Transport.stop();
+      //Tone.Transport.start();
+    });
+  }
+}
+
+
+function soundDesign(){
+
+
+  reverb = new Tone.Reverb({
+    decay: 5,
+    wet: 0.6,
+  });
+  
+  pingpong = new Tone.PingPongDelay({
+    delayTime: 0.4, 
+    feedback: 0.5, 
+    wet: 0.3});
+  
+  filter1 = new Tone.Filter(400, "lowpass");
+  filter2 = new Tone.Filter(400, "lowpass");
+  
+  env1 = new Tone.FrequencyEnvelope({
+		attack: "4n",
+		decay: "8n",
+        sustain: 0,
+        release: 0,
+        baseFrequency: "C0",
+	    octaves: 5,
+        attackCurve: "linear",
+	});
+  env2 = new Tone.FrequencyEnvelope({
+		attack: "2n",
+		decay: "2n",
+        sustain: 0,
+        release: 0,
+        baseFrequency: "C0",
+	    octaves: 6,
+        attackCurve: "sine",
+	});
+
+  env1.connect(filter1.frequency);
+  env2.connect(filter2.frequency);
+
+  console.log(mean);
+  console.log(maximum);
 
   for(i=0; i<8; i++){
     synths[i] = new Tone.Synth({oscillator: {type : "fmsine"}}).toDestination();
-    synths[i].chain(reverb, pingpong, Tone.Destination);
+    synths[i].chain(filter1, reverb, pingpong, Tone.Destination);
     synths[i].volume.value=-100;
   }
 
@@ -211,34 +520,7 @@ s4 = new Tone.Synth({
 
   Tone.Transport.start();
   Tone.Transport.bpm.value=bpm;
-  
-  
-  //CONTROLS
-  setNumPlanets = createSlider(1, 8, 8, 1);
-  setNumPlanets.position(200, 40);
-  setNumPlanets.addClass("mySliders");
-  
-  setBPM = createSlider(20, 70, 35, 5);
-  setBPM.position(400, 40);
-  setBPM.addClass("mySliders");
-
-  oscChoice = createSelect();
-  oscChoice.position(600, 36);
-  oscChoice.option('fmsine');
-  oscChoice.option('sine');
-  oscChoice.option('sawtooth');
-  oscChoice.option('triangle');
-  oscChoice.option('square');
-  oscChoice.option('pwm');
-  oscChoice.option('pulse');
-  oscChoice.style('background-color', '#a229ff');
-  oscChoice.style('border-radius', '3px');
-  oscChoice.style('width', '150px');
-  //oscChoice.addClass("myDropDowns");
-
- // console.log(Tone.Transport.seconds);
 }
-
 
 
 function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifier){
@@ -258,7 +540,6 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
   //Tone.Transport.bpm.value/60/4 MEASURES PER SECOND (1n in Tone transport reference)
   //2*Math.PI
     var revolutionRate = (2*(Math.PI)*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*modifier));
-    //  console.log(Tone.Clock.seconds);
     translate(sin(revolutionRate)*orbitWidth, 0, cos(revolutionRate)*orbitHeight);
     rotateZ(tilt);
     rotateY(frameCount * rotation);
@@ -286,85 +567,6 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
 }
 
 
-
-function draw() {
-  
-    //BACKGROUND
-    background(0,0,0,0);
-    //fill(255);
-    //stroke(255);
-
-    //muro invisibile per limiti della sfera
-    let currentDist = Math.sqrt((easycam.getPosition()[0])**2+ (easycam.getPosition()[1])**2+ (easycam.getPosition()[2])**2);
-    //console.log(currentDist);
-    if(currentDist>3000.0){
-      easycam.setState(tri, 400);
-    } 
-    else{}
-
-
-    // SKYBOX
-  
-    push()
-    noStroke()
-    texture(imgSky);
-    sphere(4000);
-    pop()
-
-    
-    //SOUNDLINE
-    for(i=0; i<7; i++){
-      lineWobble = lineWobble + wobbleArray[i];
-    }
-    soundLine(lineWobble);
-    lineWobble = 0;
-
-    //SUN
-    noStroke();
-    rotateY(PI);
-    rotateY(frameCount * 0.005);
-    texture(imgSun);
-    sphere(100); 
-    rotateY(-frameCount * 0.005);
-    rotateY(-PI);
-
-    //LIGHT
-    ambientLight(60);
-    pointLight(255, 255, 255, 0, 0, 0);
-
-    //CONTROLS AND DRAW PLANETS
-    let val = setNumPlanets.value();    
-    for(i=0; i<val; i++){
-      planet(planetOrbWidth[i], planetOrbHeight[i], planetTilt[i], planetRotation[i], imgPlanets[i], planetDiameter[i], planetRatios[i]);
-      if(i==2){   //MOON
-        push();
-        translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*6)+PI)*333]);
-        rotateY(-frameCount * 0.015);
-        planet(100, 100, 0, 0.005, imgMoon, 15, 6);
-        pop();
-      }
-   if(!playIsOff){
-        synths[i].volume.value=-12;
-      }
-      else{
-        synths[i].volume.value=-100;
-      }
-    }
-
-    for(i=val; i<8; i++){
-      synths[i].volume.value=-100;
-    }
-   
-    oscChoice.changed(function(){for(i=0; i<8; i++){synths[i].oscillator.set({type: oscChoice.value().toString()});}});
-
-    setBPM.changed(function(){
-      Tone.Transport.bpm.value=setBPM.value();
-      //Tone.Transport.stop();
-      //Tone.Transport.start();
-    });
-}
-
-
 function playSound(){
   for(i=0; i<8; i++){
   synths[i].volume.value=-12;
@@ -378,9 +580,11 @@ function stopSound(){
     }
 }
 
+
 function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
+
 
 function soundLine(lineWobble){
   let x, y, z = 0;
@@ -413,4 +617,51 @@ function soundLine(lineWobble){
     endShape();
     pop();
   }
+}
+
+
+//VORREI UN ARRAY DI LUNGHEZZA 8 PER MODULARE GLI ENVELOPE AKA DURATA DELLE NOTE
+//1 VARIABILE PER LA TONALITA'
+//DELAY E RIVERBERO MODULATI DALLE PHOTO?
+
+//scelte generative no drum machine
+//1 PER IL BPM E TOGLIAMO LO SLIDER?
+//1 ARRAY DI LUNGHEZZA 8 PER MODULARE I TEMPI DI RIVOLUZIONE/VELOCITA' DEI LOOP
+//E NON LO RENDIAMO PERSONALIZZABILE?
+function getMeanMax(){
+
+  let mean;
+  let len = 0;
+  let maximum = 0;
+  let sum = 0;
+
+  for(i=0; i<1200; i=i+5){
+    for(j=0; j<717; j=j+5){
+      index = (i*1200) + j;
+      c = environmentSelectedImg.get(i,j);
+      if(brightness(c)>maximum){
+        maximum = brightness(c);
+      }
+      sum = sum + brightness(c);
+      len++;
+    }
+  }
+  mean = sum / len;
+  values = [mean, maximum];
+  
+  return values;
+}
+
+
+let tri = {
+  center: [0, 0, 0],
+  distance: 2300,
+  rotation: [1,-0.3 , 0, 0],
+}
+
+
+let bi = {
+  center: [0, 0, 0],
+  distance: 1600,
+  rotation: [0.2, -0.2, 0, 0],
 }
