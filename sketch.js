@@ -75,6 +75,7 @@ function setup() {
     for(i=0; i<9; i++){
       button[i] = createImg('img/env/' + (i+1).toString(10) + '.jpg');
       button[i].size(envWidth, envHeight);
+      button[i].addClass("myImages");
     }
     button[0].position(border+topBorder/3.5, border+topBorder);
     button[1].position(border+topBorder/3.5*2+envWidth, border+topBorder);
@@ -318,13 +319,22 @@ function draw() {
     textSize(60);
     textFont(fontazzo);
     textAlign(CENTER);
-    text('LOADING...', 0, windowHeight/2-300);
-    stroke(200);
-    strokeWeight(5);
+    if(millis()%1000<333){
+      text('LOADING.', 0, windowHeight/2-300);
+    }
+    else if(millis()%1000<666){
+      text('LOADING..', 0, windowHeight/2-300);
+    }
+    else{
+      text('LOADING...', 0, windowHeight/2-300);
+    }
+    
+    stroke(255);
+    strokeWeight(8);
     noFill();
     rect(-300, windowHeight/2-500, 600, 100);
     noStroke();
-    fill(100);
+    fill(151, 0, 215);
     rect(-300, windowHeight/2-500, (millis()-loadTimer)/5000*597, 100);
   
     if ((millis()-loadTimer)/5000>=1){
