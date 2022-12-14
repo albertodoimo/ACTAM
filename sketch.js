@@ -111,7 +111,7 @@ function setup() {
   button1.position(20, 20);
   
   button2 = createButton('3D');
-  button2.position(20, 100);
+  button2.position(20, 85);
 
   button1.mouseClicked(set2d);      // clickando i bottoni si switchano gli stati della easycamera, dichiarati di seguito
   button2.mouseClicked(set3d);
@@ -139,7 +139,7 @@ function setup() {
   
  
   button3 = createButton('Play');
-  button3.position(windowWidth-170, 20);
+  button3.position(windowWidth-100, 20);
   button3.mouseClicked(function(){
     if(playIsOff){
       playSound(); 
@@ -174,12 +174,14 @@ s4 = new Tone.Synth({
   setNumPlanets = createSlider(1, 8, 8, 1);
   setNumPlanets.position(200, 40);
   setNumPlanets.addClass("mySliders");
-  
+  setNumPlanets.addClass("planets-caption");
+
   setBPM = createSlider(20, 70, 35, 5);
   setBPM.position(400, 40);
   setBPM.addClass("mySliders");
+  setBPM.addClass("speed-caption");
 
-  oscChoice = createSelect();
+  /* oscChoice = createSelect();
   oscChoice.position(600, 36);
   oscChoice.option('fmsine');
   oscChoice.option('sine');
@@ -190,7 +192,7 @@ s4 = new Tone.Synth({
   oscChoice.option('pulse');
   oscChoice.style('background-color', '#a229ff');
   oscChoice.style('border-radius', '3px');
-  oscChoice.style('width', '150px');
+  oscChoice.style('width', '150px'); */
   //oscChoice.addClass("myDropDowns");
 }
 
@@ -203,7 +205,7 @@ function draw() {
     button1.hide();
     button2.hide();
     button3.hide();
-    oscChoice.hide();
+    // oscChoice.hide();
     setNumPlanets.hide();
     setBPM.hide();
 
@@ -335,9 +337,9 @@ function draw() {
     rect(-300, windowHeight/2-500, 600, 100);
     noStroke();
     fill(151, 0, 215);
-    rect(-300, windowHeight/2-500, (millis()-loadTimer)/5000*597, 100);
+    rect(-300, windowHeight/2-500, (millis()-loadTimer)/2000*597, 100);
   
-    if ((millis()-loadTimer)/5000>=1){
+    if ((millis()-loadTimer)/2000>=1){
       
       easycam = createEasyCam(tri) // creazione oggetto easycam con distanza iniziale 
       easycam.setState(tri);    // stato iniziale prospettico
@@ -349,12 +351,13 @@ function draw() {
   }
   //__________________________________________SPACE WIEW______________________________________________________________
   else if(environmentSelected==2)
+
   {
 
     button1.show();
     button2.show();
     button3.show();
-    oscChoice.show();
+    // oscChoice.show();
     setNumPlanets.show();
     setBPM.show();
 
@@ -422,7 +425,7 @@ function draw() {
       synths[i].volume.value=-100;
     }
    
-    oscChoice.changed(function(){for(i=0; i<8; i++){synths[i].oscillator.set({type: oscChoice.value().toString()});}});
+    // oscChoice.changed(function(){for(i=0; i<8; i++){synths[i].oscillator.set({type: oscChoice.value().toString()});}});
 
     setBPM.changed(function(){
       Tone.Transport.bpm.value=setBPM.value();
@@ -674,3 +677,8 @@ let bi = {
   distance: 1600,
   rotation: [0.2, -0.2, 0, 0],
 }
+
+document.getElementByClassName("mySliders").oninput = function() {
+  var value = (this.value-this.min)/(this.max-this.min)*100
+  this.style.background = 'linear-gradient(to right, #82CFD0 0%, #82CFD0 ' + value + '%, #fff ' + value + '%, white 100%)'
+};

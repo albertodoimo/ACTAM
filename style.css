@@ -11,64 +11,31 @@ body {
 button {
     width: 70px;
     height: 50px;
-    border: 2px solid #111;
+    border-top: 0.5px solid rgb(255, 255, 255);
+    border-bottom: 0.5px solid rgb(255, 255, 255);
+    border-left: none;
+    border-right: none;
     outline: none;
+    font-family: 'Product Sans', sans-serif;
     font-size: 20px;
     font-weight: bold;
-    color: #111;
-    background:rgb(151, 0, 215);
+    color: rgb(255, 255, 255);
+    background: none;
     cursor: pointer;
     position: relative;
     z-index: 0;
-    border-radius: 10px;
+    transition: 700ms;
 }
 
-button:before {
-    content: '';
-    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
-    position: absolute;
-    top: -2px;
-    left:-2px;
-    background-size: 400%;
-    z-index: -1;
-    filter: blur(5px);
-    width: calc(100% + 4px);
-    height: calc(100% + 4px);
-    animation: glowing 20s linear infinite;
-    opacity: 0;
-    transition: opacity .3s ease-in-out;
-    border-radius: 10px;
-}
-  
-button:active {
-    color: #111;
+button:hover {
+  border-top: 0.5px solid rgb(255, 255, 255);
+  border-bottom: 0.5px solid rgb(255, 255, 255);
+  border-left: none;
+  border-right: none;
+  background:rgba(255, 255, 255, 0.156);
 }
 
-button:active:after {
-    background: transparent;
-}
 
-button:hover:before {
-    opacity: 1;
-}
-
-button:after {
-    z-index: -1;
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgb(151, 0, 215);
-    left: 0;
-    top: 0;
-    border-radius: 10px;
-}
-
-@keyframes glowing {
-    0% { background-position: 0 0; }
-    50% { background-position: 400% 0; }
-    100% { background-position: 0 0; }
-}
 
 .mySliders{
     width: 150px;
@@ -79,50 +46,61 @@ button:after {
 
 /* This is the "track" that the slider sits on  */
 .mySliders::-webkit-slider-runnable-track {
-    background: linear-gradient(
-        45deg,
-        rgba(255, 0, 0, 1) 0%,
-        rgba(255, 154, 0, 1) 10%,
-        rgba(208, 222, 33, 1) 20%,
-        rgba(79, 220, 74, 1) 30%,
-        rgba(63, 218, 216, 1) 40%,
-        rgba(47, 201, 226, 1) 50%,
-        rgba(28, 127, 238, 1) 60%,
-        rgba(95, 21, 242, 1) 70%,
-        rgba(186, 12, 248, 1) 80%,
-        rgba(251, 7, 217, 1) 90%,
-        rgba(255, 0, 0, 1) 100%
-    );
-    height: 10px;
-    border-radius: 5px;
+    background: none;
+    border: 1px solid white;
+    height: 13px;
+    border-radius: 6.5px;
     -webkit-appearance: none;
     cursor: pointer;
-    transition: 0.3s;
+    transition: 500ms;
+}
+
+.mySliders::-webkit-slider-runnable-track:hover {
+  background-color: rgba(255, 255, 255, 0.156);
 }
 
 /* This is the moveable bit of the slider, known as the "thumb" */
 .mySliders::-webkit-slider-thumb {
-    width: 50px;
-    height: 50px;
-    background-image: url('img/moon.jpg');
-    border: 2px solid rgb(0, 0, 0);
+    width: 9px;
+    height: 9px;
+    background-color: white;
     cursor: pointer;
     -webkit-appearance: none;
-    margin-top: -20px;
+    margin-top: 0.76px;
+    margin-left: 1px;
+    margin-right: 1px;
     border-radius: 50%;
-    transition: 500ms
+    transition: 500ms;
 }
 
-.mySliders::-webkit-slider-thumb:hover {
-    background-image: url('img/darkmoon.jpg');
-    border: 2px solid rgb(0, 255, 183);
+.speed-caption:after{
+  content:"SPEED";
+  position: absolute;
+  font-family: 'Product Sans', sans-serif;
+  font-size: 15px;
+  color: white;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%);
 }
 
+.planets-caption:after{
+  content:"PLANETS";
+  position: absolute;
+  font-family: 'Product Sans', sans-serif;
+  font-size: 15px;
+  color: white;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%);
+}
 
 .myImages{
     cursor:pointer;
+    border: 2px solid rgb(0, 0, 0);
+    transition: 300ms;
 }
 
 .myImages:hover{
-    border: 2px solid rgb(151, 0, 215);
+    border: 2px solid rgb(255, 255, 255);
 }
