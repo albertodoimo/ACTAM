@@ -336,7 +336,7 @@ function draw() {
     noFill();
     rect(-300, windowHeight/2-500, 600, 100);
     noStroke();
-    fill(151, 0, 215);
+    fill(255, 255, 255, 100);
     rect(-300, windowHeight/2-500, (millis()-loadTimer)/2000*597, 100);
   
     if ((millis()-loadTimer)/2000>=1){

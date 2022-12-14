@@ -85,7 +85,7 @@ button:hover {
 }
 
 .planets-caption:after{
-  content:"PLANETS";
+  content:"VOLUME";
   position: absolute;
   font-family: 'Product Sans', sans-serif;
   font-size: 15px;
