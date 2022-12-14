@@ -106,11 +106,11 @@ function setup() {
   document.onmousedown   = function() { return false; }
   */
 
-  button1 = createButton('2D');     // creazione bottoni per switching 2D/3D
+  button1 = createButton('2d');     // creazione bottoni per switching 2D/3D
   button1.position(20, 20);
   
-  button2 = createButton('3D');
-  button2.position(20, 80);
+  button2 = createButton('3d');
+  button2.position(20, 100);
 
   button1.mouseClicked(set2d);      // clickando i bottoni si switchano gli stati della easycamera, dichiarati di seguito
   button2.mouseClicked(set3d);
@@ -138,7 +138,7 @@ function setup() {
   
  
   button3 = createButton('Play');
-  button3.position(windowWidth-90, 20);
+  button3.position(windowWidth-170, 20);
   button3.mouseClicked(function(){
     if(playIsOff){
       playSound(); 
