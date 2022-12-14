@@ -117,3 +117,12 @@ button:after {
     background-image: url('img/darkmoon.jpg');
     border: 2px solid rgb(0, 255, 183);
 }
+
+
+.myImages{
+    cursor:pointer;
+}
+
+.myImages:hover{
+    border: 2px solid rgb(151, 0, 215);
+}
