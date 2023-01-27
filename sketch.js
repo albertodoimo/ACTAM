@@ -19,28 +19,46 @@ let env2;
 let filter1;
 let filter2;
 let synths=[];
+let filters=[];
+let envelopes=[];
 let samples=[];
 let loops=[];
 let playIsOff=true;
 let bpm = 20;
 //1= MEASURE, 4=BEAT
 let planetRatios = [8, 7, 6, 5, 4, 3, 2, 1];
-let planetNotes = ["C2", "G2", "E3", "B3", "C4", "D4", "D4", "B4"];
-let planetNotesDuration = ["32n", "32n", "32n", "32n", "32n", "32n", "32n", "32n"];
-let s1, s2, s3, s4, amp4, amp2;
+/*
+let planetNotes = ["C2", "G2", "E3", "B3", "C4", "D4", "A4", "B4"];
+let planetNotes2 = ["C1", "G1", "E2", "B2", "C3", "D3", "A3", "B3"];
+*/
+let planetNotes = ["B4", "A4", "D4", "C4", "B3", "E3", "G2", "C2"];
+//let planetNotes2 = ["B3", "A3", "D3", "C3", "B2", "E2", "G1", "C1"];
 let lineWobble = 0;
 let wobbleArray = [];
 //ENVIRONMENT
 let border=10;
 let topBorder=100;
+let envWidth;
+let envHeight;
 let button=[];
 let loadTimer;
 let fontazzo;
 let numSelected=0;
-let environmentSelected=0;
+let pageStep=0;
 let environmentSelectedImg;
+//IMAGE PROCESSING
 let mean;
 let maximum;
+//SOUNDPAGE CONTROLS
+let soundPageChosenEnvButton;
+let soundPageModalScaleSelector;
+let soundPageWaveformSelector;
+let soundPageParam2;
+let soundPageParam3;
+let soundPageParam4;
+let soundPageParam5;
+let soundPageGoToDrumMachine;
+
 
 
 
@@ -50,7 +68,6 @@ function preload() {
   imgEarth = loadImage('img/plani.jpg');
   imgSun = loadImage('img/sun.jpg');
   imgMoon = loadImage('img/moon.jpg');
-  //imgSky = loadImage('img/bg.jpg');
   fontazzo=loadFont('img/Montserrat-Bold.ttf');
 
   for(i=0; i<8; i++){
@@ -69,8 +86,10 @@ function windowResized() {
 
 function setup() {
 
-    let envWidth = (windowWidth-4*border-topBorder)/3;
-    let envHeight =(windowHeight-4*border-topBorder)/3;
+  //SELECT ENVIRONMENT PAGE CONTROLS---------------------------------------------------------------
+  //-----------------------------------------------------------------------------------------------
+    envWidth = (windowWidth-4*border-topBorder)/3;
+    envHeight =(windowHeight-4*border-topBorder)/3;
 
     for(i=0; i<9; i++){
       button[i] = createImg('img/env/' + (i+1).toString(10) + '.jpg');
@@ -92,20 +111,14 @@ function setup() {
     console.log('audio is ready');
   })
 
-  
+  //CANVAS AND EASY CAM-------------------------------------------------------------------------------------------------------
+  //--------------------------------------------------------------------------------------------------------------------------
   createCanvas(windowWidth, windowHeight, WEBGL);
 
   frameRate(30);
   setAttributes('antialias', true);
   perspective(PI / 2, width / height, 0.1, 15000);
   textureWrap(CLAMP);
-
-  
-
-  /*
-  document.oncontextmenu = function() { return false; } // necessari per il controllo da mouse della camera
-  document.onmousedown   = function() { return false; }
-  */
 
   button1 = createButton('2D');     // creazione bottoni per switching 2D/3D
   button1.position(20, 20);
@@ -115,14 +128,6 @@ function setup() {
 
   button1.mouseClicked(set2d);      // clickando i bottoni si switchano gli stati della easycamera, dichiarati di seguito
   button2.mouseClicked(set3d);
-
-  /* function state() {
-    let stato;
-    stato = easycam.getState();
-    console.log(stato)
-  } */
-
-
 
   function set2d() {        // setter vista 2d
     easycam.setState(bi, 700)
@@ -134,72 +139,86 @@ function setup() {
     easycam.setState(tri, 700)
   }
 
-  //SOUND -----------------------------------------------------------------------------------------------------------------
+  //DRUM MACHINE CONTROLS -----------------------------------------------------------------------------------------------------------------
   //-----------------------------------------------------------------------------------------------------------------------
   
- 
   button3 = createButton('Play');
   button3.position(windowWidth-100, 20);
   button3.mouseClicked(function(){
     if(playIsOff){
-      playSound(); 
       playIsOff=false;
       button3.html("Stop");
     } 
     else{
-    stopSound();
     playIsOff=true;
     button3.html("Play");
     }
   });
 
-/*   for(i=0; i<1; i++){
-    samples[i] = new Tone.Player("samples/" + (i+1).toString(10) + ".wav").toDestination();
-  } */
-/* 
-s4 = new Tone.Synth({ 
-  oscillator : {
-    type : sine
-    } ,
-    envelope : {
-    attack : 0.001 ,
-    decay : 1.5 ,
-    sustain : 0.0,
-    release : 0.04
-    }
-})
- */
-  
-  //CONTROLS
   setNumPlanets = createSlider(1, 8, 8, 1);
   setNumPlanets.position(200, 40);
   setNumPlanets.addClass("mySliders");
   setNumPlanets.addClass("planets-caption");
 
   setBPM = createSlider(20, 70, 35, 5);
-  setBPM.position(400, 40);
+  setBPM.position(550, 40);
   setBPM.addClass("mySliders");
   setBPM.addClass("speed-caption");
 
-  /* oscChoice = createSelect();
-  oscChoice.position(600, 36);
-  oscChoice.option('fmsine');
-  oscChoice.option('sine');
-  oscChoice.option('sawtooth');
-  oscChoice.option('triangle');
-  oscChoice.option('square');
-  oscChoice.option('pwm');
-  oscChoice.option('pulse');
-  oscChoice.style('background-color', '#a229ff');
-  oscChoice.style('border-radius', '3px');
-  oscChoice.style('width', '150px'); */
-  //oscChoice.addClass("myDropDowns");
+  //soundPAGE CONTROLS------------------------------------------------------------------------
+  //------------------------------------------------------------------------------------------
+  soundPageChosenEnvButton = createImg('img/env/' + (1).toString(10) + '.jpg');
+
+  soundPageModalScaleSelector=createSelect();
+  soundPageModalScaleSelector.option('IONIAN');
+  soundPageModalScaleSelector.option('DORIAN');
+  soundPageModalScaleSelector.option('PHRYGIAN');
+  soundPageModalScaleSelector.option('LYDIAN');
+  soundPageModalScaleSelector.option('MIXOLYDIAN');
+  soundPageModalScaleSelector.option('AEOLIAN');
+  soundPageModalScaleSelector.option('LOCRIAN');
+  soundPageModalScaleSelector.position(windowWidth-350, 200);
+
+  soundPageWaveformSelector=createSelect();
+  soundPageWaveformSelector.option('SINE');
+  soundPageWaveformSelector.option('FMSINE');
+  soundPageWaveformSelector.option('SAWTOOTH');
+  soundPageWaveformSelector.option('TRIANGLE');
+  soundPageWaveformSelector.option('SQUARE');
+  soundPageWaveformSelector.option('PWM');
+  soundPageWaveformSelector.option('PULSE');
+  soundPageWaveformSelector.position(windowWidth-350, 250);
+
+  soundPageParam2=createSlider(1, 10, 5, 1);
+  soundPageParam2.position(windowWidth-450, 300);
+  soundPageParam2.addClass("mySliders");
+  soundPageParam2.addClass("delayTime-caption");
+
+  soundPageParam3=createSlider(1, 10, 5, 1);
+  soundPageParam3.position(windowWidth-450, 370);
+  soundPageParam3.addClass("mySliders");
+  soundPageParam3.addClass("delayAmount-caption");
+  
+  soundPageParam4=createSlider(1, 10, 5, 1);
+  soundPageParam4.position(windowWidth-450, 440);
+  soundPageParam4.addClass("mySliders");
+  soundPageParam4.addClass("reverbAmount-caption");
+  
+  soundPageParam5=createSlider(1, 10, 5, 1);
+  soundPageParam5.position(windowWidth-450, 510);
+  soundPageParam5.addClass("mySliders");
+  soundPageParam5.addClass("chordProgression-caption");
+  
+  soundPageGoToDrumMachine = createButton('DRUM MACHINE');
+  soundPageGoToDrumMachine.position(windowWidth-420, 580);
+  soundPageGoToDrumMachine.addClass("drumButton");
+
 }
 
 
 function draw() {
-  //_________________________________SELECT ENVIRONMENT WIEW_________________________________________________________
-  if(environmentSelected==0)
+  //_________________________________SELECT ENVIRONMENT PAGE_________________________________________________________
+  if(pageStep==0)
   {
 
     button1.hide();
@@ -208,13 +227,40 @@ function draw() {
     // oscChoice.hide();
     setNumPlanets.hide();
     setBPM.hide();
+    soundPageChosenEnvButton.hide();
+    soundPageModalScaleSelector.hide();
+    soundPageGoToDrumMachine.hide();
+    soundPageWaveformSelector.hide();
+    soundPageParam2.hide();
+    soundPageParam3.hide();
+    soundPageParam4.hide();
+    soundPageParam5.hide();
+
+    for(i=0; i<9; i++){
+      button[i].size(envWidth, envHeight);
+    }
+
+    button[0].position(border+topBorder/3.5, border+topBorder);
+    button[1].position(border+topBorder/3.5*2+envWidth, border+topBorder);
+    button[2].position(border+topBorder/3.5*3+envWidth*2, border+topBorder);
+    button[3].position(border+topBorder/3.5, border*2+envHeight+topBorder);
+    button[4].position(border+topBorder/3.5*2+envWidth, border*2+envHeight+topBorder);
+    button[5].position(border+topBorder/3.5*3+envWidth*2, border*2+envHeight+topBorder);
+    button[6].position(border+topBorder/3.5, border*3+envHeight*2+topBorder);
+    button[7].position(border+topBorder/3.5*2+envWidth, border*3+envHeight*2+topBorder);
+    button[8].position(border+topBorder/3.5*3+envWidth*2, border*3+envHeight*2+topBorder);
+    
+    for(i=0; i<9; i++){
+      button[i].show();
+    }
+
 
     push();
     background(20);
     fill(255);
     stroke(255);
     textFont(fontazzo);
-    textSize(42);
+    textSize(60);
     textAlign(CENTER);
     text('CHOOSE ENVIRONMENT', 0, -windowHeight/2-170);
     textSize(24);
@@ -227,93 +273,121 @@ function draw() {
         environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
         mean = getMeanMax()[0];
         maximum = getMeanMax()[1];
-        soundDesign();
-        loadTimer=millis();
-        environmentSelected=1;
+        pageStep=1;
       });
       button[1].mouseClicked(function(){
         numSelected=1;
         environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
         mean = getMeanMax()[0];
         maximum = getMeanMax()[1];
-        soundDesign();
-        loadTimer=millis();
-        environmentSelected=1;
+        pageStep=1;
       });
       button[2].mouseClicked(function(){
         numSelected=2;
         environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
         mean = getMeanMax()[0];
         maximum = getMeanMax()[1];
-        soundDesign();
-        loadTimer=millis();
-        environmentSelected=1;
+        pageStep=1;
       });
       button[3].mouseClicked(function(){
         numSelected=3;
         environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
         mean = getMeanMax()[0];
         maximum = getMeanMax()[1];  
-        soundDesign();  
-        loadTimer=millis();
-        environmentSelected=1;
+        pageStep=1;
       });
       button[4].mouseClicked(function(){
         numSelected=4;
          environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
         mean = getMeanMax()[0];
         maximum = getMeanMax()[1];
-        soundDesign();
-        loadTimer=millis();
-        environmentSelected=1;
+        pageStep=1;
       });
       button[5].mouseClicked(function(){
         numSelected=5;
         environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
         mean = getMeanMax()[0];
         maximum = getMeanMax()[1]; 
-        soundDesign(); 
-        loadTimer=millis();
-        environmentSelected=1;
+        pageStep=1;
       });
       button[6].mouseClicked(function(){
         numSelected=6;
          environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
         mean = getMeanMax()[0];
         maximum = getMeanMax()[1]; 
-        soundDesign();
-        loadTimer=millis();
-        environmentSelected=1;
+        pageStep=1;
       });
       button[7].mouseClicked(function(){
         numSelected=7;
         environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
         mean = getMeanMax()[0];
         maximum = getMeanMax()[1]; 
-        soundDesign();
-        loadTimer=millis();
-        environmentSelected=1;
+        pageStep=1;
       });
       button[8].mouseClicked(function(){
         numSelected=8;
         environmentSelectedImg=loadImage('img/env/' + (numSelected+1).toString(10) + '.jpg');
         mean = getMeanMax()[0];
         maximum = getMeanMax()[1]; 
-        soundDesign();
-        loadTimer=millis();
-        environmentSelected=1;
+        pageStep=1;
       });
 
     
     pop();
-  }//_________________________________________LOADING WIEW____________________________________________________________
-  else if (environmentSelected==1)
+  }//_________________________________SOUND DESIGN PAGE______________________________________________________________
+  else if (pageStep==1)
   {
-
+    push();
+    background(20);
+    stroke(255);
+    fill(255);
+    textSize(60);
+    textFont(fontazzo);
+    textAlign(CENTER);
+    text('THE ENVIRONMENT GENERATED THE FOLLOWING PARAMETERS', 0, -windowHeight/2-170);
+    textSize(24);
+    text('Adjust the parameters as you wish before continuing to the drum machine', 0, -windowHeight/2-110);
+    text('Click the image to change environment', -(envWidth*1.75/2), 360);
+    
     for(i=0; i<9; i++){
       button[i].hide();
     }
+  
+    soundPageGoToDrumMachine.show();
+    soundPageGoToDrumMachine.mouseClicked(function(){
+      soundDesign();
+      loadTimer=millis();
+      pageStep=2;
+    });
+
+    soundPageModalScaleSelector.show(); //MODAL SCALE
+    soundPageWaveformSelector.show(); //WAVEFORM
+    soundPageParam2.show(); //DELAY TIME
+    soundPageParam3.show(); //DELAY AMOUNT
+    soundPageParam4.show(); //REVERB AMOUNT
+    soundPageParam5.show(); //ENVELOPE RATIOS
+
+    soundPageChosenEnvButton=button[numSelected];
+    soundPageChosenEnvButton.size(envWidth*1.75, envHeight*1.75);
+    soundPageChosenEnvButton.position(100, 200);
+    soundPageChosenEnvButton.show();
+    soundPageChosenEnvButton.mouseClicked(function(){
+      pageStep=0;
+    });
     
+    pop();
+  }//_________________________________________LOADING PAGE____________________________________________________________
+  else if (pageStep==2)
+  {
+    soundPageModalScaleSelector.hide();
+    soundPageGoToDrumMachine.hide();
+    soundPageWaveformSelector.hide();
+    soundPageParam2.hide();
+    soundPageParam3.hide();
+    soundPageParam4.hide();
+    soundPageParam5.hide();
+
+    soundPageChosenEnvButton.hide();
     push();
     background(20);
     stroke(255);
@@ -332,7 +406,7 @@ function draw() {
     }
     
     stroke(255);
-    strokeWeight(8);
+    strokeWeight(5);
     noFill();
     rect(-300, windowHeight/2-500, 600, 100);
     noStroke();
@@ -345,13 +419,11 @@ function draw() {
       easycam.setState(tri);    // stato iniziale prospettico
       easycam.setDistanceMax(2900);
       easycam.setDistanceMin(200);
-      environmentSelected=2;
+      pageStep=3;
     }
     pop();
-  }
-  //__________________________________________SPACE WIEW______________________________________________________________
-  else if(environmentSelected==2)
-
+  }//__________________________________________SPACE PAGE______________________________________________________________
+  else if(pageStep==3)
   {
 
     button1.show();
@@ -363,8 +435,6 @@ function draw() {
 
     //BACKGROUND
     background(0,0,0,0);
-    //fill(255);
-    //stroke(255);
 
     //muro invisibile per limiti della sfera
     let currentDist = Math.sqrt((easycam.getPosition()[0])**2+ (easycam.getPosition()[1])**2+ (easycam.getPosition()[2])**2);
@@ -373,7 +443,6 @@ function draw() {
     } 
     else{}
 
-
     // SKYBOX
     push();
     noStroke();
@@ -381,7 +450,6 @@ function draw() {
     sphere(4000);
     pop();
 
-    
     //SOUNDLINE
     for(i=0; i<7; i++){
       lineWobble = lineWobble + wobbleArray[i];
@@ -413,7 +481,7 @@ function draw() {
         planet(100, 100, 0, 0.005, imgMoon, 15, 6);
         pop();
       }
-   if(!playIsOff){
+      if(!playIsOff){
         synths[i].volume.value=-12;
       }
       else{
@@ -429,8 +497,8 @@ function draw() {
 
     setBPM.changed(function(){
       Tone.Transport.bpm.value=setBPM.value();
-      //Tone.Transport.stop();
-      //Tone.Transport.start();
+      Tone.Transport.stop();
+      Tone.Transport.start();
     });
   }
 }
@@ -438,9 +506,8 @@ function draw() {
 
 function soundDesign(){
 
-
   reverb = new Tone.Reverb({
-    decay: 5,
+    decay: 10,
     wet: 0.6,
   });
   
@@ -449,37 +516,25 @@ function soundDesign(){
     feedback: 0.5, 
     wet: 0.3});
   
-  filter1 = new Tone.Filter(400, "lowpass");
-  filter2 = new Tone.Filter(400, "lowpass");
-  
-  env1 = new Tone.FrequencyEnvelope({
-		attack: "4n",
-		decay: "8n",
-        sustain: 0,
-        release: 0,
-        baseFrequency: "C0",
-	    octaves: 5,
-        attackCurve: "linear",
-	});
-  env2 = new Tone.FrequencyEnvelope({
-		attack: "2n",
-		decay: "2n",
-        sustain: 0,
-        release: 0,
-        baseFrequency: "C0",
-	    octaves: 6,
-        attackCurve: "sine",
-	});
-
-  env1.connect(filter1.frequency);
-  env2.connect(filter2.frequency);
-
-  console.log(mean);
-  console.log(maximum);
 
   for(i=0; i<8; i++){
-    synths[i] = new Tone.Synth({oscillator: {type : "fmsine"}}).toDestination();
-    synths[i].chain(filter1, reverb, pingpong, Tone.Destination);
+
+    filters[i] = new Tone.Filter(400, "lowpass");
+
+    envelopes[i] = new Tone.FrequencyEnvelope({
+      attack: (planetRatios[i]*2).toString()+"n",
+      decay: (planetRatios[i]*4).toString()+"n",
+          sustain: 0,
+          release: 0,
+          baseFrequency: "C0",
+          octaves: 7,
+          attackCurve: "sine",
+    });
+
+    envelopes[i].connect(filters[i].frequency);
+
+    synths[i] = new Tone.Synth({oscillator: {type : "sawtooth"}});
+    synths[i].chain(filters[i], reverb, pingpong, Tone.Destination);
     synths[i].volume.value=-100;
   }
 
@@ -501,32 +556,44 @@ function soundDesign(){
   }, planetRatios[2].toString()+"n").start(0);
    */
 
+  loops[0] = new Tone.Loop(time => {
+    synths[0].triggerAttackRelease(planetNotes[0], planetRatios[0].toString()+"n", time);
+    envelopes[0].triggerAttackRelease(planetRatios[0].toString()+"n", time);
+  }, planetRatios[0].toString()+"n").start(0);
+
   loops[1] = new Tone.Loop(time => {
-    synths[1].triggerAttackRelease(planetNotes[1], planetNotesDuration[1], time);
+    synths[1].triggerAttackRelease(planetNotes[1], planetRatios[1].toString()+"n", time);
+    envelopes[1].triggerAttackRelease(planetRatios[1].toString()+"n", time);
   }, planetRatios[1].toString()+"n").start(0);
 
   loops[2] = new Tone.Loop(time => {
-    synths[2].triggerAttackRelease(planetNotes[2], planetNotesDuration[2], time);
+    synths[2].triggerAttackRelease(planetNotes[2], planetRatios[2].toString()+"n", time);
+    envelopes[2].triggerAttackRelease(planetRatios[2].toString()+"n", time);
   }, planetRatios[2].toString()+"n").start(0);
 
   loops[3] = new Tone.Loop(time => {
-    synths[3].triggerAttackRelease(planetNotes[3], planetNotesDuration[3], time);
+    synths[3].triggerAttackRelease(planetNotes[3], planetRatios[3].toString()+"n", time);
+    envelopes[3].triggerAttackRelease(planetRatios[3].toString()+"n", time);
   }, planetRatios[3].toString()+"n").start(0);
 
   loops[4] = new Tone.Loop(time => {
-    synths[4].triggerAttackRelease(planetNotes[4], planetNotesDuration[4], time);
+    synths[4].triggerAttackRelease(planetNotes[4], planetRatios[4].toString()+"n", time);
+    envelopes[4].triggerAttackRelease(planetRatios[4].toString()+"n", time);
   }, planetRatios[4].toString()+"n").start(0);
 
   loops[5] = new Tone.Loop(time => {
-    synths[5].triggerAttackRelease(planetNotes[5], planetNotesDuration[5], time);
+    synths[5].triggerAttackRelease(planetNotes[5], planetRatios[5].toString()+"n", time);
+    envelopes[5].triggerAttackRelease(planetRatios[5].toString()+"n", time);
   }, planetRatios[5].toString()+"n").start(0);
 
   loops[6] = new Tone.Loop(time => {
-    synths[6].triggerAttackRelease(planetNotes[6], planetNotesDuration[6], time);
+    synths[6].triggerAttackRelease(planetNotes[6], planetRatios[6].toString()+"n", time);
+    envelopes[6].triggerAttackRelease(planetRatios[6].toString()+"n", time);
   }, planetRatios[6].toString()+"n").start(0);
 
   loops[7] = new Tone.Loop(time => {
-    synths[7].triggerAttackRelease(planetNotes[7], planetNotesDuration[7], time);
+    synths[7].triggerAttackRelease(planetNotes[7], planetRatios[7].toString()+"n", time);
+    envelopes[7].triggerAttackRelease(planetRatios[7].toString()+"n", time);
   }, planetRatios[7].toString()+"n").start(0);
 
 
@@ -534,6 +601,7 @@ function soundDesign(){
   Tone.Transport.start();
   Tone.Transport.bpm.value=bpm;
 }
+
 
 function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifier){
   push();
@@ -576,20 +644,6 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
     
   pop();
 
-}
-
-
-function playSound(){
-  for(i=0; i<8; i++){
-  synths[i].volume.value=-12;
-  }
-}
-
-
-function stopSound(){
-  for(i=0; i<8; i++){
-    synths[i].volume.value=-100;
-    }
 }
 
 
