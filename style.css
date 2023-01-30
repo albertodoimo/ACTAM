@@ -1,70 +1,297 @@
 * {
-	margin: 0;
-	padding: 0;
+    color: rgb(255, 255, 255);
+    margin: 0;
+    padding: 0;
+    font-family: 'Product Sans', sans-serif;
 	box-sizing: border-box;
 }
 
 body {
     overflow: hidden;
 }
-  
-button {
-    width: 70px;
-    height: 50px;
-    border-top: 0.5px solid rgb(255, 255, 255);
-    border-bottom: 0.5px solid rgb(255, 255, 255);
-    border-left: none;
-    border-right: none;
-    outline: none;
-    font-family: 'Product Sans', sans-serif;
-    font-size: 20px;
-    font-weight: bold;
+
+html {
+    scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+#starfield {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: -1;
+    background: rgb(0, 0, 0);
+    top: 0;
+    left: 0;
+}
+
+.title {
     color: rgb(255, 255, 255);
-    background: none;
-    cursor: pointer;
+    width: 50%;
+    margin: auto;
+    margin-top: 13vw;
+    padding-top: 2vw;
+    padding-bottom: 2vw;
+    text-align: center;
+    z-index: 333;
+}
+
+#main-title { 
+    font-size: 4.5vw;
+}
+
+#sec-title {
+    margin: 10px 0 40px;
+    font-size: 2vw;
+}
+
+.block {
+    --angle: 0deg;
+    background: black;
+    border: 2px solid;
+    border-image-slice: 5;
+    border-image-source: linear-gradient(var(--angle), #000000 0%, #000000 70%, #ffffff 70%, #ffffff 100%);
+    /* border-image-source: linear-gradient(var(--angle), rgba(0,0,0,1) 0%, rgba(0,0,0,1) 0%, rgb(255, 255, 255) 50%, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 0%); */
+    animation: 3s rotate linear infinite;
+}
+
+  @keyframes rotate {
+    to {
+      --angle: 360deg;
+    }
+  }
+
+  @property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+.btn {
+    display: inline-block;
+    margin-top: 1.7vw;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    background: rgb(0, 0, 0);
+    border: 1px solid rgb(255, 255, 255);
+    padding: 1vw 2vw;
     position: relative;
-    z-index: 0;
-    transition: 700ms;
+    cursor: pointer;
+    font-size: 1.5vw;
+    z-index: 2;
+    transition: 500ms;
 }
 
-button:hover {
-  border-top: 0.5px solid rgb(255, 255, 255);
-  border-bottom: 0.5px solid rgb(255, 255, 255);
-  border-left: none;
-  border-right: none;
-  background:rgba(255, 255, 255);
+.btn:hover {
+    color: rgb(0, 0, 0);
+    border: 1px solid rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
 }
 
-.drumButton{
-  width: 250px;
+#ambient-selection {
+    color: white;
+    width: 95%;
+    margin: auto;
+    margin-top: 30vw;
+    margin-bottom: 5vw;
+    text-align: center;
+    z-index: 998;
+    position: relative;
+    font-size: 1.5vw;
 }
 
-.mySliders{
-    width: 320px;
+#ambient-selection h1 {
+    padding-top: 2.5vw;
+    margin-bottom: 1vw;
+}
+
+#ambient-selection p {
+    text-align: center;
+    margin-bottom: 5vh;
+}
+
+.row {
+    margin-top: 1%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.col {
+    flex-basis: 32%;
+    margin: 1%;
+    margin-bottom: 0.5%;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255, 0.318);
+    transition: 1s;
+}
+
+.col img {
+    width: 100%;
+    display: block;
+}
+
+.col:hover {
+    box-shadow: 0 0 20px 0px rgba(0, 0, 0, 0.2);
+    transition: 0.5s;
+    cursor: pointer;
+    border: 2px solid white;
+}
+
+.layer {
+    background: rgba(255, 255, 255, 0.1);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: 0.5s;
+}
+
+.layer:hover {
+    background: transparent;
+    cursor: pointer;
+}
+
+.home-btn {
+    position: absolute;
+    top: 80%;
+    left: 90%;
+    color: #ffffff;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: #d8ccee 1px 0 10px;
+    height: 6vw;
+    width: 6vw;
+    border: solid 1px #ffffff;
+    border-radius: 175px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: 1s;
+    cursor: pointer;
+    z-index: 999;
+    background-color: #000000;
+  }
+
+  #ahead {
+    top: 80%;
+    left: 83%;
+  }
+
+  .home-btn:before {
+    content: '';
+    position: absolute;
+    background: #ffffff;
+    width: 0;
+    height: 0;
+    z-index: -1;
+    border-radius: 175px;
+    box-shadow: 0px 0px 24px 1px rgba(224,199,224,0.2);
+    transition: all 500ms cubic-bezier(1.000, -0.195, 0.000, 1.330);
+    transition-timing-function: cubic-bezier(1.000, -0.195, 0.000, 1.330);
+  }
+  
+  .home-btn:hover {
+    color: black;
+    transition: 1s;
+  }
+
+  .home-btn:hover:before {
+    width: 85%;
+    height: 85%;
+  }
+  
+  .home-btn:active:before, .btn:focus:before {
+    width: 100%;
+    height: 100%;
+  }
+
+/* .layer h3 {
+    width: 100%;
+    font-weight: 500;
+    color: white;
+    font-size: 26px;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%);
+    position: absolute;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.layer:hover h3 {
+    bottom: 49%;
+    opacity: 1;
+} */
+
+.img-container {
+    width: 50%;
+    margin: 2%;
+    margin-left: 7%;
+    margin-top: 1.6px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(255, 255, 255);
+    transition: 1s;
+    float: left;
+}
+
+#imageBox {
+    width: 100%;
+    display: block;
+}
+
+#param {
+    margin-left: 60%;
+    margin-top: 4%;
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-bottom: 30px;
+    width: 24%;
+    height: 50%;
+    --angle: 0deg;
+    background: black;
+    border: 2px solid white;
+    border-image-slice: 5;
+    border-image-source: linear-gradient(var(--angle), #000000 0%, #000000 70%, #ffffff 70%, #ffffff 100%);
+    animation: 3s rotate linear infinite;
+}
+
+#param h1 {
+    font-size: 3vw;
+    margin-bottom: 2vw;
+}
+
+.slider{
+    width: 19.5vw;
     background-color: transparent;
     /* Removes some defaults */
     -webkit-appearance: none;
 }
 
-/* This is the "track" that the slider sits on  */
-.mySliders::-webkit-slider-runnable-track {
+.slider::-webkit-slider-runnable-track {
     background: none;
     border: 1px solid white;
-    height: 13px;
-    border-radius: 6.5px;
+    height: 1vw;
+    border-radius: 8px;
     -webkit-appearance: none;
-    cursor: pointer;
     transition: 500ms;
 }
 
-.mySliders::-webkit-slider-runnable-track:hover {
-  background-color: rgba(255, 255, 255);
+.slider::-webkit-slider-thumb:hover {
+    box-shadow: 0px 0px 0px 7px rgba(255, 255, 255, 0.578);
+
 }
 
-/* This is the moveable bit of the slider, known as the "thumb" */
-.mySliders::-webkit-slider-thumb {
-    width: 9px;
-    height: 9px;
+.slider::-webkit-slider-thumb {
+    width: 0.7vw;
+    height: 0.7vw;
     background-color: white;
     cursor: pointer;
     -webkit-appearance: none;
@@ -73,80 +300,16 @@ button:hover {
     margin-right: 1px;
     border-radius: 50%;
     transition: 500ms;
+    transform: translate(0, 0.5px);
 }
 
-.speed-caption:after{
-  content:"SPEED";
-  position: absolute;
-  font-family: 'Product Sans', sans-serif;
-  font-size: 15px;
-  color: white;
-  top: 20px;
-  left: 50%;
-  transform: translate(-50%);
+.output {
+    margin-left: 10px;
+    font-size: 18px;
 }
 
-.planets-caption:after{
-  content:"VOLUME";
-  position: absolute;
-  font-family: 'Product Sans', sans-serif;
-  font-size: 15px;
-  color: white;
-  top: 20px;
-  left: 50%;
-  transform: translate(-50%);
-}
-
-.delayTime-caption:after{
-  content:"DELAY TIME";
-  position: absolute;
-  font-family: 'Product Sans', sans-serif;
-  font-size: 15px;
-  color: white;
-  top: 20px;
-  left: 50%;
-  transform: translate(-50%);
-}
-
-.delayAmount-caption:after{
-  content:"DELAY AMOUNT";
-  position: absolute;
-  font-family: 'Product Sans', sans-serif;
-  font-size: 15px;
-  color: white;
-  top: 20px;
-  left: 50%;
-  transform: translate(-50%);
-}
-
-.reverbAmount-caption:after{
-  content:"REVERB AMOUNT";
-  position: absolute;
-  font-family: 'Product Sans', sans-serif;
-  font-size: 15px;
-  color: white;
-  top: 20px;
-  left: 50%;
-  transform: translate(-50%);
-}
-
-.chordProgression-caption:after{
-  content:"CHORD PROGRESSION";
-  position: absolute;
-  font-family: 'Product Sans', sans-serif;
-  font-size: 15px;
-  color: white;
-  top: 20px;
-  left: 50%;
-  transform: translate(-50%);
-}
-
-.myImages{
-    cursor:pointer;
-    border: 2px solid rgb(0, 0, 0);
-    transition: 300ms;
-}
-
-.myImages:hover{
-    border: 2px solid rgb(255, 255, 255);
+.wrapper h3{
+    font-size: 1.6vw;
+    margin-top: 15px;
+    margin-bottom: 10px;
 }

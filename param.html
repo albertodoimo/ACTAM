@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="Images/icon.png" type="image/png">
+    <link href="https://fonts.cdnfonts.com/css/product-sans" rel="stylesheet">
+    <style>@import url('https://fonts.cdnfonts.com/css/product-sans');</style>
+    <title>Sound Settings</title>
+</head>
+
+<body>
+    <div>
+        <canvas id="starfield"></canvas>
+    </div>
+
+    <div class="img-container">
+        <img id="imageBox">
+    </div>
+    <div id="param">
+        <h1>Sound Settings</h1>
+        <div class="wrapper">
+            <h3>Delay Time</h3>
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value"><output class="output">50</output>
+        </div>
+
+        <div class="wrapper">
+            <h3>Delay Amount</h3>
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value"><output class="output">50</output>
+        </div>
+        
+        <div class="wrapper">
+            <h3>Reverb</h3>
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value"><output class="output">50</output>
+        </div>
+        
+        <div class="wrapper">
+            <h3>Progression</h3>
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value"><output class="output">50</output>
+        </div>
+    
+    </div>
+
+    <a onclick="window.location.href='drum.html'" id="ahead" class="home-btn">VàMOS</a>
+    <a onclick="window.location.href='http://127.0.0.1:5501/index.html#ambient-selection'" id="back" class="home-btn">BACK</a>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script src="param.js"></script>
+    <script>
+        function resize(){    
+          $("#starfield").outerHeight($(window).height()-$("#starfield").offset().top- Math.abs($("#starfield").outerHeight(true) - $("#starfield").outerHeight()));
+        }
+        $(document).ready(function(){
+          resize();
+          $(window).on("resize", function(){                      
+              resize();
+          });
+        });
+    </script>
+
+</body>
+
+</html>

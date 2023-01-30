@@ -1,25 +1,104 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="img/icon.png" type="image/png">
-  <link href="https://fonts.cdnfonts.com/css/product-sans" rel="stylesheet">
-  <style>
-    @import url('https://fonts.cdnfonts.com/css/product-sans');
-</style>
-  <title>PROVA</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="P5/p5.js"></script>
-  <script src="P5/p5.easycam.js"></script>
-  <script src="Tone/Tone.js"></script>
-  <script src="Tone/Tone.js.map"></script>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="Images/icon.png" type="image/png">
+    <link href="https://fonts.cdnfonts.com/css/product-sans" rel="stylesheet">
+    <style>@import url('https://fonts.cdnfonts.com/css/product-sans');</style>
+    <title>The Sound of Space</title>
 </head>
 
 <body>
-  
-  <script src="sketch.js"></script>
+    <div>
+        <canvas id="starfield"></canvas>
+    </div>
+
+    <div class="title block">
+        <h1 id="main-title">The Sound of Space</h1>
+        <h3 id="sec-title">ACTAM Project - Generative Music</h3>
+        <a href="#ambient-selection" class="btn">LET'S START</a>
+    </div>
+
+    <div style="position: absolute; left: 90.5%; top: 145%;">
+        <a href="#top" class="home-btn">BACK</a>
+    </div>
+    
+    <div id="ambient-selection">
+        <h1>Ambient Selection</h1>
+        <p> The selected image will affect the soundscape</p>
+    
+    <div class="row">
+        <div id="1" class="col" onclick="ambient(this.id)">
+            <img id="1" onclick="" src="Images/env/1.jpg">
+            <div class="layer">
+                <!-- <h3>1</h3> -->
+            </div>
+        </div>
+        <div id="2" class="col" onclick="ambient(this.id)">
+            <img id="2" onclick="" src="Images/env/2.jpg">
+            <div class="layer">
+                <!-- <h3>2</h3> -->
+            </div>
+        </div>
+        <div id="3" class="col" onclick="ambient(this.id)">
+            <img id="3" onclick="" src="Images/env/3.jpg">
+            <div class="layer">
+                <!-- <h3>3</h3> -->
+            </div>
+        </div>
+        <div id="4" class="col" onclick="ambient(this.id)">
+            <img id="4" onclick="" src="Images/env/4.jpg">
+            <div class="layer">
+                <!-- <h3>1</h3> -->
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="5" class="col" onclick="ambient(this.id)">
+            <img id="5" onclick="" src="Images/env/5.jpg">
+            <div class="layer">
+                <!-- <h3>2</h3> -->
+            </div>
+        </div>
+        <div id="6" class="col" onclick="ambient(this.id)">
+            <img id="6" onclick="" src="Images/env/6.jpg">
+            <div class="layer">
+                <!-- <h3>3</h3> -->
+            </div>
+        </div>
+        <div id="7" class="col" onclick="ambient(this.id)">
+            <img id="7" onclick="" src="Images/env/7.jpg">
+            <div class="layer">
+                <!-- <h3>1</h3> -->
+            </div>
+        </div>
+        <div id="8" class="col" onclick="ambient(this.id)">
+            <img id="8" onclick="" src="Images/env/8.jpg">
+            <div class="layer">
+                <!-- <h3>2</h3> -->
+            </div>
+        </div>
+    </div>
+    
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script src="main.js"></script>
+    <script>
+        function resize(){    
+          $("#starfield").outerHeight($(window).height()-$("#starfield").offset().top- Math.abs($("#starfield").outerHeight(true) - $("#starfield").outerHeight()));
+        }
+        $(document).ready(function(){
+          resize();
+          $(window).on("resize", function(){                      
+              resize();
+          });
+        });
+    </script>
 
 </body>
 
