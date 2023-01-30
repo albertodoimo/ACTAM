@@ -35,3 +35,49 @@ for (var i = 0; i < stars; i++) {
 
 // Import image
 document.getElementById('imageBox').src = environment.toString();
+
+// AVERAGE IMAGE COLOR
+let img;
+
+let avgRed = 0;
+let avgGreen = 0;
+let avgBlue = 0;
+
+// Load the image
+function preload() {
+    img = loadImage(environment);
+}
+
+function setup() {
+  
+    // Load the pixels
+    img.loadPixels();
+  
+    // Loop through the pixels X and Y
+    for (let y = 0; y < img.height; y++) {
+      for (let x = 0; x < img.width; x++) {
+  
+        // Calculate the pixel index
+        const index = (y * img.width + x) * 4;
+  
+        // Sum the red, green, and blue values
+        avgRed += img.pixels[index + 0];
+        avgGreen += img.pixels[index + 1];
+        avgBlue += img.pixels[index + 2];
+  
+      }
+    }
+  
+    // We're finished working with pixels so update them
+    img.updatePixels();
+  
+    // Get the total number of pixels
+    // Divide by 4 because the total number of pixels = pixels * numColorChannels 
+    const numPixels = img.pixels.length / 4;
+  
+    // divide the totals by the number of pixels to find the average.
+    avgRed /= numPixels;
+    avgGreen /= numPixels;
+    avgBlue /= numPixels;
+  }
+

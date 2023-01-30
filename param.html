@@ -44,10 +44,13 @@
     </div>
 
     <a onclick="window.location.href='drum.html'" id="ahead" class="home-btn">VàMOS</a>
-    <a onclick="window.location.href='http://127.0.0.1:5501/index.html#ambient-selection'" id="back" class="home-btn">BACK</a>
+    <a onclick="window.location.href='index.html#ambient-selection'" id="back" class="home-btn">BACK</a>
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="param.js"></script>
+    <script src="Libraries/P5/p5.js"></script>
+    <script src="Libraries/P5/p5.easycam.js"></script>
+    <script src="Libraries/Tone/Tone.js"></script>
     <script>
         function resize(){    
           $("#starfield").outerHeight($(window).height()-$("#starfield").offset().top- Math.abs($("#starfield").outerHeight(true) - $("#starfield").outerHeight()));
