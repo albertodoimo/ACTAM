@@ -12,16 +12,19 @@
 </head>
 
 <body>
-    <div>
-        <canvas id="starfield"></canvas>
-    </div>
 
     <div class="img-container">
         <img id="imageBox">
     </div>
     <div id="param">
-        <h1>Sound Settings</h1>
-        <div class="wrapper">
+        <h1>Soundscape</h1>
+        <p>A detailed explanation of each parameter is given below.</p>
+        <div class="sided">
+            <canvas id="color"></canvas>
+            <div class="caption">Average <br> Color</div>
+        </div>
+
+        <!-- <div class="wrapper">
             <h3>Delay Time</h3>
             <input type="range" min="1" max="100" value="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value"><output class="output">50</output>
         </div>
@@ -39,7 +42,7 @@
         <div class="wrapper">
             <h3>Progression</h3>
             <input type="range" min="1" max="100" value="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value"><output class="output">50</output>
-        </div>
+        </div> -->
     
     </div>
 
@@ -50,7 +53,6 @@
     <script src="param.js"></script>
     <script src="Libraries/P5/p5.js"></script>
     <script src="Libraries/P5/p5.easycam.js"></script>
-    <script src="Libraries/Tone/Tone.js"></script>
     <script>
         function resize(){    
           $("#starfield").outerHeight($(window).height()-$("#starfield").offset().top- Math.abs($("#starfield").outerHeight(true) - $("#starfield").outerHeight()));

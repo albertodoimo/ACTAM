@@ -18,6 +18,10 @@ html {
     display: none; 
 }
 
+canvas {
+    position: fixed;
+}
+
 #starfield {
     width: 100%;
     height: 100%;
@@ -231,7 +235,7 @@ html {
 } */
 
 .img-container {
-    width: 50%;
+    width: 40%;
     margin: 2%;
     margin-left: 7%;
     margin-top: 1.6px;
@@ -250,9 +254,7 @@ html {
 #param {
     margin-left: 60%;
     margin-top: 4%;
-    padding-top: 10px;
-    padding-left: 20px;
-    padding-bottom: 30px;
+    padding: 20px;
     width: 24%;
     height: 50%;
     --angle: 0deg;
@@ -265,8 +267,31 @@ html {
 
 #param h1 {
     font-size: 3vw;
-    margin-bottom: 2vw;
 }
+
+#param p {
+    margin-top: 10px;
+    margin-bottom: 2vw;
+    font-size: 3ex;
+}
+
+#color {
+    width: 4vw;
+    height: 4vw;
+    border: 2px solid white;
+    z-index: 1000;
+    float: left;
+}
+
+.sided {
+}
+
+.caption {
+    font-size: 25px;
+    margin-left: 5%;
+}
+
+
 
 .slider{
     width: 19.5vw;
@@ -313,3 +338,4 @@ html {
     margin-top: 15px;
     margin-bottom: 10px;
 }
+
