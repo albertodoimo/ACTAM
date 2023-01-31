@@ -1,5 +1,23 @@
 var environment = localStorage.getItem("environment");
 
+var c = document.getElementById("imageBox");
+var ctx = c.getContext("2d");
+var image = new Image();
+image.onload = function() {
+  c.height = image.height/3.5;
+  c.width = image.width/3.5;
+  ctx.drawImage(image, 0, 0, image.width/3.5, image.height/3.5);
+}
+image.src = environment.toString();
+
+
+
+
+
+
+
+
+
 let stars = [];
 let speed;
   
@@ -54,8 +72,7 @@ function setup() {
     }
   }
 
-// Import image
-document.getElementById('imageBox').src = environment.toString();
+
 
 /* // AVERAGE IMAGE COLOR
 let img;
