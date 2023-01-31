@@ -1,5 +1,7 @@
+// Retrieving selected image path from local storage
 var environment = localStorage.getItem("environment");
 
+// Loading selected image in HTML canvas element + subsequent resizing 
 var c = document.getElementById("imageBox");
 var ctx = c.getContext("2d");
 var image = new Image();
@@ -10,10 +12,73 @@ image.onload = function() {
 }
 image.src = environment.toString();
 
+// Image color processing ===> extracting a COLOR PALETTE from the image
+const imageData = ctx.getImageData(0, 0, c.width, c.height);
 
+// Looping on the imageData array to extract the rgb value of each pixel in a more readable way
+const buildRgb = (imageData) => {
+  const rgbValues = [];
+  for (let i = 0; i < imageData.length; i += 4) {
+    const rgb = {
+      r: imageData[i],
+      g: imageData[i + 1],
+      b: imageData[i + 2],
+    };
+    rgbValues.push(rgb);
+  }
+  return rgbValues;
+};
 
+/* 
 
+MEDIAN CUT Algorithm:
 
+After building the rgb colors array we need to somehow know which colors are the most representative of the image, to obtain this we use color quantization.
+To achieve color quantization we are gonna use an algorithm called median-cut, the process is the following:
+
+    1. Find the color channel (red, green or blue) in the image with the biggest range.
+    2. Sort pixels by that channel.
+    3. Divide the list in half.
+    4. Repeat the process for each half until you have the desired number of colors.
+
+*/
+
+const findBiggestColorRange = (rgbValues) => {
+  let rMin = Number.MAX_VALUE;
+  let gMin = Number.MAX_VALUE;
+  let bMin = Number.MAX_VALUE;
+
+  let rMax = Number.MIN_VALUE;
+  let gMax = Number.MIN_VALUE;
+  let bMax = Number.MIN_VALUE;
+
+  rgbValues.forEach((pixel) => {
+    rMin = Math.min(rMin, pixel.r);
+    gMin = Math.min(gMin, pixel.g);
+    bMin = Math.min(bMin, pixel.b);
+
+    rMax = Math.max(rMax, pixel.r);
+    gMax = Math.max(gMax, pixel.g);
+    bMax = Math.max(bMax, pixel.b);
+  });
+
+  const rRange = rMax - rMin;
+  const gRange = gMax - gMin;
+  const bRange = bMax - bMin;
+
+  const biggestRange = Math.max(rRange, gRange, bRange);
+  if (biggestRange === rRange) {
+    return "r";
+  } else if (biggestRange === gRange) {
+    return "g";
+  } else {
+    return "b";
+  }
+};
+
+const quantization = (rgbValues, depth) => {
+
+}
 
 
 
