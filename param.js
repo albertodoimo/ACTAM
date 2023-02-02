@@ -12,7 +12,6 @@ const buildPalette = (colorsList) => {
   paletteContainer.innerHTML = "";
 
   const orderedByColor = orderByLuminance(colorsList);
-  const hslColors = convertRGBtoHSL(orderedByColor);
 
   for (let i = 0; i < orderedByColor.length; i++) {
     const hexColor = rgbToHex(orderedByColor[i]);
@@ -52,6 +51,8 @@ const rgbToHex = (pixel) => {
   ).toUpperCase();
 };
 
+
+
 /** 
  * ? Convert HSL to Hex
  * this entire formula can be found in stackoverflow, credits to @icl7126 !!!
@@ -71,6 +72,8 @@ const hslToHex = (hslColor) => {
   };
   return `#${f(0)}${f(8)}${f(4)}`.toUpperCase();
 };
+
+
 
 /**
  * ! Convert RGB values to HSL
@@ -135,6 +138,8 @@ const convertRGBtoHSL = (rgbValues) => {
     };
   });
 };
+
+
 
 /**
  * * Using relative luminance we sort the colors in order of brightness
@@ -222,6 +227,8 @@ const findBiggestColorRange = (rgbValues) => {
   }
 };
 
+
+
 /* 
 
 ! MEDIAN CUT Algorithm:
@@ -279,20 +286,59 @@ const quantization = (rgbValues, depth) => {
 
 }
 
+//? KEY COLORS
+var dict = {
+  C : [255, 0, 0],
+  G : [250, 120, 0],
+  D : [250, 250, 0],
+  A : [0, 255, 0],
+  E : [190, 255, 255],
+  B : [50, 190, 250],
+  G_b : [110, 60, 250],
+  D_b : [160, 0, 255],
+  A_b : [200, 125, 250],
+  E_b : [255, 0, 0],
+  B_b: [150, 80, 120],
+  F: [100, 0, 0],
+};
+
+Color.defaults.deltaE = "2000";
+
+const computeKey = (rgb) => {
+  let color1 = new Color("srgb", rgb);
+  let color2 = new Color("srgb", dict.C);
+  let min = Color.deltaE(color1, color2);
+  let key;
+
+  for (let k in dict) {
+    color2 = new Color("srgb", dict.k);
+    diff = Color.deltaE(color1, color2);
+    if (diff < min) key = k;
+  }
+
+  return key;
+};
+
+
+
 // Loading selected image in HTML canvas element + subsequent resizing 
 var c = document.getElementById("imageBox");
 var ctx = c.getContext("2d");
-var image = new Image();
-image.onload = function() {
-  c.height = image.height/3.5;
-  c.width = image.width/3.5;
-  ctx.drawImage(image, 0, 0, image.width/3.5, image.height/3.5);
-  /**
+var img = new Image();
+
+
+img.onload = function() {
+  c.height = img.height/3.5;
+  c.width = img.width/3.5;
+  ctx.drawImage(img, 0, 0, img.width/3.5, img.height/3.5);
+
+  /* *
        * getImageData returns an array full of RGBA values
        * each pixel consists of four values: the red value of the colour, the green, the blue and the alpha
        * (transparency). For array value consistency reasons,
        * the alpha is not from 0 to 1 like it is in the RGBA of CSS, but from 0 to 255.
-       */
+  */
+
   const imageData = ctx.getImageData(0, 0, c.width, c.height);
 
   // Convert the image data to RGB values so its much simpler
@@ -307,11 +353,18 @@ image.onload = function() {
 
   // Create the HTML structure to show the color palette
   buildPalette(quantColors);
+
+  
+  const fac = new FastAverageColor();
+  avg = fac.getColor(img);
+  avg = [avg.value[0], avg.value[1], avg.value[2]];
+  console.log(avg);
+
+  console.log(computeKey(avg));
+
 }
-image.src = environment.toString();
 
-
-
+img.src = environment.toString();
 
 /*
  * getImageData returns an array full of RGBA values
@@ -338,27 +391,10 @@ buildPalette(quantColors);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* BACKGROUND -------------------------------------------------------------------------------------------------------------- */
 
 let stars = [];
-let speed;
+let sp;
   
 function setup() {
     var canvas = createCanvas(windowWidth, Math.max(document.body.scrollHeight, document.documentElement.scrollHeight
@@ -372,7 +408,7 @@ function setup() {
   
   function draw() {
     background(0);
-    speed = map(mouseX, 0, width, 0,15);
+    sp = map(mouseX, 0, width, 0,15);
     translate(width/2, height/2);
     for (let i = 0; i < stars.length; i++) { 
       stars[i].update();
@@ -389,7 +425,7 @@ function setup() {
     }
     
     update() {
-      this.z = this.z - speed;
+      this.z = this.z - sp;
   
       if (this.z < 1) {
         this.z = width;
