@@ -90,17 +90,6 @@
 
     <script src="Libraries/P5/p5.js"></script>
     <script src="main.js"></script>
-    <script>
-        function resize(){    
-          $("#starfield").outerHeight($(window).height()-$("#starfield").offset().top- Math.abs($("#starfield").outerHeight(true) - $("#starfield").outerHeight()));
-        }
-        $(document).ready(function(){
-          resize();
-          $(window).on("resize", function(){                      
-              resize();
-          });
-        });
-    </script>
 
 </body>
 
