@@ -317,7 +317,7 @@ const quantization = (rgbValues, depth) => {
     ...quantization(rgbValues.slice(mid + 1), depth + 1),
   ];
 
-}
+};
 
 const computeKey = (avg) => {
   let color1 = new Color({space: "srgb", coords: [avg[0], avg[1], avg[2]]});
@@ -330,11 +330,12 @@ const computeKey = (avg) => {
     diff = color1.deltaE2000(value);
     if (diff < min) {
       color_key = key;
+      reference = value.coords;
       min = diff;
     }
-  }
+  };
 
-  return color_key;
+  return [color_key, reference];
 };
 
 
@@ -385,8 +386,9 @@ img.onload = function() {
   colorElement.appendChild(document.createTextNode("AVERAGE"));
   paletteContainer.appendChild(colorElement);
 
-  console.log(avg);
-  console.log(computeKey(avg));
+  document.getElementById("key").textContent = computeKey(avg)[0].toString();
+  document.getElementById("key").style.color = "rgba(" + computeKey(avg)[1][0].toString() + ", " + computeKey(avg)[1][1].toString() + ", " + computeKey(avg)[1][2].toString() + ")";
+
 
 }
 

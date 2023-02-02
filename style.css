@@ -272,12 +272,13 @@ img {
 }
 
 #key {
-   margin: 1.5vw; 
+   margin: 1.5vw;
+   font-size: 3vw;
 }
 
 #key-container {
     text-align: center;
-    margin: 1vw;
+    margin: 2vw;
 }
 
 #color {
