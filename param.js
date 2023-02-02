@@ -24,15 +24,14 @@ var dict = {
   A: la,
   E: mi,
   B: si,
-  G_b: sol_b,
-  D_b: re_b,
-  A_b: la_b,
-  E_b: mi_b,
-  B_b: si_b,
+  Gb: sol_b,
+  Db: re_b,
+  Ab: la_b,
+  Eb: mi_b,
+  Bb: si_b,
   F: fa,
 };
 
-Color.defaults.deltaE = "2000";
 
 //! PALETTE EXTRACTION ------------------------------------------------------------------------------------------ //
 
@@ -324,10 +323,15 @@ const computeKey = (avg) => {
   let color1 = new Color({space: "srgb", coords: [avg[0], avg[1], avg[2]]});
   let min = color1.deltaE2000(dict.C);
   let color_key;
+  let diff = [];
+  let i = 0;
 
   for (const [key, value] of Object.entries(dict)) {
     diff = color1.deltaE2000(value);
-    if (diff < min) color_key = key;
+    if (diff < min) {
+      color_key = key;
+      min = diff;
+    }
   }
 
   return color_key;
@@ -345,6 +349,7 @@ img.onload = function() {
   c.height = img.height/3.5;
   c.width = img.width/3.5;
   ctx.drawImage(img, 0, 0, img.width/3.5, img.height/3.5);
+  ctx.imageSmoothingEnabled = false;
 
   /* *
        * getImageData returns an array full of RGBA values
@@ -457,6 +462,7 @@ function setup() {
     }
     
     show() {
+      // fill(255, 255, 150, 170);
       fill(255);
       noStroke();
       

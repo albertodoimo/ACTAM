@@ -251,8 +251,12 @@ img {
 #imageBox {
     z-index: 999;
     margin-top: 3%;
-    margin-left: 61%;
+    margin-left: 59%;
     border: 2px solid white;
+}
+
+#imageBox canvas {
+    object-fit: cover;
 }
 
 .container {
@@ -261,6 +265,19 @@ img {
 
 .container canvas, #param {
     position: absolute;
+}
+
+#param h2 {
+    display: inline;
+}
+
+#key {
+   margin: 1.5vw; 
+}
+
+#key-container {
+    text-align: center;
+    margin: 1vw;
 }
 
 #color {

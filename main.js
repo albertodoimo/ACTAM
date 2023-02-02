@@ -75,6 +75,7 @@ function setup() {
     }
     
     show() {
+      // fill(255, 255, 150, 170);
       fill(255);
       noStroke();
       
