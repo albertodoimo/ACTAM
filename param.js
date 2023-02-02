@@ -1,6 +1,39 @@
 // Retrieving selected image path from local storage
 var environment = localStorage.getItem("environment");
 
+//? KEY COLORS
+
+var ut = new Color("srgb", [255, 0, 0]);
+var sol = new Color("srgb", [250, 120, 0]);
+var re = new Color("srgb", [250, 250, 0]);
+var la = new Color("srgb", [0, 255, 0]);
+var mi = new Color("srgb", [190, 255, 255]);
+var si = new Color("srgb", [50, 190, 250]);
+var sol_b = new Color("srgb", [110, 60, 250]);
+var re_b = new Color("srgb", [160, 0, 255]);
+var la_b = new Color("srgb", [200, 125, 250]);
+var mi_b = new Color("srgb", [255, 0, 0]);
+var si_b = new Color("srgb",[150, 80, 120]);
+var fa = new Color("srgb", [100, 0, 0]);
+
+
+var dict = {
+  C: ut,
+  G: sol,
+  D: re,
+  A: la,
+  E: mi,
+  B: si,
+  G_b: sol_b,
+  D_b: re_b,
+  A_b: la_b,
+  E_b: mi_b,
+  B_b: si_b,
+  F: fa,
+};
+
+Color.defaults.deltaE = "2000";
+
 //! PALETTE EXTRACTION ------------------------------------------------------------------------------------------ //
 
 //* PALETTE building
@@ -34,6 +67,7 @@ const buildPalette = (colorsList) => {
     colorElement.appendChild(document.createTextNode(hexColor));
     paletteContainer.appendChild(colorElement);
   }
+  
 };
 
 //  Convert each pixel value ( number ) to hexadecimal ( string ) with base 16
@@ -286,37 +320,17 @@ const quantization = (rgbValues, depth) => {
 
 }
 
-//? KEY COLORS
-var dict = {
-  C : [255, 0, 0],
-  G : [250, 120, 0],
-  D : [250, 250, 0],
-  A : [0, 255, 0],
-  E : [190, 255, 255],
-  B : [50, 190, 250],
-  G_b : [110, 60, 250],
-  D_b : [160, 0, 255],
-  A_b : [200, 125, 250],
-  E_b : [255, 0, 0],
-  B_b: [150, 80, 120],
-  F: [100, 0, 0],
-};
+const computeKey = (avg) => {
+  let color1 = new Color({space: "srgb", coords: [avg[0], avg[1], avg[2]]});
+  let min = color1.deltaE2000(dict.C);
+  let color_key;
 
-Color.defaults.deltaE = "2000";
-
-const computeKey = (rgb) => {
-  let color1 = new Color("srgb", rgb);
-  let color2 = new Color("srgb", dict.C);
-  let min = Color.deltaE(color1, color2);
-  let key;
-
-  for (let k in dict) {
-    color2 = new Color("srgb", dict.k);
-    diff = Color.deltaE(color1, color2);
-    if (diff < min) key = k;
+  for (const [key, value] of Object.entries(dict)) {
+    diff = color1.deltaE2000(value);
+    if (diff < min) color_key = key;
   }
 
-  return key;
+  return color_key;
 };
 
 
@@ -358,8 +372,15 @@ img.onload = function() {
   const fac = new FastAverageColor();
   avg = fac.getColor(img);
   avg = [avg.value[0], avg.value[1], avg.value[2]];
-  console.log(avg);
 
+  const paletteContainer = document.getElementById("palette");
+  const colorElement = document.createElement("div");
+  colorElement.style.backgroundColor = "rgba(" + avg[0].toString() + ", " + avg[1].toString() + ", " + avg[2].toString() + ")";
+  colorElement.style.float = "right";
+  colorElement.appendChild(document.createTextNode("AVERAGE"));
+  paletteContainer.appendChild(colorElement);
+
+  console.log(avg);
   console.log(computeKey(avg));
 
 }
