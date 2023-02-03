@@ -3,6 +3,10 @@
 // Retrieving selected image path from local storage
 var environment = localStorage.getItem("environment");
 
+var count = 0;  // color counter ----------> CHORD PROGRESSION
+var ref;
+var alpha_channel = [];
+
 //! KEY COLORS
 // Color.js ----> Color Objects
 var ut = new Color("srgb", [255, 0, 0]);
@@ -21,7 +25,7 @@ var fa = new Color("srgb", [100, 0, 0]);
 // Association of color object (Color.js) to key label via a DICTIONARY object
 var dict = {  C: ut,  G: sol,  D: re,  A: la,  E: mi,  B: si,  Gb: sol_b,  Db: re_b,  Ab: la_b,  Eb: mi_b,  Bb: si_b,  F: fa,  };
 
-//! PALETTE
+//! PALETTE & NUMBER OF COLORS (i.e. CHORD PROGRESSION)
 const buildPalette = (colorsList) => {
   const paletteContainer = document.getElementById("palette");
   
@@ -48,13 +52,14 @@ const buildPalette = (colorsList) => {
       };
     };
 
+    count++;
+
     // create the div and text elements for both colors & append it to the document
     const colorElement = document.createElement("div");
     colorElement.style.backgroundColor = hexColor;
     colorElement.appendChild(document.createTextNode(hexColor));
     paletteContainer.appendChild(colorElement);
   };
-  
 };
 
 //  Convert each pixel value ( number ) to hexadecimal ( string ) with base 16
@@ -174,7 +179,10 @@ const orderByLuminance = (rgbValues) => {
 // Looping on the imageData array to extract the rgb value of each pixel in a more readable way
 const buildRgb = (imageData) => {
   const rgbValues = [];
+  let c = 0;
   for (let i = 0; i < imageData.length; i += 4) {
+    alpha_channel[c] = imageData[i + 3];
+    c++;
     const rgb = {
       r: imageData[i],
       g: imageData[i + 1],
@@ -319,15 +327,37 @@ const computeKey = (avg) => {
       min = diff;
     }
   };
-
-  localStorage.setItem("key", color_key);   // saves the key in the local storage, allowing for a re-use in subsequent pages 
-                                            //* (prior retrieval via the following syntax:  ------- var key = localStorage.getItem("key"); -------)
-
   return [color_key, reference];
 };
 
 //! MODE COMPUTAYION (BRIGHTNESS)
-const isItDark = (imageData, c, callback) => {
+const isItDark = (imageData, c) => {
+  var fuzzy = 0.1;
+  var data = imageData.data;
+  var r,g,b, max_rgb;
+  var light = 0, dark = 0;
+
+  for(var x = 0, len = data.length; x < len; x+=4) {
+    r = data[x];
+    g = data[x+1];
+    b = data[x+2];
+
+    max_rgb = Math.max(Math.max(r, g), b);
+    if (max_rgb < 128)
+      dark++;
+    else
+      light++;
+  }
+
+  var dl_diff = ((light - dark) / (c.width*c.height));
+  if (dl_diff + fuzzy < 0)
+    return true; /* Dark. */
+  else
+    return false;  /* Not dark. */
+};
+
+//! TETRAD SPECIES COMPUTATION (ALPHA CHANNEL)
+const alphaAvg = (imageData, c) => {
   var fuzzy = 0.1;
   var data = imageData.data;
   var r,g,b, max_rgb;
@@ -389,24 +419,34 @@ img.onload = function() {
   //! KEY
   // Fast Average Color Library ----> FastAverageColor Object
   const fac = new FastAverageColor();
+
   // FastAverageColor method "getColor()" returns img average color 
   avg = fac.getColor(img);
+
   // The returned color format is too complex, so we convert it to an array 
   avg = [avg.value[0], avg.value[1], avg.value[2]];
+
   localStorage.setItem("avg", avg); // save tha avg array color in local storage
+
   // Adding the AVG color to the palette (mimics the code seen in "buildPalette()")
   const paletteContainer = document.getElementById("palette");
   const colorElement = document.createElement("div");
   colorElement.style.backgroundColor = "rgba(" + avg[0].toString() + ", " + avg[1].toString() + ", " + avg[2].toString() + ")";
   colorElement.appendChild(document.createTextNode("AVERAGE"));
   paletteContainer.appendChild(colorElement);
-  // Insert the key caption in the corresponding <div>. Note that computeKey() returns an array [color_key, reference]  
-  document.getElementById("key").textContent = computeKey(avg)[0].toString();
-  document.getElementById("key").style.color = "rgba(" + computeKey(avg)[1][0].toString() + ", " + computeKey(avg)[1][1].toString() + ", " + computeKey(avg)[1][2].toString() + ")";
+
+  // Insert the key caption in the corresponding <div>. Note that computeKey() returns an array [color_key, reference]
+  const comp_key = computeKey(avg);
+  ref = comp_key[1];
+  localStorage.setItem("key", comp_key[0])
+  localStorage.setItem("ref", comp_key[1]);
+  document.getElementById("key").textContent = comp_key[0].toString();
+  document.getElementById("key").style.color = "rgba(" + comp_key[1][0].toString() + ", " + comp_key[1][1].toString() + ", " + comp_key[1][2].toString() + ")";
 
   //! BRIGHTNESS (MODE)
   const dark = isItDark(imageData, c);
   localStorage.setItem("mode", dark); // save the boolean "dark" value in local storage
+
   // Insert the mode caption in the corresponding <div>
   dark ? document.getElementById("mode").textContent = "Minor" : document.getElementById("mode").textContent = "Major";
   // Mode caption styling
@@ -415,6 +455,9 @@ img.onload = function() {
     document.getElementById("mode").style.textShadow = "white 1px 0 30px"
   }
   else document.getElementById("mode").style.textShadow = "rgba(" + avg[0].toString() + ", " + avg[1].toString() + ", " + avg[2].toString() + ") 1px 0 30px";
+
+  //! NUMBER OF COLORS in the palette (CHORD PROGRESSION COMPLEXITY)
+  localStorage.setItem("prog", count);
 
 };
 
@@ -445,14 +488,10 @@ buildPalette(quantColors);
 
 
 
-
-
-
 //*? BACKGROUND -------------------------------------------------------------------------------------------------------------- //
 
 let stars = [];
 let sp;
-var avg = localStorage.getItem("avg");
   
 function setup() {
     var canvas = createCanvas(windowWidth, Math.max(document.body.scrollHeight, document.documentElement.scrollHeight
@@ -494,8 +533,7 @@ class Star {
     }
     
     show() {
-      // fill(avg[0], avg[1], avg[2], 255);
-      fill(255);
+      fill(ref[0], ref[1], ref[2]);
       noStroke();
       
       this.sx = map(this.x / this.z, 0, 1, 0, width);
