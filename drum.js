@@ -67,6 +67,10 @@ let arp1Envelope, arp1Filter, arp1Synth, arp1Loop;
 //ARP2
 let arp2Envelope, arp2Filter, arp2Synth, arp2Loop;
 
+let tendina = [];
+let slidVol = [];
+let lista = ["1", "2", "4", "8"];
+
 /* //SOUNDLINE WOBBLING
 let lineWobble = 0;
 let wobbleArray = []; */
@@ -110,11 +114,11 @@ function setup() {
   
     button1 = createButton('2D');     // creazione bottoni per switching 2D/3D
     button1.position(20, 20);
-    button1.addClass("home-btn")
+    button1.addClass("home-btn");
     
     button2 = createButton('3D');
     button2.position(20, 85);
-    button2.addClass("home-btn")
+    button2.addClass("home-btn");
   
     button1.mouseClicked(set2d);      // clickando i bottoni si switchano gli stati della easycamera, dichiarati di seguito
     button2.mouseClicked(set3d);
@@ -145,10 +149,67 @@ function setup() {
       button3.html("Play");
       }
     });
-  
+
+
+
+    //RATIO SELECTORS
+    for(i=0; i<8; i++){ 
+      tendina[i] = createSelect();
+      tendina[i].position(30, 300 + i*50);
+      for(let j= 0; j< lista.length; j++){
+        tendina[i].option(lista[j]);
+        }
+      tendina[i].addClass("home-btn");
+      tendina[i].addClass("hide");
+      tendina[i].style('height', '3vw');
+      tendina[i].style('width', '3vw');
+    }
+
+    //VOLUME SLIDERS
+    for(i=0; i<8; i++){ 
+      slidVol[i] = createSlider();
+      slidVol[i].position(80, 300 + i*50);
+
+      slidVol[i].addClass("slider");
+      slidVol[i].addClass("hide");
+      slidVol[i].addClass("volume");
+      slidVol[i].style('height', '3vw');
+      slidVol[i].style('width', '8vw');
+      //slidVol[i].style('background-color', '#000000');
+    }
+
+    //MENU
+    menuButton = createButton('Menu');
+    let hiddenMenu = true;
+    menuButton.position(30, 240);
+    menuButton.addClass("home-btn")
+    menuButton.style('height', '3vw');
+    menuButton.style('width', '6vw');
+    menuButton.mouseClicked( function() {
+      if(hiddenMenu){
+        hiddenMenu = false;
+        menuButton.html("Hide");
+        for(i=0; i<8; i++){ 
+          tendina[i].addClass("show");
+          slidVol[i].addClass("show");
+          tendina[i].removeClass("hide");
+          slidVol[i].removeClass("hide");
+        }
+      } 
+      else{
+        hiddenMenu = true;
+        menuButton.html("Menu");
+        for(i=0; i<8; i++){ 
+          tendina[i].addClass("hide");
+          slidVol[i].addClass("hide");
+          tendina[i].removeClass("show");
+          slidVol[i].removeClass("show");
+        }
+      }
+    });
+    
+
   }
-
-
 
   function draw() {
   
@@ -160,7 +221,7 @@ function setup() {
       
       if (currentDist>3000.0) {
         easycam.setState(tri, 400);
-      }
+      }      
   
       // SKYBOX
       push();

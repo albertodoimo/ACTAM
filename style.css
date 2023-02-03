@@ -326,6 +326,38 @@ html {
     transform: translate(0, 0.5px);
 }
 
+.hide{
+    opacity: 0;
+    animation: hidefade 1s;
+}
+
+@keyframes hidefade {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+
+
+.show{
+    display: block;
+    animation: showfade 2s;
+  }
+
+@keyframes showfade {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
 .output {
     margin-left: 10px;
     font-size: 18px;
@@ -336,4 +368,6 @@ html {
     margin-top: 15px;
     margin-bottom: 10px;
 }
+
+
 
