@@ -33,7 +33,7 @@ for (var i = 0; i < stars; i++) {
 
   
   let stars = [];
-  let speed;
+  let sp;
   
 function setup() {
     var canvas = createCanvas(windowWidth, Math.max(document.body.scrollHeight, document.documentElement.scrollHeight
@@ -47,7 +47,7 @@ function setup() {
   
   function draw() {
     background(0);
-    speed = map(mouseX, 0, width, 0,15);
+    sp = map(mouseX, 0, width, 0,15);
     translate(width/2, height/2);
     for (let i = 0; i < stars.length; i++) { 
       stars[i].update();
@@ -64,7 +64,7 @@ function setup() {
     }
     
     update() {
-      this.z = this.z - speed;
+      this.z = this.z - sp;
   
       if (this.z < 1) {
         this.z = width;
@@ -75,6 +75,7 @@ function setup() {
     }
     
     show() {
+      // fill(255, 255, 150, 170);
       fill(255);
       noStroke();
       

@@ -8,63 +8,30 @@
     <link rel="icon" href="Images/icon.png" type="image/png">
     <link href="https://fonts.cdnfonts.com/css/product-sans" rel="stylesheet">
     <style>@import url('https://fonts.cdnfonts.com/css/product-sans');</style>
-    <title>Sound Settings</title>
+    <title>Soundscape</title>
 </head>
 
 <body>
-
-    <div class="img-container">
-        <img id="imageBox">
-    </div>
-    <div id="param">
-        <h1>Soundscape</h1>
-        <p>A detailed explanation of each parameter is given below.</p>
-        <div class="sided">
-            <canvas id="color"></canvas>
-            <div class="caption">Average <br> Color</div>
+    <div class="container">
+       <canvas id="imageBox"></canvas>         
+        <div id="param">
+            <h1>Soundscape</h1>
+            <div id="palette"></div>
+            <div id="param-container"><h2>The selected key is:</h2> <h2 id="key"></h2></div>
+            <div id="param-container"><h2>The selected mode is:</h2> <h2 id="mode"></h2></div>
         </div>
-
-        <!-- <div class="wrapper">
-            <h3>Delay Time</h3>
-            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value"><output class="output">50</output>
-        </div>
-
-        <div class="wrapper">
-            <h3>Delay Amount</h3>
-            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value"><output class="output">50</output>
-        </div>
-        
-        <div class="wrapper">
-            <h3>Reverb</h3>
-            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value"><output class="output">50</output>
-        </div>
-        
-        <div class="wrapper">
-            <h3>Progression</h3>
-            <input type="range" min="1" max="100" value="50" class="slider" id="myRange" oninput="this.nextElementSibling.value = this.value"><output class="output">50</output>
-        </div> -->
-    
     </div>
 
     <a onclick="window.location.href='drum.html'" id="ahead" class="home-btn">VàMOS</a>
     <a onclick="window.location.href='index.html#ambient-selection'" id="back" class="home-btn">BACK</a>
 
+    <script src="https://unpkg.com/fast-average-color/dist/index.browser.min.js"></script>
+    <script src="https://colorjs.io/dist/color.global.js"></script>
+
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="param.js"></script>
     <script src="Libraries/P5/p5.js"></script>
     <script src="Libraries/P5/p5.easycam.js"></script>
-    <script>
-        function resize(){    
-          $("#starfield").outerHeight($(window).height()-$("#starfield").offset().top- Math.abs($("#starfield").outerHeight(true) - $("#starfield").outerHeight()));
-        }
-        $(document).ready(function(){
-          resize();
-          $(window).on("resize", function(){                      
-              resize();
-          });
-        });
-    </script>
-
 </body>
 
 </html>
