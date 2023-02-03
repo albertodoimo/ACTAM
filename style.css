@@ -286,8 +286,6 @@ img {
     font-size: 3vw;
 }
 
-
-
 #color {
     width: 4vw;
     height: 4vw;
@@ -303,7 +301,6 @@ img {
     font-size: 25px;
     margin-left: 5%;
 }
-
 
 
 .slider{
@@ -394,7 +391,7 @@ img {
     border: 0.2px solid white;
 
     /* create a little bit of contrast for the text */
-    mix-blend-mode: difference;
+     mix-blend-mode: difference;
     color: #fff;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
