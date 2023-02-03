@@ -1,8 +1,10 @@
+//? --------------------------> DECLARATION ZONE <-------------------------- ?//
+
 // Retrieving selected image path from local storage
 var environment = localStorage.getItem("environment");
 
-//? KEY COLORS
-
+//! KEY COLORS
+// Color.js ----> Color Objects
 var ut = new Color("srgb", [255, 0, 0]);
 var sol = new Color("srgb", [250, 120, 0]);
 var re = new Color("srgb", [250, 250, 0]);
@@ -16,33 +18,19 @@ var mi_b = new Color("srgb", [255, 0, 0]);
 var si_b = new Color("srgb",[150, 80, 120]);
 var fa = new Color("srgb", [100, 0, 0]);
 
+// Association of color object (Color.js) to key label via a DICTIONARY object
+var dict = {  C: ut,  G: sol,  D: re,  A: la,  E: mi,  B: si,  Gb: sol_b,  Db: re_b,  Ab: la_b,  Eb: mi_b,  Bb: si_b,  F: fa,  };
 
-var dict = {
-  C: ut,
-  G: sol,
-  D: re,
-  A: la,
-  E: mi,
-  B: si,
-  Gb: sol_b,
-  Db: re_b,
-  Ab: la_b,
-  Eb: mi_b,
-  Bb: si_b,
-  F: fa,
-};
-
-
-//! PALETTE EXTRACTION ------------------------------------------------------------------------------------------ //
-
-//* PALETTE building
-
+//! PALETTE
 const buildPalette = (colorsList) => {
   const paletteContainer = document.getElementById("palette");
   
   // reset the HTML in case you load various images
   paletteContainer.innerHTML = "";
 
+  // The palette graphic representation contains the colors ORDERED BY LUMINANCE
+  // https://developer.mozilla.org/en-US/docs/Web/Accessibility/Understanding_Colors_and_Luminance#light_and_luminance
+  
   const orderedByColor = orderByLuminance(colorsList);
 
   for (let i = 0; i < orderedByColor.length; i++) {
@@ -57,15 +45,15 @@ const buildPalette = (colorsList) => {
       // if the distance is less than 120 we omit that color
       if (difference < 120) {
         continue;
-      }
-    }
+      };
+    };
 
     // create the div and text elements for both colors & append it to the document
     const colorElement = document.createElement("div");
     colorElement.style.backgroundColor = hexColor;
     colorElement.appendChild(document.createTextNode(hexColor));
     paletteContainer.appendChild(colorElement);
-  }
+  };
   
 };
 
@@ -83,8 +71,6 @@ const rgbToHex = (pixel) => {
     componentToHex(pixel.b)
   ).toUpperCase();
 };
-
-
 
 /** 
  * ? Convert HSL to Hex
@@ -105,8 +91,6 @@ const hslToHex = (hslColor) => {
   };
   return `#${f(0)}${f(8)}${f(4)}`.toUpperCase();
 };
-
-
 
 /**
  * ! Convert RGB values to HSL
@@ -172,8 +156,6 @@ const convertRGBtoHSL = (rgbValues) => {
   });
 };
 
-
-
 /**
  * * Using relative luminance we sort the colors in order of brightness
  * the fixed values and further explanation about this topic
@@ -204,11 +186,12 @@ const buildRgb = (imageData) => {
 };
 
 /**
- * Calculate the color distance or difference between 2 colors
+ *! Calculate the color distance or difference between 2 colors
  *
  * further explanation of this topic
  * can be found here -> https://en.wikipedia.org/wiki/Euclidean_distance
- * note: this method is not accuarate for better results use Delta-E distance metric.
+ *? note: this method is not accurate: for better results, the Delta-E distance metric should be used, but for the purpose 
+ *? of building the color palette the Euclidean distance is sufficient.
  */
 const calculateColorDifference = (color1, color2) => {
   const rDifference = Math.pow(color2.r - color1.r, 2);
@@ -260,11 +243,9 @@ const findBiggestColorRange = (rgbValues) => {
   }
 };
 
+/*
 
-
-/* 
-
-! MEDIAN CUT Algorithm:
+! MEDIAN CUT Algorithm:   @https://en.wikipedia.org/wiki/Median_cut#:~:text=Median%20cut%20is%20an%20algorithm,typically%20used%20for%20color%20quantization
 
 * After building the rgb colors array we need to somehow know which colors are the most representative of the image, to obtain this we use color quantization.
 * To achieve color quantization we are gonna use an algorithm called median-cut, the process is the following:
@@ -274,10 +255,11 @@ const findBiggestColorRange = (rgbValues) => {
     3. Divide the list in half.
     4. Repeat the process for each half until you have the desired number of colors.
 
-* Now that we have the component with the biggest range of colors in it (R, G or B), sort it and then split it by half, using the two halves we repeat the same process and call the function again, each time adding a value to depth. (DEPTH means how many color we want by power of 2) */
+* Now that we have the component with the biggest range of colors in it (R, G or B), sort it and then split it by half, using the two halves we repeat the same 
+* process and call the function again, each time adding a value to depth. (DEPTH means how many color we want by power of 2)
 
-//? QUANTIZATION
-
+*/
+//! QUANTIZATION
 const quantization = (rgbValues, depth) => {
   const MAX_DEPTH = 4;
 
@@ -319,6 +301,9 @@ const quantization = (rgbValues, depth) => {
 
 };
 
+//! KEY COMPUTATION
+/* The function takes the avg = [r, g, b] array as an input and, by means of the Color.js library, computes the perceptive distance (Delta E algorithm, 2000 version) between the 
+average color and each of the colors associated with the 12 keys according to Scriabin's "clavier à lumières" (https://it.wikipedia.org/wiki/Clavier_%C3%A0_lumi%C3%A8res), and returns the key corresponding to the minimum distance. */
 const computeKey = (avg) => {
   let color1 = new Color({space: "srgb", coords: [avg[0], avg[1], avg[2]]});
   let min = color1.deltaE2000(dict.C);
@@ -330,78 +315,118 @@ const computeKey = (avg) => {
     diff = color1.deltaE2000(value);
     if (diff < min) {
       color_key = key;
-      reference = value.coords;
+      reference = value.coords; // reference is the RGB color code of the Scriabin's color associated with the returned key. The Color.js attribute ".coords" returns as an array the RGB coordinates of the color
       min = diff;
     }
   };
 
+  localStorage.setItem("key", color_key);   // saves the key in the local storage, allowing for a re-use in subsequent pages 
+                                            //* (prior retrieval via the following syntax:  ------- var key = localStorage.getItem("key"); -------)
+
   return [color_key, reference];
 };
 
+//! MODE COMPUTAYION (BRIGHTNESS)
+const isItDark = (imageData, c, callback) => {
+  var fuzzy = 0.1;
+  var data = imageData.data;
+  var r,g,b, max_rgb;
+  var light = 0, dark = 0;
 
+  for(var x = 0, len = data.length; x < len; x+=4) {
+    r = data[x];
+    g = data[x+1];
+    b = data[x+2];
+
+    max_rgb = Math.max(Math.max(r, g), b);
+    if (max_rgb < 128)
+      dark++;
+    else
+      light++;
+  }
+
+  var dl_diff = ((light - dark) / (c.width*c.height));
+  if (dl_diff + fuzzy < 0)
+    return true; /* Dark. */
+  else
+    return false;  /* Not dark. */
+};
+
+
+//? --------------------------> COMPUTATION ZONE <-------------------------- ?//
 
 // Loading selected image in HTML canvas element + subsequent resizing 
 var c = document.getElementById("imageBox");
 var ctx = c.getContext("2d");
 var img = new Image();
 
-
+//* IMG.ONLOAD ------------> upon image correct loading, draws the image in the canvas and processes it
 img.onload = function() {
   c.height = img.height/3.5;
   c.width = img.width/3.5;
   ctx.drawImage(img, 0, 0, img.width/3.5, img.height/3.5);
-  ctx.imageSmoothingEnabled = false;
+  ctx.imageSmoothingEnabled = false;  // 
 
+  //! PALETTE
   /* *
        * getImageData returns an array full of RGBA values
        * each pixel consists of four values: the red value of the colour, the green, the blue and the alpha
        * (transparency). For array value consistency reasons,
        * the alpha is not from 0 to 1 like it is in the RGBA of CSS, but from 0 to 255.
   */
-
   const imageData = ctx.getImageData(0, 0, c.width, c.height);
-
-  // Convert the image data to RGB values so its much simpler
+  // Convert the image data to RGB values so it is much easier to work with
   const rgbArray = buildRgb(imageData.data);
-
   /**
    * Color quantization
    * A process that reduces the number of colors used in an image
    * while trying to visually maintin the original image as much as possible
    */
   const quantColors = quantization(rgbArray, 0);
-
   // Create the HTML structure to show the color palette
   buildPalette(quantColors);
 
-  
+  //! KEY
+  // Fast Average Color Library ----> FastAverageColor Object
   const fac = new FastAverageColor();
+  // FastAverageColor method "getColor()" returns img average color 
   avg = fac.getColor(img);
+  // The returned color format is too complex, so we convert it to an array 
   avg = [avg.value[0], avg.value[1], avg.value[2]];
-
+  localStorage.setItem("avg", avg); // save tha avg array color in local storage
+  // Adding the AVG color to the palette (mimics the code seen in "buildPalette()")
   const paletteContainer = document.getElementById("palette");
   const colorElement = document.createElement("div");
   colorElement.style.backgroundColor = "rgba(" + avg[0].toString() + ", " + avg[1].toString() + ", " + avg[2].toString() + ")";
-  colorElement.style.float = "right";
   colorElement.appendChild(document.createTextNode("AVERAGE"));
   paletteContainer.appendChild(colorElement);
-
+  // Insert the key caption in the corresponding <div>. Note that computeKey() returns an array [color_key, reference]  
   document.getElementById("key").textContent = computeKey(avg)[0].toString();
   document.getElementById("key").style.color = "rgba(" + computeKey(avg)[1][0].toString() + ", " + computeKey(avg)[1][1].toString() + ", " + computeKey(avg)[1][2].toString() + ")";
 
+  //! BRIGHTNESS (MODE)
+  const dark = isItDark(imageData, c);
+  localStorage.setItem("mode", dark); // save the boolean "dark" value in local storage
+  // Insert the mode caption in the corresponding <div>
+  dark ? document.getElementById("mode").textContent = "Minor" : document.getElementById("mode").textContent = "Major";
+  // Mode caption styling
+  if (dark)  {
+    document.getElementById("mode").style.color = "black";
+    document.getElementById("mode").style.textShadow = "white 1px 0 30px"
+  }
+  else document.getElementById("mode").style.textShadow = "rgba(" + avg[0].toString() + ", " + avg[1].toString() + ", " + avg[2].toString() + ") 1px 0 30px";
 
-}
+};
 
+// environment variable retrieval (i.e. the selected image path) and setting img source
 img.src = environment.toString();
 
-/*
+/* Image color processing ===> extracting a COLOR PALETTE from the image
  * getImageData returns an array full of RGBA values
  * each pixel consists of four values: the red value of the colour, the green, the blue and the alpha
  * (transparency). For array value consistency reasons,
  * the alpha is not from 0 to 1 like it is in the RGBA of CSS, but from 0 to 255.
 */
-
-// Image color processing ===> extracting a COLOR PALETTE from the image
 const imageData = ctx.getImageData(0, 0, c.width, c.height);
 
 // Convert the image data to RGB values so its much simpler
@@ -419,10 +444,15 @@ buildPalette(quantColors);
 
 
 
-/* BACKGROUND -------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+//*? BACKGROUND -------------------------------------------------------------------------------------------------------------- //
 
 let stars = [];
 let sp;
+var avg = localStorage.getItem("avg");
   
 function setup() {
     var canvas = createCanvas(windowWidth, Math.max(document.body.scrollHeight, document.documentElement.scrollHeight
@@ -432,9 +462,9 @@ function setup() {
     for (let i=0; i<1000; i++) {
       stars.push(new Star());
     }
-  }
+};
   
-  function draw() {
+function draw() {
     background(0);
     sp = map(mouseX, 0, width, 0,15);
     translate(width/2, height/2);
@@ -442,9 +472,9 @@ function setup() {
       stars[i].update();
       stars[i].show();
     }
-  }
+};
   
-  class Star {
+class Star {
     
     constructor() {
       this.x = random(-width,width);
@@ -464,7 +494,7 @@ function setup() {
     }
     
     show() {
-      // fill(255, 255, 150, 170);
+      // fill(avg[0], avg[1], avg[2], 255);
       fill(255);
       noStroke();
       
@@ -474,4 +504,4 @@ function setup() {
       this.size = map(this.z,0,width,10,0); 
       ellipse(this.sx,this.sy,this.size,this.size);
     }
-  }
+};
