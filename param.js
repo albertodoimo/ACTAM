@@ -337,13 +337,13 @@ const isItDark = (imageData, c) => {
   var r,g,b, max_rgb;
   var light = 0, dark = 0;
 
-  for(var x = 0, len = data.length; x < len; x+=4) {
+  for(let x = 0, len = data.length; x < len; x+=4) {
     r = data[x];
     g = data[x+1];
     b = data[x+2];
 
     max_rgb = Math.max(Math.max(r, g), b);
-    if (max_rgb < 128)
+    if (max_rgb < 110)
       dark++;
     else
       light++;
@@ -357,29 +357,22 @@ const isItDark = (imageData, c) => {
 };
 
 //! TETRAD SPECIES COMPUTATION (ALPHA CHANNEL)
-const alphaAvg = (imageData, c) => {
-  var fuzzy = 0.1;
-  var data = imageData.data;
-  var r,g,b, max_rgb;
-  var light = 0, dark = 0;
+const tetrad = (imageData, c) => {
+  let data = imageData.data;
+  let r,g,b, max_rgb;
+  let light = 0;
 
-  for(var x = 0, len = data.length; x < len; x+=4) {
+  for(let x = 0, len = data.length; x < len; x+=4) {
     r = data[x];
     g = data[x+1];
     b = data[x+2];
 
     max_rgb = Math.max(Math.max(r, g), b);
-    if (max_rgb < 128)
-      dark++;
-    else
+    if (max_rgb >= 200)
       light++;
   }
 
-  var dl_diff = ((light - dark) / (c.width*c.height));
-  if (dl_diff + fuzzy < 0)
-    return true; /* Dark. */
-  else
-    return false;  /* Not dark. */
+  return (light / (c.width*c.height));
 };
 
 
@@ -458,6 +451,9 @@ img.onload = function() {
 
   //! NUMBER OF COLORS in the palette (CHORD PROGRESSION COMPLEXITY)
   localStorage.setItem("prog", count);
+
+  //! TETRAD COMPUTATION
+  console.log(tetrad(imageData, c));
 
 };
 
