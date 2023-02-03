@@ -271,15 +271,22 @@ img {
     display: inline;
 }
 
+#param-container {
+    text-align: left;
+    margin: 2vw;
+}
+
 #key {
     margin: 1.5vw;
     font-size: 3vw;
 }
 
-#key-container {
-    text-align: center;
-    margin: 2vw;
+#mode {
+    margin: 1.5vw;
+    font-size: 3vw;
 }
+
+
 
 #color {
     width: 4vw;
