@@ -31,6 +31,7 @@ for (var i = 0; i < stars; i++) {
     context.fill();
 } */
 
+localStorage.clear();
   
   let stars = [];
   let sp;

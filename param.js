@@ -25,6 +25,10 @@ var fa = new Color("srgb", [100, 0, 0]);
 // Association of color object (Color.js) to key label via a DICTIONARY object
 var dict = {  C: ut,  G: sol,  D: re,  A: la,  E: mi,  B: si,  Gb: sol_b,  Db: re_b,  Ab: la_b,  Eb: mi_b,  Bb: si_b,  F: fa,  };
 
+// Extracted parameter dictionary
+
+var param = { k: "", m: "", p: "", t: "" };
+
 //! PALETTE & NUMBER OF COLORS (i.e. CHORD PROGRESSION)
 const buildPalette = (colorsList) => {
   const paletteContainer = document.getElementById("palette");
@@ -431,14 +435,39 @@ img.onload = function() {
   // Insert the key caption in the corresponding <div>. Note that computeKey() returns an array [color_key, reference]
   const comp_key = computeKey(avg);
   ref = comp_key[1];
-  localStorage.setItem("key", comp_key[0])
-  localStorage.setItem("ref", comp_key[1]);
   document.getElementById("key").textContent = comp_key[0].toString();
   document.getElementById("key").style.color = "rgba(" + comp_key[1][0].toString() + ", " + comp_key[1][1].toString() + ", " + comp_key[1][2].toString() + ")";
 
+  if (comp_key[0] == 'C') {
+    param.k = 1;
+  } else if (comp_key[0] == 'Db') {
+    param.k = 2;
+  } else if (comp_key[0] == 'D') {
+    param.k = 3;
+  } else if (comp_key[0] == 'Eb') {
+    param.k = 4;
+  } else if (comp_key[0] == 'E') {
+    param.k = 5;
+  } else if (comp_key[0] == 'F') {
+    param.k = 6;
+  } else if (comp_key[0] == 'Gb') {
+    param.k = 7;
+  } else if (comp_key[0] == 'G') {
+    param.k = 8;
+  } else if (comp_key[0] == 'Ab') {
+    param.k = 9;
+  } else if (comp_key[0] == 'A') {
+    param.k = 10;
+  } else if (comp_key[0] == 'Bb') {
+    param.k = 11;
+  } else if (comp_key[0] == 'B') {
+    param.k = 12;
+  }
+
+
   //! BRIGHTNESS (MODE)
   const dark = isItDark(imageData, c);
-  localStorage.setItem("mode", dark); // save the boolean "dark" value in local storage
+  dark ? param.m = 0 : param.m = 1;
 
   // Insert the mode caption in the corresponding <div>
   dark ? document.getElementById("mode").textContent = "Minor" : document.getElementById("mode").textContent = "Major";
@@ -449,11 +478,30 @@ img.onload = function() {
   }
   else document.getElementById("mode").style.textShadow = "rgba(" + avg[0].toString() + ", " + avg[1].toString() + ", " + avg[2].toString() + ") 1px 0 30px";
 
-  //! NUMBER OF COLORS in the palette (CHORD PROGRESSION COMPLEXITY)
-  localStorage.setItem("prog", count);
+  //! TETRAD SPECIES
+  if (tetrad(imageData, c) < 0.15) {
+    param.t = 1;
+  } else {
+    param.t = 0;
+  }
 
-  //! TETRAD COMPUTATION
-  console.log(tetrad(imageData, c));
+  //! NUMBER OF COLORS in the palette (CHORD PROGRESSION COMPLEXITY)
+  if (tetrad(imageData, c) * 100 * count < 100) {
+    param.p = 5;
+  } else if (tetrad(imageData, c)* 100 * count > 101 && tetrad(imageData, c)* 100 * count < 200) {
+    param.p = 4;
+  } else if (tetrad(imageData, c)* 100 * count > 201 && tetrad(imageData, c)* 100 * count < 300) {
+    param.p = 3;
+  } else if (tetrad(imageData, c)* 100 * count > 301 && tetrad(imageData, c)* 100 * count < 400) {
+    param.p = 2;
+  } else if (tetrad(imageData, c)* 100 * count > 401) {
+    param.p = 1;
+  }
+
+  localStorage.setItem("k", param.k);
+  localStorage.setItem("m", param.m);
+  localStorage.setItem("p", param.p);
+  localStorage.setItem("t", param.t);
 
 };
 
@@ -480,9 +528,6 @@ const quantColors = quantization(rgbArray, 0);
 
 // Create the HTML structure to show the color palette
 buildPalette(quantColors);
-
-
-
 
 //*? BACKGROUND -------------------------------------------------------------------------------------------------------------- //
 
