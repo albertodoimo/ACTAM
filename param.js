@@ -481,22 +481,31 @@ img.onload = function() {
   //! TETRAD SPECIES
   if (tetrad(imageData, c) < 0.15) {
     param.t = 1;
+    document.getElementById("tetrad").textContent = "Standard";
   } else {
     param.t = 0;
+    document.getElementById("tetrad").textContent = "Seventh";
   }
+  document.getElementById("tetrad").style.textShadow = "rgba(" + avg[0].toString() + ", " + avg[1].toString() + ", " + avg[2].toString() + ") 1px 0 30px";
 
   //! NUMBER OF COLORS in the palette (CHORD PROGRESSION COMPLEXITY)
   if (tetrad(imageData, c) * 100 * count < 100) {
     param.p = 5;
+    document.getElementById("prog").textContent = "I - V";
   } else if (tetrad(imageData, c)* 100 * count > 101 && tetrad(imageData, c)* 100 * count < 200) {
     param.p = 4;
+    document.getElementById("prog").textContent = "I - VI - IV";
   } else if (tetrad(imageData, c)* 100 * count > 201 && tetrad(imageData, c)* 100 * count < 300) {
     param.p = 3;
+    document.getElementById("prog").textContent = "I - IV - VI - V";
   } else if (tetrad(imageData, c)* 100 * count > 301 && tetrad(imageData, c)* 100 * count < 400) {
     param.p = 2;
+    document.getElementById("prog").textContent = "I - IV - II - V";
   } else if (tetrad(imageData, c)* 100 * count > 401) {
     param.p = 1;
+    document.getElementById("prog").textContent = "I - V - VI - IV";
   }
+  document.getElementById("prog").style.textShadow = "rgba(" + avg[0].toString() + ", " + avg[1].toString() + ", " + avg[2].toString() + ") 1px 0 30px";
 
   localStorage.setItem("k", param.k);
   localStorage.setItem("m", param.m);
