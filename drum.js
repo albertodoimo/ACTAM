@@ -529,7 +529,7 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
      //ELLIPSE
         rotateX(PI/2);
         noFill();
-        stroke(255); 
+        stroke(255, 160); 
         strokeWeight(2);
         ellipse(0, 0, orbitWidth*2, orbitHeight*2, 50);
         rotateX(-PI/2);
