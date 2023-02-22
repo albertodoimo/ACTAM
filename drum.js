@@ -67,9 +67,12 @@ let arp1Envelope, arp1Filter, arp1Synth, arp1Loop;
 //ARP2
 let arp2Envelope, arp2Filter, arp2Synth, arp2Loop;
 
+//Planets menus
 let tendina = [];
 let slidVol = [];
-let lista = ["1", "2", "4", "8"];
+let volumes = [-32, -36, -16, -24, -24, -24, -24, -16];
+let lista = ["1", "4", "16", "32"];
+let refreshed = false;
 
 /* //SOUNDLINE WOBBLING
 let lineWobble = 0;
@@ -163,19 +166,22 @@ function setup() {
       tendina[i].addClass("hide");
       tendina[i].style('height', '3vw');
       tendina[i].style('width', '3vw');
+      tendina[i].changed(changeRatio);
     }
 
     //VOLUME SLIDERS
     for(i=0; i<8; i++){ 
-      slidVol[i] = createSlider();
-      slidVol[i].position(80, 300 + i*50);
+      slidVol[i] = createSlider(-100, -16, volumes[i], 1);
 
+      slidVol[i].position(80, 300 + i*50);
       slidVol[i].addClass("slider");
       slidVol[i].addClass("hide");
       slidVol[i].addClass("volume");
       slidVol[i].style('height', '3vw');
       slidVol[i].style('width', '8vw');
       //slidVol[i].style('background-color', '#000000');
+
+      slidVol[i].changed(changeVolume);
     }
 
     //MENU
@@ -208,8 +214,39 @@ function setup() {
       }
     });
     
-
   }
+
+
+  function changeRatio(){
+    console.log('Ratios');
+    for(i=0; i<8; i++){ 
+      planetRatios[i] = tendina[i].value();
+      console.log(planetRatios[i]);
+    }
+  }
+  
+  function refreshVolumes(){
+    console.log('Refreshed');
+    bassSynth1.volume.value=volumes[0];
+    bassSynth2.volume.value=volumes[0];
+    bassSynth3.volume.value=volumes[0];
+    for (j=0; j<4; j++){
+    chordSynths[j].volume.value=volumes[j+1];
+    }
+    leadSynth.volume.value=volumes[5];
+    arp1Synth.volume.value=volumes[6];
+    arp2Synth.volume.value=volumes[7];
+  }
+  
+  function changeVolume(){
+    console.log('Volumes');
+    for(i=0; i<8; i++){ 
+      volumes[i] = slidVol[i].value();
+      console.log(volumes[i]);
+    }
+    refreshVolumes();
+  }
+
 
   function draw() {
   
@@ -267,15 +304,10 @@ function setup() {
         
         //---------------------------------------------------------MIXER--------------------------------------------------------------------------
         if(!playIsOff){
-          bassSynth1.volume.value=-16;
-          bassSynth2.volume.value=-16;
-          bassSynth3.volume.value=-16;
-          for (j=0; j<4; j++){
-          chordSynths[j].volume.value=-24;
+          if(!refreshed){
+            refreshVolumes();
+            refreshed = true;
           }
-          leadSynth.volume.value=-16;
-          arp1Synth.volume.value=-36;
-          arp2Synth.volume.value=-32;
         }
         else{
           bassSynth1.volume.value=-100;
