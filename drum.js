@@ -173,7 +173,7 @@ function setup() {
     for(i=0; i<8; i++){ 
       slidVol[i] = createSlider(-100, -16, volumes[i], 1);
 
-      slidVol[i].position(80, 300 + i*50);
+      slidVol[i].position(80, 650 - i*50);
       slidVol[i].addClass("slider");
       slidVol[i].addClass("hide");
       slidVol[i].addClass("volume");
@@ -292,7 +292,7 @@ function setup() {
       //--------------------------------------------------SET NUM PLANETS DEACTIVATED FOR SOUND DESIGN PURPOSES--------------------------------------------
       
       //CONTROLS AND DRAW PLANETS   
-      for(i=0; i<7; i++){
+      for(i=0; i<8; i++){
         planet(planetOrbWidth[i], planetOrbHeight[i], planetTilt[i], planetRotation[i], imgPlanets[i], planetDiameter[i], planetRatios[i]);
         if(i==2){   //MOON
           push();
