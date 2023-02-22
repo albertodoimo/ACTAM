@@ -146,6 +146,7 @@ function setup() {
       if(playIsOff){
         playIsOff=false;
         button3.html("Stop");
+        refreshVolumes();
       } 
       else{
       playIsOff=true;
@@ -223,6 +224,7 @@ function setup() {
       planetRatios[i] = tendina[i].value();
       console.log(planetRatios[i]);
     }
+    soundDesign();
   }
   
   function refreshVolumes(){
@@ -304,12 +306,12 @@ function setup() {
         
         //---------------------------------------------------------MIXER--------------------------------------------------------------------------
         if(!playIsOff){
-          if(!refreshed){
-            refreshVolumes();
-            refreshed = true;
-          }
+          Tone.Transport.start();
+          //refreshVolumes();
+          //refreshed = true;          
         }
         else{
+          Tone.Transport.pause();
           bassSynth1.volume.value=-100;
           bassSynth2.volume.value=-100;
           bassSynth3.volume.value=-100;
@@ -320,7 +322,6 @@ function setup() {
           arp1Synth.volume.value=-100;
           arp2Synth.volume.value=-100;
         }
-        
       }
       /*
       for(i=val; i<8; i++){
@@ -518,7 +519,7 @@ function soundDesign(){
     
     
     
-      Tone.Transport.start();
+      //Tone.Transport.start();
       Tone.Transport.bpm.value=bpm;
 }
     
