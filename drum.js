@@ -26,15 +26,17 @@ let bpm = 20;
 //1= MEASURE, 4=BEAT
 //---------arp1,arp2,lead,chord4,chord3,chord2,chord1,bass--------------------------------------
 let planetRatios = [32, 24, 2, 5, 4, 3, 2, 1];
+
 let chromas=["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-let MAJOR=["C", "D", "E", "F", "G", "A", "B"]; //Cmajor
-let MINOR=["B", "C#", "D", "E", "F#", "G", "A"]; //Bminor
-let myChord=[];
-let majProf=[0, 2, 4, 5, 7, 9, 11];
-let minProf=[0, 2, 3, 5, 7, 8, 10];
-let maj=false; 
-let profile=[];
-let key=4;
+
+let myScale=[];
+let majProf = [0, 2, 4, 5, 7, 9, 11];
+let minProf = [0, 2, 3, 5, 7, 8, 10];
+let maj = Boolean(parseInt(m));
+console.log(maj);
+let profile = [];
+let key = parseInt(k);
+
 for(i =0; i<7; i++){
   if(maj){
     profile = majProf;
@@ -42,40 +44,60 @@ for(i =0; i<7; i++){
   else{
     profile = minProf; 
   }
-  myChord[i]=chromas[key+profile[i]];
+  myScale[i]=chromas[key+profile[i]];
 } 
-console.log(myChord);
-let tetrad=[1, 3, 5, 7];
-let progression1=[1, 5, 6, 4];
-let progression2=[1, 4, 2, 5];
-let progression3=[1, 4, 6, 5];
-let progression4=[1, 6, 4];
-let progression5=[1, 5];
+
+console.log(myScale);
+
+let tetrad = [1, 3, 5, 7];
+
+let progression1 = [1, 5, 6, 4];
+let progression2 = [1, 4, 2, 5];
+let progression3 = [1, 4, 6, 5];
+let progression4 = [1, 6, 4];
+let progression5 = [1, 5];
+
+let selectedProgression;
+
 //IMAGE PROCESSING
 let mean;
 let maximum;
-let selectedMode = MAJOR;//-------------------------------------------------------------------------------------------------------------------
-let selectedProgression = progression1;//-----------------------------------------------------------------------------------------------------
+let selectedMode = myScale;//-------------------------------------------------------------------------------------------------------------------
+
+switch (parseInt(p)) {
+  case 1:
+    selectedProgression = progression1;
+  case 2:
+    selectedProgression = progression2;
+  case 3:
+    selectedProgression = progression3;
+  case 4:
+    selectedProgression = progression4;
+  case 5:
+    selectedProgression = progression5;
+}
+
 //BASS
 let bassEnvelope, bassFilter, bassSynth1, bassSynth2, bassLoop;
 let bassNotes=[];
 for(i=0; i<selectedProgression.length; i++){
   bassNotes[i]=selectedMode[selectedProgression[i]-1];
 }
+
 //CHORD
 let chordSynths=[];
 let chordFilters=[];
 let chordEnvelopes=[];
 let chordLoops=[];
 let chordNotes=[];
-for(i=0; i<4; i++){
-  chordNotes[i]=[];
-  for(j=0; j<selectedProgression.length; j++){
-    if(selectedProgression[j]-1+(tetrad[i]-1)<selectedMode.length){
-      chordNotes[i][j]=selectedMode[selectedProgression[j]-1+(tetrad[i]-1)];
+for(i = 0; i < 4; i++) {
+  chordNotes[i] = [];
+  for(j = 0; j < selectedProgression.length; j++){
+    if (selectedProgression[j] - 1 + (tetrad[i] - 1) < selectedMode.length) {
+      chordNotes[i][j] = selectedMode[selectedProgression[j] - 1 + (tetrad[i] - 1)];
     }
-    else{
-      chordNotes[i][j]=selectedMode[selectedProgression[j]-1+(tetrad[i]-1)-7];
+    else {
+      chordNotes[i][j] = selectedMode[selectedProgression[j] - 1 + (tetrad[i] - 1) - 7];
     }
   }
 }
@@ -409,9 +431,10 @@ function soundDesign(){
           bassSynth1.triggerAttackRelease(bassNotes[bassNotesIndex]+"1", planetRatios[7].toString()+"n", time);
           bassSynth2.triggerAttackRelease(bassNotes[bassNotesIndex]+"1", planetRatios[7].toString()+"n", time);
           bassSynth3.triggerAttackRelease(bassNotes[bassNotesIndex]+"1", planetRatios[7].toString()+"n", time);
-          if (bassNotesIndex==bassNotes.length-1){bassNotesIndex=0; chordNotesIndex=0;}
+          if (bassNotesIndex == bassNotes.length - 1) { bassNotesIndex = 0; chordNotesIndex = 0; }
           else{bassNotesIndex++; chordNotesIndex++;}
           bassEnvelope.triggerAttackRelease(planetRatios[7].toString()+"n", time);
+          console.log(chordNotes);
         }, planetRatios[7].toString()+"n").start(0);
     
     
@@ -438,11 +461,19 @@ function soundDesign(){
       chordSynths[i].chain(chordFilters[i], reverb, Tone.Destination);
       chordSynths[i].volume.value=-100;
     }
-    
-    chordLoops[0] = new Tone.Loop(time => {
-      chordSynths[0].triggerAttackRelease(chordNotes[3][chordNotesIndex]+"3", planetRatios[6].toString()+"n", time);
-      chordEnvelopes[0].triggerAttackRelease(planetRatios[6].toString()+"n", time);
-    }, planetRatios[6].toString()+"n").start(0);
+
+    if (Boolean(t)) {
+      chordLoops[0] = new Tone.Loop(time => {
+        chordSynths[0].triggerAttackRelease(chordNotes[3][chordNotesIndex]+"3", planetRatios[6].toString()+"n", time);
+        chordEnvelopes[0].triggerAttackRelease(planetRatios[6].toString()+"n", time);
+      }, planetRatios[6].toString()+"n").start(0);
+    }
+    else{
+      chordLoops[0] = new Tone.Loop(time => {
+        chordSynths[0].triggerAttackRelease(chordNotes[0][chordNotesIndex]+"4", planetRatios[6].toString()+"n", time);
+        chordEnvelopes[0].triggerAttackRelease(planetRatios[6].toString()+"n", time);
+      }, planetRatios[6].toString()+"n").start(0);      
+    }
     
     chordLoops[1]= new Tone.Loop(time => {
       chordSynths[1].triggerAttackRelease(chordNotes[2][chordNotesIndex]+"3", planetRatios[5].toString()+"n", time);
@@ -508,7 +539,7 @@ function soundDesign(){
     
         arp1Loop = new Tone.Loop(time => {
           arp1Synth.triggerAttackRelease(chordNotes[arp1NotesIndex][chordNotesIndex]+"4", planetRatios[1].toString()+"n", time);
-          if (arp1NotesIndex==3){arp1NotesIndex=0;}
+          if (arp1NotesIndex==2){arp1NotesIndex=0;}
           else{arp1NotesIndex++;}
           arp1Envelope.triggerAttackRelease(planetRatios[1].toString()+"n", time);
         }, planetRatios[1].toString()+"n").start(0);

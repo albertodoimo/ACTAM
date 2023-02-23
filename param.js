@@ -480,10 +480,10 @@ img.onload = function() {
 
   //! TETRAD SPECIES
   if (tetrad(imageData, c) < 0.15) {
-    param.t = 1;
+    param.t = 0;
     document.getElementById("tetrad").textContent = "Standard";
   } else {
-    param.t = 0;
+    param.t = 1;
     document.getElementById("tetrad").textContent = "Seventh";
   }
   document.getElementById("tetrad").style.textShadow = "rgba(" + avg[0].toString() + ", " + avg[1].toString() + ", " + avg[2].toString() + ") 1px 0 30px";
