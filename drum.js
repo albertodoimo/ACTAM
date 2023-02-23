@@ -1,3 +1,9 @@
+var k = localStorage.getItem("k");
+var m = localStorage.getItem("m");
+var p = localStorage.getItem("p");
+var t = localStorage.getItem("t");
+
+
 // DICHIARO LE VARIABILI FUORI DALLA FUNZIONI
 // PERCHE' ABBIANO VISIBILITA' ANCHE NELLE ALTRE FUNZIONI
 let imgEarth;
