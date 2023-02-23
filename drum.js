@@ -20,8 +20,25 @@ let bpm = 20;
 //1= MEASURE, 4=BEAT
 //---------arp1,arp2,lead,chord4,chord3,chord2,chord1,bass--------------------------------------
 let planetRatios = [32, 24, 2, 5, 4, 3, 2, 1];
+let chromas=["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 let MAJOR=["C", "D", "E", "F", "G", "A", "B"]; //Cmajor
 let MINOR=["B", "C#", "D", "E", "F#", "G", "A"]; //Bminor
+let myChord=[];
+let majProf=[0, 2, 4, 5, 7, 9, 11];
+let minProf=[0, 2, 3, 5, 7, 8, 10];
+let maj=false; 
+let profile=[];
+let key=4;
+for(i =0; i<7; i++){
+  if(maj){
+    profile = majProf;
+  }
+  else{
+    profile = minProf; 
+  }
+  myChord[i]=chromas[key+profile[i]];
+} 
+console.log(myChord);
 let tetrad=[1, 3, 5, 7];
 let progression1=[1, 5, 6, 4];
 let progression2=[1, 4, 2, 5];
