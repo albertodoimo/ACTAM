@@ -11,11 +11,13 @@ let imgSun;
 let imgMoon;
 var imgSky;
 let imgPlanets = [];
-let planetOrbWidth = [150, 300, 500, 800, 1050, 1300, 1600, 1900];
-let planetOrbHeight = [100, 200, 333, 533, 700, 866.5, 1066, 1266];
+let sunDim = 200; 
+//let planetOrbWidth = [170, 300, 500, 800, 1050, 1300, 1600, 1900];
+let planetOrbHeight = [sunDim+57, 50+sunDim+108, 150+sunDim+149, 180+sunDim+227, sunDim+588, sunDim+866.5, sunDim+1166, sunDim+1366];
+let planetOrbWidth = planetOrbHeight.map(x => x * 1.5);
 let planetTilt = [0, 0, -25, 0, 0, 0, 0, 0];
 let planetRotation = [0.005, 0.01, 0.015, 0.020, 0.025 , 0.030 , 0.035 , 0.040]; 
-let planetDiameter = [25, 50 , 75, 100, 125, 125, 100, 200];
+let planetDiameter = [24, 50 , 63, 33, 140, 116, 50, 48];
 let bool = false;
 let easycam;
 
@@ -327,7 +329,7 @@ function setup() {
       rotateY(PI);
       rotateY(frameCount * 0.005);
       texture(imgSun);
-      sphere(70); 
+      sphere(sunDim); 
       rotateY(-frameCount * 0.005);
       rotateY(-PI);
   
@@ -341,13 +343,13 @@ function setup() {
       //CONTROLS AND DRAW PLANETS   
       for(i=0; i<8; i++){
         planet(planetOrbWidth[i], planetOrbHeight[i], planetTilt[i], planetRotation[i], imgPlanets[i], planetDiameter[i], planetRatios[i]);
-        if(i==2){   //MOON
+        /* if(i==2){   //MOON
           push();
           translate(-sin(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*planetRatios[2])+PI)*500, 0, -[cos(2*Math.PI*(((Tone.Transport.seconds)*(Tone.Transport.bpm.value/60/4))*planetRatios[2])+PI)*333]);
           rotateY(-frameCount * 0.015);
           planet(100, 100, 0, 0.005, imgMoon, 15, 6);
           pop();
-        }
+        } */
         
         //---------------------------------------------------------MIXER--------------------------------------------------------------------------
         if(!playIsOff){
@@ -585,7 +587,7 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
         rotateX(PI/2);
         noFill();
         stroke(255, 160); 
-        strokeWeight(2);
+        strokeWeight(1);
         ellipse(0, 0, orbitWidth*2, orbitHeight*2, 50);
         rotateX(-PI/2);
       
@@ -663,13 +665,13 @@ function getRndInteger(min, max) {
     
     let tri = {
       center: [0, 0, 0],
-      distance: 1800,
+      distance: 2400,
       rotation: [1,-0.3 , 0, 0],
     }
     
     
     let bi = {
       center: [0, 0, 0],
-      distance: 1600,
+      distance: 2000,
       rotation: [0.2, -0.2, 0, 0],
     }
