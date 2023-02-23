@@ -439,29 +439,29 @@ img.onload = function() {
   document.getElementById("key").style.color = "rgba(" + comp_key[1][0].toString() + ", " + comp_key[1][1].toString() + ", " + comp_key[1][2].toString() + ")";
 
   if (comp_key[0] == 'C') {
-    param.k = 1;
+    param.k = 0;
   } else if (comp_key[0] == 'Db') {
-    param.k = 2;
+    param.k = 1;
   } else if (comp_key[0] == 'D') {
-    param.k = 3;
+    param.k = 2;
   } else if (comp_key[0] == 'Eb') {
-    param.k = 4;
+    param.k = 3;
   } else if (comp_key[0] == 'E') {
-    param.k = 5;
+    param.k = 4;
   } else if (comp_key[0] == 'F') {
-    param.k = 6;
+    param.k = 5;
   } else if (comp_key[0] == 'Gb') {
-    param.k = 7;
+    param.k = 6;
   } else if (comp_key[0] == 'G') {
-    param.k = 8;
+    param.k = 7;
   } else if (comp_key[0] == 'Ab') {
-    param.k = 9;
+    param.k = 8;
   } else if (comp_key[0] == 'A') {
-    param.k = 10;
+    param.k = 9;
   } else if (comp_key[0] == 'Bb') {
-    param.k = 11;
+    param.k = 10;
   } else if (comp_key[0] == 'B') {
-    param.k = 12;
+    param.k = 11;
   }
 
 
@@ -492,16 +492,16 @@ img.onload = function() {
   if (tetrad(imageData, c) * 100 * count < 100) {
     param.p = 5;
     document.getElementById("prog").textContent = "I - V";
-  } else if (tetrad(imageData, c)* 100 * count > 101 && tetrad(imageData, c)* 100 * count < 200) {
+  } else if (tetrad(imageData, c) * 100 * count > 101 && tetrad(imageData, c)* 100 * count < 200) {
     param.p = 4;
     document.getElementById("prog").textContent = "I - VI - IV";
-  } else if (tetrad(imageData, c)* 100 * count > 201 && tetrad(imageData, c)* 100 * count < 300) {
+  } else if (tetrad(imageData, c) * 100 * count > 201 && tetrad(imageData, c)* 100 * count < 300) {
     param.p = 3;
     document.getElementById("prog").textContent = "I - IV - VI - V";
-  } else if (tetrad(imageData, c)* 100 * count > 301 && tetrad(imageData, c)* 100 * count < 400) {
+  } else if (tetrad(imageData, c) * 100 * count > 301 && tetrad(imageData, c)* 100 * count < 400) {
     param.p = 2;
     document.getElementById("prog").textContent = "I - IV - II - V";
-  } else if (tetrad(imageData, c)* 100 * count > 401) {
+  } else if (tetrad(imageData, c) * 100 * count > 401) {
     param.p = 1;
     document.getElementById("prog").textContent = "I - V - VI - IV";
   }
