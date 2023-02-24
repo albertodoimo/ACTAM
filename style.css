@@ -334,7 +334,29 @@ img {
 }
 
 #instr1::after {
-    content:"8";
+    content:"arpeg 1";
+}
+
+#instr2::after {
+    content:"arpeg 2";
+}
+#instr3::after {
+    content:"lead";
+}
+#instr4::after {
+    content:"tonic";
+}
+#instr5::after {
+    content:"third";
+}
+#instr6::after {
+    content:"fifth";
+}
+#instr7::after {
+    content:"seventh/octave";
+}
+#instr8::after {
+    content:"bass";
 }
 
 .slider::-webkit-slider-runnable-track {
