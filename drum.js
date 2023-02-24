@@ -69,14 +69,19 @@ let selectedMode = myScale;//---------------------------------------------------
 switch (parseInt(p)) {
   case 1:
     selectedProgression = progression1;
+    break;
   case 2:
     selectedProgression = progression2;
+    break;
   case 3:
     selectedProgression = progression3;
+    break;
   case 4:
     selectedProgression = progression4;
+    break;
   case 5:
     selectedProgression = progression5;
+    break;
 }
 
 //BASS
@@ -157,7 +162,7 @@ function setup() {
     easycam.setDistanceMin(200);
     soundDesign();
     
-    frameRate(30);
+    frameRate(60);
     setAttributes('antialias', true);
     perspective(PI / 2, width / height, 0.1, 15000);
     textureWrap(CLAMP);
@@ -317,13 +322,6 @@ function setup() {
       sphere(4000);
       pop();
   
-      /* //SOUNDLINE
-      for(i=0; i<7; i++){
-        lineWobble = lineWobble + wobbleArray[i];
-      }
-      soundLine(lineWobble);
-      lineWobble = 0; */
-  
       //SUN
       noStroke();
       rotateY(PI);
@@ -336,7 +334,6 @@ function setup() {
       //LIGHT
       ambientLight(60);
       pointLight(255, 255, 255, 0, 0, 0);
-  
   
       //--------------------------------------------------SET NUM PLANETS DEACTIVATED FOR SOUND DESIGN PURPOSES--------------------------------------------
       
@@ -382,6 +379,8 @@ function setup() {
         Tone.Transport.stop();
         Tone.Transport.start();
       }); */
+
+      
 }
 
 
@@ -627,40 +626,6 @@ function planet(orbitWidth, orbitHeight, tilt, rotation, skin, diameter, modifie
 function getRndInteger(min, max) {
       return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
-    
-    
-/*     function soundLine(lineWobble){
-      let x, y, z = 0;
-      if (lineWobble==0) {
-        push();
-        stroke(255, 100, 100);
-        strokeWeight(5);
-        fill(255);
-        rotateX(PI/2);
-        rotateZ(PI/4);
-        line(0, 0, (planetOrbWidth[setNumPlanets.value()-1]/2)*0.94, (planetOrbWidth[setNumPlanets.value()-1]/2)*0.94);
-        pop();
-      } 
-      else {
-        //console.log(wobbleArray);
-        push();
-        beginShape();
-        stroke(255, 100, 100);
-        strokeWeight(5);
-        noFill(255);
-        curveVertex(0, 0, 0);
-        curveVertex(0, 0, 0);
-        for (let i = 1; i < 5; i++) {
-          x = getRndInteger(-25, 25);
-          y = i * (planetOrbWidth[setNumPlanets.value()-1]/10);
-          curveVertex(x, 0, y); 
-        }
-        curveVertex(0, 0, (planetOrbWidth[setNumPlanets.value() - 1]/2)*1.05);
-        curveVertex(0, 0, (planetOrbWidth[setNumPlanets.value() - 1]/2)*1.05);
-        endShape();
-        pop();
-      }
-    } */
     
     
     let tri = {
