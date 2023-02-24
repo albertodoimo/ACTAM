@@ -125,6 +125,7 @@ let slidVol = [];
 let volumes = [-32, -36, -16, -24, -24, -24, -24, -16];
 let lista = ["1", "4", "16", "32"];
 let refreshed = false;
+let idVol = ["instr1", "instr2", "instr3", "instr4", "instr5", "instr6", "instr7", "instr8"];
 
 /* //SOUNDLINE WOBBLING
 let lineWobble = 0;
@@ -132,15 +133,15 @@ let wobbleArray = []; */
 
 function preload() {
 
-    imgEarth = loadImage('Images/plani.jpg');
-    imgSun = loadImage('Images/sun.jpg');
-    imgMoon = loadImage('Images/moon.jpg');
-    
-    environmentSelectedImg=loadImage(localStorage.getItem("environment"))
+  imgEarth = loadImage('Images/plani.jpg');
+  imgSun = loadImage('Images/sun.jpg');
+  imgMoon = loadImage('Images/moon.jpg');
   
-    for(i=0; i<8; i++){
-      imgPlanets[i] = loadImage('Images/' + (i+1).toString(10) + '.jpg');
-    }
+  environmentSelectedImg=loadImage(localStorage.getItem("environment"))
+
+  for(i=0; i<8; i++){
+    imgPlanets[i] = loadImage('Images/' + (i+1).toString(10) + '.jpg');
+  }
 
 }
 
@@ -230,6 +231,7 @@ function setup() {
       slidVol[i].addClass("slider");
       slidVol[i].addClass("hide");
       slidVol[i].addClass("volume");
+      slidVol[i].id(idVol[7-i]);
       slidVol[i].style('height', '3vw');
       slidVol[i].style('width', '8vw');
       //slidVol[i].style('background-color', '#000000');
