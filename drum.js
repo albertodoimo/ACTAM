@@ -227,7 +227,7 @@ function setup() {
     for(i=0; i<8; i++){ 
       slidVol[i] = createSlider(-100, -16, volumes[i], 1);
 
-      slidVol[i].position(80, 650 - i*50);
+      slidVol[i].position(80, 660 - i*50);
       slidVol[i].addClass("slider");
       slidVol[i].addClass("hide");
       slidVol[i].addClass("volume");
@@ -381,6 +381,11 @@ function setup() {
         Tone.Transport.stop();
         Tone.Transport.start();
       }); */
+
+      text("red", slidVol[1].x + slidVol[1].width);
+      //text("green", gSlider.x * 2 + gSlider.width, 65);
+      //text("blue", bSlider.x * 2 + bSlider.width, 95);
+
 
       
 }
