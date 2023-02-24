@@ -126,6 +126,7 @@ let volumes = [-32, -36, -16, -24, -24, -24, -24, -16];
 let lista = ["1", "4", "16", "32"];
 let refreshed = false;
 let idVol = ["instr1", "instr2", "instr3", "instr4", "instr5", "instr6", "instr7", "instr8"];
+let idTend = ["pl1", "pl2", "pl3", "pl4", "pl5", "pl6", "pl7", "pl8"];
 
 /* //SOUNDLINE WOBBLING
 let lineWobble = 0;
@@ -218,6 +219,7 @@ function setup() {
         }
       tendina[i].addClass("home-btn");
       tendina[i].addClass("hide");
+      tendina[i].id(idTend[i]);
       tendina[i].style('height', '3vw');
       tendina[i].style('width', '3vw');
       tendina[i].changed(changeRatio);
@@ -235,7 +237,6 @@ function setup() {
       slidVol[i].style('height', '3vw');
       slidVol[i].style('width', '8vw');
       //slidVol[i].style('background-color', '#000000');
-
       slidVol[i].changed(changeVolume);
     }
 

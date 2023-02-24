@@ -336,7 +336,6 @@ img {
 #instr1::after {
     content:"arpeg 1";
 }
-
 #instr2::after {
     content:"arpeg 2";
 }
@@ -357,6 +356,33 @@ img {
 }
 #instr8::after {
     content:"bass";
+}
+
+
+#pl1{
+    background-image: url('/Images/1.jpg');
+}
+#pl2{
+    background-image: url('/Images/2.jpg');
+}
+#pl3{
+    background-image: url('/Images/3bis.jpg');
+    background-size: cover;
+}
+#pl4{
+    background-image: url('/Images/4.jpg');
+}
+#pl5{
+    background-image: url('/Images/5.jpg');
+}
+#pl6{
+    background-image: url('/Images/6.jpg');
+}
+#pl7{
+    background-image: url('/Images/7.jpg');
+}
+#pl8{
+    background-image: url('/Images/8.jpg');
 }
 
 .slider::-webkit-slider-runnable-track {
