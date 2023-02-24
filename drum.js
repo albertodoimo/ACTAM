@@ -126,7 +126,6 @@ let volumes = [-32, -36, -16, -24, -24, -24, -24, -16];
 let lista = ["1", "4", "16", "32"];
 let refreshed = false;
 let idVol = ["instr1", "instr2", "instr3", "instr4", "instr5", "instr6", "instr7", "instr8"];
-let idTend = ["pl1", "pl2", "pl3", "pl4", "pl5", "pl6", "pl7", "pl8"];
 
 /* //SOUNDLINE WOBBLING
 let lineWobble = 0;
@@ -170,11 +169,11 @@ function setup() {
     textureWrap(CLAMP);
   
     button1 = createButton('2D');     // creazione bottoni per switching 2D/3D
-    button1.position(20, 20);
+    button1.position(windowWidth-100, 120);
     button1.addClass("home-btn");
     
     button2 = createButton('3D');
-    button2.position(20, 85);
+    button2.position(windowWidth-100, 185);
     button2.addClass("home-btn");
   
     button1.mouseClicked(set2d);      // clickando i bottoni si switchano gli stati della easycamera, dichiarati di seguito
@@ -213,13 +212,12 @@ function setup() {
     //RATIO SELECTORS
     for(i=0; i<8; i++){ 
       tendina[i] = createSelect();
-      tendina[i].position(30, 300 + i*50);
+      tendina[i].position(30, 80 + i*60);
       for(let j= 0; j< lista.length; j++){
         tendina[i].option(lista[j]);
         }
       tendina[i].addClass("home-btn");
       tendina[i].addClass("hide");
-      tendina[i].id(idTend[i]);
       tendina[i].style('height', '3vw');
       tendina[i].style('width', '3vw');
       tendina[i].changed(changeRatio);
@@ -229,7 +227,7 @@ function setup() {
     for(i=0; i<8; i++){ 
       slidVol[i] = createSlider(-100, -16, volumes[i], 1);
 
-      slidVol[i].position(80, 660 - i*50);
+      slidVol[i].position(80, 510 - i*60);
       slidVol[i].addClass("slider");
       slidVol[i].addClass("hide");
       slidVol[i].addClass("volume");
@@ -237,13 +235,14 @@ function setup() {
       slidVol[i].style('height', '3vw');
       slidVol[i].style('width', '8vw');
       //slidVol[i].style('background-color', '#000000');
+
       slidVol[i].changed(changeVolume);
     }
 
     //MENU
     menuButton = createButton('Menu');
     let hiddenMenu = true;
-    menuButton.position(30, 240);
+    menuButton.position(20, 20);
     menuButton.addClass("home-btn")
     menuButton.style('height', '3vw');
     menuButton.style('width', '6vw');
