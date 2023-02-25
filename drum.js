@@ -171,7 +171,7 @@ function preload() {
   environmentSelectedImg = loadImage(localStorage.getItem("environment"));
 
   for (i = 0; i < 8; i++) {
-    imgPlanets[i] = loadImage("Images/" + (i + 1).toString(10) + ".jpg");
+    imgPlanets[i] = loadImage("Images/" + (i + 1).toString() + ".jpg");
   }
 }
 
@@ -223,7 +223,7 @@ function setup() {
   //-----------------------------------------------------------------------------------------------------------------------
 
   button3 = createButton("Play");
-  button3.position(windowWidth - 100, 20);
+  button3.position(windowWidth - 110, 20);
   button3.addClass("home-btn");
   button3.mouseClicked(function () {
     if (playIsOff) {
@@ -269,7 +269,7 @@ function setup() {
   menuButton = createButton("Menu");
   let hiddenMenu = true;
   menuButton.position(30, 240);
-  menuButton.addClass("home-btn");
+  menuButton.addClass("menu-btn");
   menuButton.style("height", "3vw");
   menuButton.style("width", "6vw");
   menuButton.mouseClicked(function () {
@@ -719,7 +719,7 @@ function planet(
 
   //TEXTURE
   texture(skin);
-  
+
   //COLORE ROSSO QUANDO PASSA PER L'AZIMUTH
   /* if(sin(revolutionRate)<=0.2 && sin(revolutionRate)>=-0.2 && cos(revolutionRate)>=0.8){
           emissiveMaterial(255, 50, 50);
