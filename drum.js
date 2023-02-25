@@ -158,21 +158,24 @@ let slidVol = [];
 let volumes = [-32, -36, -16, -24, -24, -24, -24, -16];
 let lista = ["1", "4", "16", "32"];
 let refreshed = false;
+let idVol = ["instr1", "instr2", "instr3", "instr4", "instr5", "instr6", "instr7", "instr8"];
 
 /* //SOUNDLINE WOBBLING
 let lineWobble = 0;
 let wobbleArray = []; */
 
 function preload() {
-  imgEarth = loadImage("Images/plani.jpg");
-  imgSun = loadImage("Images/sun.jpg");
-  imgMoon = loadImage("Images/moon.jpg");
 
-  environmentSelectedImg = loadImage(localStorage.getItem("environment"));
+  imgEarth = loadImage('Images/plani.jpg');
+  imgSun = loadImage('Images/sun.jpg');
+  imgMoon = loadImage('Images/moon.jpg');
+  
+  environmentSelectedImg=loadImage(localStorage.getItem("environment"))
 
-  for (i = 0; i < 8; i++) {
-    imgPlanets[i] = loadImage("Images/" + (i + 1).toString() + ".jpg");
+  for(i=0; i<8; i++){
+    imgPlanets[i] = loadImage('Images/' + (i+1).toString(10) + '.jpg');
   }
+
 }
 
 function windowResized() {
@@ -182,118 +185,121 @@ function windowResized() {
 }
 
 function setup() {
-  //CANVAS AND EASY CAM-------------------------------------------------------------------------------------------------------
-  //--------------------------------------------------------------------------------------------------------------------------
-  createCanvas(windowWidth, windowHeight, WEBGL);
-  easycam = createEasyCam(); // creazione oggetto easycam con distanza iniziale
-  easycam.setState(tri); // stato iniziale prospettico
-  easycam.setDistanceMax(2900);
-  easycam.setDistanceMin(200);
-  soundDesign();
-
-  frameRate(60);
-  setAttributes("antialias", true);
-  perspective(PI / 2, width / height, 0.1, 15000);
-  textureWrap(CLAMP);
-
-  button1 = createButton("2D"); // creazione bottoni per switching 2D/3D
-  button1.position(20, 20);
-  button1.addClass("home-btn");
-
-  button2 = createButton("3D");
-  button2.position(20, 85);
-  button2.addClass("home-btn");
-
-  button1.mouseClicked(set2d); // clickando i bottoni si switchano gli stati della easycamera, dichiarati di seguito
-  button2.mouseClicked(set3d);
-
-  function set2d() {
-    // setter vista 2d
-    easycam.setState(bi, 700);
-    easycam.removeMouseListeners();
-  }
-
-  function set3d() {
-    // setter vista 3d (stato iniziale)
-    easycam.attachMouseListeners(p5.renderer);
-    easycam.setState(tri, 700);
-  }
-
-  //DRUM MACHINE CONTROLS -----------------------------------------------------------------------------------------------------------------
-  //-----------------------------------------------------------------------------------------------------------------------
-
-  button3 = createButton("Play");
-  button3.position(windowWidth - 110, 20);
-  button3.addClass("home-btn");
-  button3.mouseClicked(function () {
-    if (playIsOff) {
-      playIsOff = false;
-      button3.html("Stop");
-      refreshVolumes();
-    } else {
-      playIsOff = true;
+  
+    //CANVAS AND EASY CAM-------------------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------------------------------------
+    createCanvas(windowWidth, windowHeight, WEBGL);
+    easycam = createEasyCam() // creazione oggetto easycam con distanza iniziale 
+    easycam.setState(tri);    // stato iniziale prospettico
+    easycam.setDistanceMax(2900);
+    easycam.setDistanceMin(200);
+    soundDesign();
+    
+    frameRate(60);
+    setAttributes('antialias', true);
+    perspective(PI / 2, width / height, 0.1, 15000);
+    textureWrap(CLAMP);
+  
+    button1 = createButton('2D');     // creazione bottoni per switching 2D/3D
+    button1.position(windowWidth-100, 120);
+    button1.addClass("home-btn");
+    
+    button2 = createButton('3D');
+    button2.position(windowWidth-100, 185);
+    button2.addClass("home-btn");
+  
+    button1.mouseClicked(set2d);      // clickando i bottoni si switchano gli stati della easycamera, dichiarati di seguito
+    button2.mouseClicked(set3d);
+  
+    function set2d() {        // setter vista 2d
+      easycam.setState(bi, 700)
+      easycam.removeMouseListeners()
+    }
+    
+    function set3d() {        // setter vista 3d (stato iniziale)
+      easycam.attachMouseListeners(p5.renderer)
+      easycam.setState(tri, 700)
+    }
+  
+    //DRUM MACHINE CONTROLS -----------------------------------------------------------------------------------------------------------------
+    //-----------------------------------------------------------------------------------------------------------------------
+    
+    button3 = createButton('Play');
+    button3.position(windowWidth-100, 20);
+    button3.addClass("home-btn")
+    button3.mouseClicked( function() {
+      if(playIsOff){
+        playIsOff=false;
+        button3.html("Stop");
+        refreshVolumes();
+      } 
+      else{
+      playIsOff=true;
       button3.html("Play");
     }
   });
 
-  //RATIO SELECTORS
-  for (i = 0; i < 8; i++) {
-    tendina[i] = createSelect();
-    tendina[i].position(30, 300 + i * 50);
-    for (let j = 0; j < lista.length; j++) {
-      tendina[i].option(lista[j]);
+    //RATIO SELECTORS
+    for(i=0; i<8; i++){ 
+      tendina[i] = createSelect();
+      tendina[i].position(30, 80 + i*60);
+      for(let j= 0; j< lista.length; j++){
+        tendina[i].option(lista[j]);
+        }
+      tendina[i].addClass("home-btn");
+      tendina[i].addClass("hide");
+      tendina[i].style('height', '3vw');
+      tendina[i].style('width', '3vw');
+      tendina[i].changed(changeRatio);
     }
-    tendina[i].addClass("home-btn");
-    tendina[i].addClass("hide");
-    tendina[i].style("height", "3vw");
-    tendina[i].style("width", "3vw");
-    tendina[i].changed(changeRatio);
-  }
 
   //VOLUME SLIDERS
   for (i = 0; i < 8; i++) {
     slidVol[i] = createSlider(-100, -16, volumes[i], 1);
 
-    slidVol[i].position(80, 650 - i * 50);
-    slidVol[i].addClass("slider");
-    slidVol[i].addClass("hide");
-    slidVol[i].addClass("volume");
-    slidVol[i].style("height", "3vw");
-    slidVol[i].style("width", "8vw");
-    //slidVol[i].style('background-color', '#000000');
+      slidVol[i].position(80, 510 - i*60);
+      slidVol[i].addClass("slider");
+      slidVol[i].addClass("hide");
+      slidVol[i].addClass("volume");
+      slidVol[i].id(idVol[7-i]);
+      slidVol[i].style('height', '3vw');
+      slidVol[i].style('width', '8vw');
+      //slidVol[i].style('background-color', '#000000');
 
     slidVol[i].changed(changeVolume);
   }
 
-  //MENU
-  menuButton = createButton("Menu");
-  let hiddenMenu = true;
-  menuButton.position(30, 240);
-  menuButton.addClass("menu-btn");
-  menuButton.style("height", "3vw");
-  menuButton.style("width", "6vw");
-  menuButton.mouseClicked(function () {
-    if (hiddenMenu) {
-      hiddenMenu = false;
-      menuButton.html("Hide");
-      for (i = 0; i < 8; i++) {
-        tendina[i].addClass("show");
-        slidVol[i].addClass("show");
-        tendina[i].removeClass("hide");
-        slidVol[i].removeClass("hide");
+    //MENU
+    menuButton = createButton('Menu');
+    let hiddenMenu = true;
+    menuButton.position(20, 20);
+    menuButton.addClass("home-btn")
+    menuButton.style('height', '3vw');
+    menuButton.style('width', '6vw');
+    menuButton.mouseClicked( function() {
+      if(hiddenMenu){
+        hiddenMenu = false;
+        menuButton.html("Hide");
+        for(i=0; i<8; i++){ 
+          tendina[i].addClass("show");
+          slidVol[i].addClass("show");
+          tendina[i].removeClass("hide");
+          slidVol[i].removeClass("hide");
+        }
+      } 
+      else{
+        hiddenMenu = true;
+        menuButton.html("Menu");
+        for(i=0; i<8; i++){ 
+          tendina[i].addClass("hide");
+          slidVol[i].addClass("hide");
+          tendina[i].removeClass("show");
+          slidVol[i].removeClass("show");
+        }
       }
-    } else {
-      hiddenMenu = true;
-      menuButton.html("Menu");
-      for (i = 0; i < 8; i++) {
-        tendina[i].addClass("hide");
-        slidVol[i].addClass("hide");
-        tendina[i].removeClass("show");
-        slidVol[i].removeClass("show");
-      }
-    }
-  });
-}
+    });
+    
+  }
 
 function changeRatio() {
   console.log("Ratios");
@@ -413,6 +419,13 @@ function draw() {
         Tone.Transport.stop();
         Tone.Transport.start();
       }); */
+
+      text("red", slidVol[1].x + slidVol[1].width);
+      //text("green", gSlider.x * 2 + gSlider.width, 65);
+      //text("blue", bSlider.x * 2 + bSlider.width, 95);
+
+
+      
 }
 
 function soundDesign() {
