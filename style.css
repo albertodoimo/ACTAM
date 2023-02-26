@@ -254,12 +254,14 @@ img {
   float: left;
 }
 
+
 #imageBox {
   z-index: 999;
   margin-top: 3%;
   margin-left: 59%;
   border: 2px solid white;
 }
+
 
 #imageBox canvas {
   object-fit: cover;
@@ -269,19 +271,48 @@ img {
   position: relative;
 }
 
-.container canvas,
-#param {
-  position: absolute;
+.container canvas, #param {
+    position: absolute;
+}
+
+.container canvas, #param2 {
+    position: absolute;
+    top: 20px;
+    left:50%;
+    transform: translate(-50%);
+    width: 60%;
+    
+    display: flex;
+    justify-content: space-between;
+} 
+
+#param2 {
+    height: 3vw;
 }
 
 #param h2 {
   display: inline;
 }
 
+#param2 h3, h2 {
+    display: flex;
+    /* margin: 1vw; */
+    /* font-size: 1vw; */
+    align-items: center;
+}
+
+
 #param-container {
   font-size: 1.5vw;
   text-align: left;
   margin: 2vw;
+}
+
+#param-container2 {
+    font-size: 1vw;
+    text-align: center;
+    margin: auto;
+    display: flex;
 }
 
 #key {
@@ -302,6 +333,30 @@ img {
 #tetrad {
   margin: 1.5vw;
   font-size: 3vw;
+}
+
+#key2 {
+    margin: .5vw;
+    font-size: 1vw;
+    display: inline;
+    left:100%;
+}
+
+#mode2 {
+    margin: .5vw;
+    font-size: 1vw;
+    display: inline;
+}
+
+#prog2 {
+    margin: .5vw;
+    font-size: 1vw;
+    display: inline;
+}
+#tetrad2 {
+    margin: .5vw;
+    font-size: 1vw;
+    display: inline;
 }
 
 #color {
@@ -431,10 +486,10 @@ img {
   }
 }
 
-.show {
-  display: block;
-  animation: showfade 2s;
-}
+.show{
+    display: block;
+    animation: showfade 2s;
+  }
 
 @keyframes showfade {
   0% {
