@@ -30,6 +30,7 @@ let bpm = 20;
 let planetRatios = [32, 24, 2, 5, 4, 3, 2, 1];
 
 let chromas=["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+let chromas2 = ["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
 
 let myScale=[];
 let majProf = [0, 2, 4, 5, 7, 9, 11];
@@ -53,13 +54,14 @@ console.log(myScale);
 
 let tetrad = [1, 3, 5, 7];
 
+
 let progression1 = [1, 5, 6, 4];
 let progression2 = [1, 4, 2, 5];
 let progression3 = [1, 4, 6, 5];
 let progression4 = [1, 6, 4];
 let progression5 = [1, 5];
 
-let selectedProgression;
+let progressionNames = ["I - V","I - VI - IV","I - IV - VI - V","I - IV - II - V","I - V - VI - IV"]
 
 //IMAGE PROCESSING
 let mean;
@@ -269,6 +271,26 @@ function setup() {
       }
     });
     
+    
+    var key2 = document.getElementById("key2");
+    console.log(key2);
+    key2.textContent = chromas2[k];
+
+    if(m==0){
+      document.getElementById("mode2").textContent = "Minor";
+    }
+    else{
+      document.getElementById("mode2").textContent = "Major";
+    }
+
+    document.getElementById("prog2").textContent = progressionNames[p-1];
+
+    if (t==0) {
+      document.getElementById("tetrad2").textContent = "Standard";
+    } else {
+      document.getElementById("tetrad2").textContent = "Seventh";
+    }
+
   }
 
 
