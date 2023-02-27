@@ -260,6 +260,8 @@ img {
   z-index: 999;
   margin-top: 3%;
   margin-left: 59%;
+  width: 640x;
+  height: 360px;
   border: 2px solid white;
 }
 
@@ -276,7 +278,7 @@ img {
     position: absolute;
 }
 
-.container canvas, #param2 {
+.container #param2 {
     position: absolute;
     top: 20px;
     left:50%;

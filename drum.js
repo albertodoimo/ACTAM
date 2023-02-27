@@ -93,7 +93,7 @@ let progression3 = [1, 4, 6, 5];
 let progression4 = [1, 6, 4];
 let progression5 = [1, 5];
 
-let progressionNames = ["I - V","I - VI - IV","I - IV - VI - V","I - IV - II - V","I - V - VI - IV"]
+let progressionNames = ["I - V - VI - IV","I - IV - II - V","I - IV - VI - V","I - VI - IV","I - V"]
 
 //IMAGE PROCESSING
 let mean;
@@ -314,7 +314,7 @@ function setup() {
     }
 
     document.getElementById("prog2").textContent = progressionNames[p-1];
-
+  
     if (t==0) {
       document.getElementById("tetrad2").textContent = "Standard";
     } else {
