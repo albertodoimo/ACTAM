@@ -64,7 +64,6 @@ let chromas = [
   "B",
 ];
 let chromas2 = ["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
-let chromas2 = ["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
 
 let myScale = [];
 let majProf = [0, 2, 4, 5, 7, 9, 11];
