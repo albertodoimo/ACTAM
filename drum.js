@@ -170,6 +170,7 @@ let idVol = [
   "instr7",
   "instr8",
 ];
+let idTend = ["pl1", "pl2", "pl3", "pl4", "pl5", "pl6", "pl7", "pl8"];
 
 /* //SOUNDLINE WOBBLING
 let lineWobble = 0;
@@ -257,6 +258,7 @@ function setup() {
     }
     tendina[i].addClass("home-btn");
     tendina[i].addClass("hide");
+    tendina[i].id(idTend[i]);
     tendina[i].style("height", "3vw");
     tendina[i].style("width", "3vw");
     tendina[i].changed(changeRatio);
