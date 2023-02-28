@@ -297,7 +297,18 @@ function setup() {
         tendina[i].removeClass("hide");
         slidVol[i].removeClass("hide");
       }
-    }});
+    }
+    else {
+      hiddenMenu = true;
+      menuButton.html("Menu");
+      for (i = 0; i < 8; i++) {
+        tendina[i].addClass("hide");
+        slidVol[i].addClass("hide");
+        tendina[i].removeClass("show");
+        slidVol[i].removeClass("show");
+      }
+    }
+  });
     
     
     var key2 = document.getElementById("key2");
