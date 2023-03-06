@@ -451,7 +451,7 @@ function draw() {
         Tone.Transport.start();
       }); */
 
-  text("red", slidVol[1].x + slidVol[1].width);
+  //text("red", slidVol[1].x + slidVol[1].width);
   //text("green", gSlider.x * 2 + gSlider.width, 65);
   //text("blue", bSlider.x * 2 + bSlider.width, 95);
 }
