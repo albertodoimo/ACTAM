@@ -255,10 +255,7 @@ function setup() {
   //RATIO SELECTORS
   for (i = 0; i < 8; i++) {
     tendina[i] = createSelect();
-    tendina[i].position(0, 60 +  i * windowHeight/10);
-    for (let j = 0; j < lista.length; j++) {
-      tendina[i].option(lista[j]);
-    }
+    tendina[i].position(10 , 60 +  i * windowHeight/10);
     tendina[i].addClass("style-btn");
     tendina[i].addClass("hide");
     tendina[i].addClass("positionMenu");
@@ -266,13 +263,16 @@ function setup() {
     tendina[i].style("height", "3vw");
     tendina[i].style("width", "3vw");
     tendina[i].changed(changeRatio);
+    for (let j = 0; j < lista.length; j++) {
+      tendina[i].option(lista[j]);
+    }
   }
 
   //VOLUME SLIDERS
   for (i = 0; i < 8; i++) {
     slidVol[i] = createSlider(-100, -16, volumes[i], 1);
 
-    slidVol[i].position(60, (65 + 7 * windowHeight/10) -  i * windowHeight/10);
+    slidVol[i].position(65, (65 + 7 * windowHeight/10) -  i * windowHeight/10);
     slidVol[i].addClass("slider");
     slidVol[i].addClass("hide");
     slidVol[i].addClass("volume");
@@ -532,7 +532,7 @@ function soundDesign() {
       bassNotesIndex++;
       chordNotesIndex++;
     }
-    bassEnvelope.triggerAttackRelease(planetRatios[7].toString() + "n", time);
+    bassEnvelope.triggerAttackRelease(planetRatios[7].toString() + "n", now);
     console.log(chordNotes);
   }, planetRatios[7].toString() + "n").start(0);
 
