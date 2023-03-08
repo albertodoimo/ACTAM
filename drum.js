@@ -201,7 +201,7 @@ function setup() {
   easycam = createEasyCam(); // creazione oggetto easycam con distanza iniziale
   easycam.setState(tri); // stato iniziale prospettico
   easycam.setDistanceMax(2900);
-  easycam.setDistanceMin(200);
+  easycam.setDistanceMin(sunDim+50);
   soundDesign();
 
   frameRate(60);
@@ -210,12 +210,14 @@ function setup() {
   textureWrap(CLAMP);
 
   button1 = createButton("2D"); // creazione bottoni per switching 2D/3D
-  button1.position(windowWidth - 100, 120);
-  button1.addClass("home-btn");
+    //button1.position(windowWidth - 100, 120);
+  button1.addClass("style-btn");
+  button1.addClass("position2D")
 
   button2 = createButton("3D");
-  button2.position(windowWidth - 100, 185);
-  button2.addClass("home-btn");
+  //button2.position(windowWidth - 100, 185);
+  button2.addClass("style-btn");
+  button2.addClass("position3D")
 
   button1.mouseClicked(set2d); // clickando i bottoni si switchano gli stati della easycamera, dichiarati di seguito
   button2.mouseClicked(set3d);
@@ -236,8 +238,9 @@ function setup() {
   //-----------------------------------------------------------------------------------------------------------------------
 
   button3 = createButton("Play");
-  button3.position(windowWidth - 100, 20);
-  button3.addClass("home-btn");
+  //button3.position(windowWidth - 100, 20);
+  button3.addClass("style-btn");
+  button3.addClass("positionPlayStop");
   button3.mouseClicked(function () {
     if (playIsOff) {
       playIsOff = false;
@@ -252,12 +255,13 @@ function setup() {
   //RATIO SELECTORS
   for (i = 0; i < 8; i++) {
     tendina[i] = createSelect();
-    tendina[i].position(30, 80 + i * 60);
+    tendina[i].position(0, 60 +  i * windowHeight/10);
     for (let j = 0; j < lista.length; j++) {
       tendina[i].option(lista[j]);
     }
-    tendina[i].addClass("home-btn");
+    tendina[i].addClass("style-btn");
     tendina[i].addClass("hide");
+    tendina[i].addClass("positionMenu");
     tendina[i].id(idTend[i]);
     tendina[i].style("height", "3vw");
     tendina[i].style("width", "3vw");
@@ -268,13 +272,14 @@ function setup() {
   for (i = 0; i < 8; i++) {
     slidVol[i] = createSlider(-100, -16, volumes[i], 1);
 
-    slidVol[i].position(80, 510 - i * 60);
+    slidVol[i].position(60, (65 + 7 * windowHeight/10) -  i * windowHeight/10);
     slidVol[i].addClass("slider");
     slidVol[i].addClass("hide");
     slidVol[i].addClass("volume");
+    slidVol[i].addClass("positionMenu");
     slidVol[i].id(idVol[7 - i]);
     slidVol[i].style("height", "3vw");
-    slidVol[i].style("width", "8vw");
+    slidVol[i].style("width", "10vw");
     //slidVol[i].style('background-color', '#000000');
 
     slidVol[i].changed(changeVolume);
@@ -283,8 +288,9 @@ function setup() {
   //MENU
   menuButton = createButton("Menu");
   let hiddenMenu = true;
-  menuButton.position(20, 20);
-  menuButton.addClass("home-btn");
+  //menuButton.position(20, 20);
+  menuButton.addClass("style-btn");
+  menuButton.addClass("positionMenu");
   menuButton.style("height", "3vw");
   menuButton.style("width", "6vw");
   menuButton.mouseClicked(function () {
