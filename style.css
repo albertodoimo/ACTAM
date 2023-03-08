@@ -102,7 +102,7 @@ html {
   width: 95%;
   margin: auto;
   margin-top: 30vw;
-  margin-bottom: 5vw;
+  margin-bottom: auto;
   text-align: center;
   z-index: 998;
   position: relative;
@@ -173,7 +173,8 @@ img {
     color: #ffffff;
     text-decoration: none;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 0.2vw;
+    font-size: 1.2vw;
     text-shadow: #d8ccee 1px 0 10px;
     height: 6vw;
     width: 6vw;
@@ -390,7 +391,7 @@ img {
     content:"VOLUME";
     position: absolute;
     font-family: 'Product Sans', sans-serif;
-    font-size: 13px;
+    font-size: 1.2vw;
     font-weight: bold;
     color: white;
     top: -7px;
@@ -562,7 +563,7 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: small;
+  font-size: 1.2vw;
 
   border: 0.2px solid white;
 
