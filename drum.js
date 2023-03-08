@@ -532,7 +532,7 @@ function soundDesign() {
       bassNotesIndex++;
       chordNotesIndex++;
     }
-    bassEnvelope.triggerAttackRelease(planetRatios[7].toString() + "n", now);
+    bassEnvelope.triggerAttackRelease(planetRatios[7].toString() + "n", time);
     console.log(chordNotes);
   }, planetRatios[7].toString() + "n").start(0);
 
