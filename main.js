@@ -112,3 +112,36 @@ function ambient(id) {
     localStorage.setItem("environment", selectedAmbient)
     window.location.href = "param.html";
 }
+
+
+// GUIDE TOUR
+
+const tour = new Shepherd.Tour({
+  useModalOverlay: true,
+  defaultStepOptions: {
+      classes: 'btn-style',
+      scrollTo: true
+  }
+});
+
+// step #0
+tour.addStep({
+  id: 'ambient-selection',
+  text: 'The buildings on this row allow to choose between different instruments to play the main melody',
+  attachTo: {
+      element: '.shepard-ambient-selection',
+      on: 'left'
+  },
+  classes: 'example-step-extra-class',
+  buttons: [
+      {
+          text: 'Exit',
+          action: tour.complete
+      },
+      {
+          text: 'Next',
+          action: tour.next
+      }
+
+  ]
+});

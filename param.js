@@ -554,6 +554,7 @@ function setup() {
 };
   
 function draw() {
+
     background(0);
     sp = map(mouseX, 0, width, 0,15);
     translate(width/2, height/2);
