@@ -204,7 +204,7 @@ function setup() {
   easycam.setDistanceMin(sunDim+50);
   soundDesign();
 
-  frameRate(60);
+  frameRate(30);
   setAttributes("antialias", true);
   perspective(PI / 2, width / height, 0.1, 15000);
   textureWrap(CLAMP);
@@ -369,6 +369,17 @@ function changeVolume() {
   refreshVolumes();
 }
 
+//Stars variables
+let s = 0;
+let r_s = 2500;
+let x_s, y_s, z_s, c_s = [];
+let n_s = 120;
+let white = [255,255,255];
+let yellow = [255,255,80];
+let cyan = [120,180,255];
+let red = [255,100,100];
+let colors = [white, yellow, cyan, red];
+
 function draw() {
   //BACKGROUND
   background(0, 0, 0, 0);
@@ -385,12 +396,67 @@ function draw() {
   }
 
   // SKYBOX
-  push();
-  noStroke();
-  texture(environmentSelectedImg);
-  rotateY(frameCount * 0.0005);
-  sphere(4000);
-  pop();
+/*   if(s%20 == 0){
+    x_s = [];
+    y_s = [];
+    z_s = [];  
+    for (i=0; i<50; i++){
+      x_s.push(random(-4000, 4000));
+      y_s.push(random(-4000, 4000));
+      z_s.push(random(-4000, 4000));
+    }
+     /////  push();
+    noStroke();
+    texture(environmentSelectedImg);
+    rotateY(frameCount * 0.0005);
+    sphere(4000);
+    ///////pop(); 
+    s = 0;
+  } */
+
+  if(s==0){
+    s++;
+    x_s = [];
+    y_s = [];
+    z_s = [];
+    c_s = [];
+    for (i=0; i<n_s; i++){
+      x_s[i] = random(-r_s*1.2, r_s*1.2);
+      y_s[i] = random(-r_s, r_s);
+      z_s[i] = random(-r_s, r_s/4);  
+      c_s[i] = white;
+    }
+  }
+
+  for (i=0; i<n_s; i++){
+    if(i%(n_s/4)==0){
+      x_s.push(random(-r_s*1.2, r_s*1.2));
+      y_s.push(random(-r_s, r_s));
+      z_s.push(random(-r_s, r_s));
+      x_s.shift();
+      y_s.shift();
+      z_s.shift();
+      var col = random([0, 1, 2, 3]);
+      c_s.push(colors[col]);
+      c_s.shift();
+    }
+    
+    var d_s = Math.sqrt(x_s[i]**2 +  y_s[i]**2 + z_s[i]**2);
+    if(d_s>1500){
+      strokeWeight(random([1, 2, 3]));
+      stroke(c_s[i]);
+      fill(c_s[i]);
+      point(x_s[i], y_s[i], z_s[i]);
+      if(d_s < 2800){
+        var l = random([6, 7, 8]);
+        strokeWeight(1);
+        line(x_s[i] - l, y_s[i] - l, z_s[i] - l, x_s[i] + l, y_s[i] + l, z_s[i] + l);
+        line(x_s[i] - l, y_s[i] - l, z_s[i] + l, x_s[i] + l, y_s[i] + l, z_s[i] - l);
+        line(x_s[i] - l, y_s[i] + l, z_s[i] + l, x_s[i] + l, y_s[i] - l, z_s[i] - l);
+      }
+    }
+  }
+
 
   //SUN
   noStroke();
