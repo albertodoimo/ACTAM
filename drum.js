@@ -158,7 +158,7 @@ let arp2Envelope, arp2Filter, arp2Synth, arp2Loop;
 let tendina = [];
 let slidVol = [];
 let volumes = [-32, -36, -16, -24, -24, -24, -24, -16];
-let lista = ["1", "4", "16", "32"];
+let lista = ["1", "2", "3", "4", "5", "16", "24", "32"];
 let refreshed = false;
 let idVol = [
   "instr1",
@@ -256,6 +256,7 @@ function setup() {
     for (let j = 0; j < lista.length; j++) {
       tendina[i].option(lista[j]);
     }
+    tendina[i].selected(planetRatios[i]);
     tendina[i].addClass("home-btn");
     tendina[i].addClass("hide");
     tendina[i].id(idTend[i]);
@@ -338,7 +339,12 @@ function changeRatio() {
     planetRatios[i] = tendina[i].value();
     console.log(planetRatios[i]);
   }
+  
+  Tone.Transport.pause();
+  playIsOff = true;
+  button3.html("Play");
   soundDesign();
+  
 }
 
 function refreshVolumes() {
@@ -528,7 +534,7 @@ function soundDesign() {
     }
     bassEnvelope.triggerAttackRelease(planetRatios[7].toString() + "n", time);
     console.log(chordNotes);
-  }, planetRatios[7].toString() + "n").start(0);
+  }, planetRatios[7].toString() + "n").start(Tone.now());
 
   //TETRADE CHORDS (ASYNC?)
   for (i = 0; i < 4; i++) {
@@ -563,7 +569,7 @@ function soundDesign() {
         planetRatios[6].toString() + "n",
         time
       );
-    }, planetRatios[6].toString() + "n").start(0);
+    }, planetRatios[6].toString() + "n").start(Tone.now());
   } else {
     chordLoops[0] = new Tone.Loop((time) => {
       chordSynths[0].triggerAttackRelease(
@@ -575,7 +581,7 @@ function soundDesign() {
         planetRatios[6].toString() + "n",
         time
       );
-    }, planetRatios[6].toString() + "n").start(0);
+    }, planetRatios[6].toString() + "n").start(Tone.now());
   }
 
   chordLoops[1] = new Tone.Loop((time) => {
@@ -588,7 +594,7 @@ function soundDesign() {
       planetRatios[5].toString() + "n",
       time
     );
-  }, planetRatios[5].toString() + "n").start(0);
+  }, planetRatios[5].toString() + "n").start(Tone.now());
 
   chordLoops[2] = new Tone.Loop((time) => {
     chordSynths[2].triggerAttackRelease(
@@ -600,7 +606,7 @@ function soundDesign() {
       planetRatios[4].toString() + "n",
       time
     );
-  }, planetRatios[4].toString() + "n").start(0);
+  }, planetRatios[4].toString() + "n").start(Tone.now());
 
   chordLoops[3] = new Tone.Loop((time) => {
     chordSynths[3].triggerAttackRelease(
@@ -612,7 +618,7 @@ function soundDesign() {
       planetRatios[3].toString() + "n",
       time
     );
-  }, planetRatios[3].toString() + "n").start(0);
+  }, planetRatios[3].toString() + "n").start(Tone.now());
 
   //LEAD
   leadFilter = new Tone.Filter(400, "lowpass");
@@ -645,7 +651,7 @@ function soundDesign() {
       leadNotesIndex++;
     }
     leadEnvelope.triggerAttackRelease(planetRatios[2].toString() + "n", time);
-  }, planetRatios[2].toString() + "n").start(0);
+  }, planetRatios[2].toString() + "n").start(Tone.now());
 
   //DRY ARPEGGIATOR
   arp1Filter = new Tone.Filter(400, "lowpass");
@@ -678,7 +684,7 @@ function soundDesign() {
       arp1NotesIndex++;
     }
     arp1Envelope.triggerAttackRelease(planetRatios[1].toString() + "n", time);
-  }, planetRatios[1].toString() + "n").start(0);
+  }, planetRatios[1].toString() + "n").start(Tone.now());
 
   //WET ARPEGGIATOR
   arp2Filter = new Tone.Filter(400, "lowpass");
@@ -705,13 +711,14 @@ function soundDesign() {
       planetRatios[0].toString() + "n",
       time
     );
+    console.log(time);
     if (arp2NotesIndex == 2) {
       arp2NotesIndex = 0;
     } else {
       arp2NotesIndex++;
     }
     arp2Envelope.triggerAttackRelease(planetRatios[0].toString() + "n", time);
-  }, planetRatios[0].toString() + "n").start(0);
+  }, planetRatios[0].toString() + "n").start(Tone.now());
 
   //Tone.Transport.start();
   Tone.Transport.bpm.value = bpm;
