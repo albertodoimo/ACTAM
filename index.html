@@ -9,7 +9,8 @@
     <link href="https://fonts.cdnfonts.com/css/product-sans" rel="stylesheet">
     <style>@import url('https://fonts.cdnfonts.com/css/product-sans');</style>
     <title>The Sound of Space</title>
-    <link rel="stylesheet" href="shepherd.js/dist/css/shepherd.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/shepherd.js@8.3.1/dist/js/shepherd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@8.3.1/dist/css/shepherd.css"/>
 </head>
 
 <body>
@@ -20,7 +21,8 @@
     <div class="title block">
         <h1 id="main-title">The Sound of Space</h1>
         <h3 id="sec-title">ACTAM Project - Generative Music</h3>
-        <a href="#ambient-selection" class="btn">LET'S START</a>
+        <a id="letstart" href="#ambient-selection" class="btn" onclick="tour.start()">LET'S START</a>
+
     </div>
 
     <div style="position: absolute; left: 90.5%; top: 130%;">
@@ -88,7 +90,6 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
-    <script src="shepherd.js/dist/js/shepherd.min.js"></script>
     <script src="Libraries/P5/p5.js"></script>
     <script src="main.js"></script>
 
