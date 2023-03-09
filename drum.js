@@ -201,21 +201,23 @@ function setup() {
   easycam = createEasyCam(); // creazione oggetto easycam con distanza iniziale
   easycam.setState(tri); // stato iniziale prospettico
   easycam.setDistanceMax(2900);
-  easycam.setDistanceMin(200);
+  easycam.setDistanceMin(sunDim+50);
   soundDesign();
 
-  frameRate(60);
+  frameRate(30);
   setAttributes("antialias", true);
   perspective(PI / 2, width / height, 0.1, 15000);
   textureWrap(CLAMP);
 
   button1 = createButton("2D"); // creazione bottoni per switching 2D/3D
-  button1.position(windowWidth - 100, 120);
-  button1.addClass("home-btn");
+    //button1.position(windowWidth - 100, 120);
+  button1.addClass("style-btn");
+  button1.addClass("position2D")
 
   button2 = createButton("3D");
-  button2.position(windowWidth - 100, 185);
-  button2.addClass("home-btn");
+  //button2.position(windowWidth - 100, 185);
+  button2.addClass("style-btn");
+  button2.addClass("position3D")
 
   button1.mouseClicked(set2d); // clickando i bottoni si switchano gli stati della easycamera, dichiarati di seguito
   button2.mouseClicked(set3d);
@@ -236,8 +238,9 @@ function setup() {
   //-----------------------------------------------------------------------------------------------------------------------
 
   button3 = createButton("Play");
-  button3.position(windowWidth - 100, 20);
-  button3.addClass("home-btn");
+  //button3.position(windowWidth - 100, 20);
+  button3.addClass("style-btn");
+  button3.addClass("positionPlayStop");
   button3.mouseClicked(function () {
     if (playIsOff) {
       playIsOff = false;
@@ -252,30 +255,31 @@ function setup() {
   //RATIO SELECTORS
   for (i = 0; i < 8; i++) {
     tendina[i] = createSelect();
-    tendina[i].position(30, 80 + i * 60);
-    for (let j = 0; j < lista.length; j++) {
-      tendina[i].option(lista[j]);
-    }
-    tendina[i].selected(planetRatios[i]);
-    tendina[i].addClass("home-btn");
+    tendina[i].position(10 , 60 +  i * windowHeight/10);
+    tendina[i].addClass("style-btn");
     tendina[i].addClass("hide");
+    tendina[i].addClass("positionMenu");
     tendina[i].id(idTend[i]);
     tendina[i].style("height", "3vw");
     tendina[i].style("width", "3vw");
     tendina[i].changed(changeRatio);
+    for (let j = 0; j < lista.length; j++) {
+      tendina[i].option(lista[j]);
+    }
   }
 
   //VOLUME SLIDERS
   for (i = 0; i < 8; i++) {
     slidVol[i] = createSlider(-100, -16, volumes[i], 1);
 
-    slidVol[i].position(80, 510 - i * 60);
+    slidVol[i].position(65, (65 + 7 * windowHeight/10) -  i * windowHeight/10);
     slidVol[i].addClass("slider");
     slidVol[i].addClass("hide");
     slidVol[i].addClass("volume");
+    slidVol[i].addClass("positionMenu");
     slidVol[i].id(idVol[7 - i]);
     slidVol[i].style("height", "3vw");
-    slidVol[i].style("width", "8vw");
+    slidVol[i].style("width", "10vw");
     //slidVol[i].style('background-color', '#000000');
 
     slidVol[i].changed(changeVolume);
@@ -284,8 +288,9 @@ function setup() {
   //MENU
   menuButton = createButton("Menu");
   let hiddenMenu = true;
-  menuButton.position(20, 20);
-  menuButton.addClass("home-btn");
+  //menuButton.position(20, 20);
+  menuButton.addClass("style-btn");
+  menuButton.addClass("positionMenu");
   menuButton.style("height", "3vw");
   menuButton.style("width", "6vw");
   menuButton.mouseClicked(function () {
@@ -369,6 +374,17 @@ function changeVolume() {
   refreshVolumes();
 }
 
+//Stars variables
+let s = 0;
+let r_s = 2500;
+let x_s, y_s, z_s, c_s = [];
+let n_s = 120;
+let white = [255,255,255];
+let yellow = [255,255,80];
+let cyan = [120,180,255];
+let red = [255,100,100];
+let colors = [white, yellow, cyan, red];
+
 function draw() {
   //BACKGROUND
   background(0, 0, 0, 0);
@@ -385,12 +401,67 @@ function draw() {
   }
 
   // SKYBOX
-  push();
-  noStroke();
-  texture(environmentSelectedImg);
-  rotateY(frameCount * 0.0005);
-  sphere(4000);
-  pop();
+/*   if(s%20 == 0){
+    x_s = [];
+    y_s = [];
+    z_s = [];  
+    for (i=0; i<50; i++){
+      x_s.push(random(-4000, 4000));
+      y_s.push(random(-4000, 4000));
+      z_s.push(random(-4000, 4000));
+    }
+     /////  push();
+    noStroke();
+    texture(environmentSelectedImg);
+    rotateY(frameCount * 0.0005);
+    sphere(4000);
+    ///////pop(); 
+    s = 0;
+  } */
+
+  if(s==0){
+    s++;
+    x_s = [];
+    y_s = [];
+    z_s = [];
+    c_s = [];
+    for (i=0; i<n_s; i++){
+      x_s[i] = random(-r_s*1.2, r_s*1.2);
+      y_s[i] = random(-r_s, r_s);
+      z_s[i] = random(-r_s, r_s);  
+      c_s[i] = white;
+    }
+  }
+
+  for (i=0; i<n_s; i++){
+    if(i%(n_s/4)==0){
+      x_s.push(random(-r_s*1.2, r_s*1.2));
+      y_s.push(random(-r_s, r_s));
+      z_s.push(random(-r_s, r_s));
+      x_s.shift();
+      y_s.shift();
+      z_s.shift();
+      var col = random([0, 1, 2, 3]);
+      c_s.push(colors[col]);
+      c_s.shift();
+    }
+    
+    var d_s = Math.sqrt(x_s[i]**2 +  y_s[i]**2 + z_s[i]**2);
+    if(d_s>2900){
+      strokeWeight(random([1, 2, 3]));
+      stroke(c_s[i]);
+      fill(c_s[i]);
+      point(x_s[i], y_s[i], z_s[i]);
+      if(d_s < 3500){
+        var l = random([9, 10, 11]);
+        strokeWeight(1);
+        line(x_s[i] - l, y_s[i] - l, z_s[i] - l, x_s[i] + l, y_s[i] + l, z_s[i] + l);
+        line(x_s[i] - l, y_s[i] - l, z_s[i] + l, x_s[i] + l, y_s[i] + l, z_s[i] - l);
+        line(x_s[i] - l, y_s[i] + l, z_s[i] + l, x_s[i] + l, y_s[i] - l, z_s[i] - l);
+      }
+    }
+  }
+
 
   //SUN
   noStroke();
@@ -457,7 +528,7 @@ function draw() {
         Tone.Transport.start();
       }); */
 
-  text("red", slidVol[1].x + slidVol[1].width);
+  //text("red", slidVol[1].x + slidVol[1].width);
   //text("green", gSlider.x * 2 + gSlider.width, 65);
   //text("blue", bSlider.x * 2 + bSlider.width, 95);
 }

@@ -102,7 +102,7 @@ html {
   width: 95%;
   margin: auto;
   margin-top: 30vw;
-  margin-bottom: 5vw;
+  margin-bottom: auto;
   text-align: center;
   z-index: 998;
   position: relative;
@@ -168,14 +168,13 @@ img {
   cursor: pointer;
 }
 
-.home-btn {
+.style-btn {
     position: absolute;
-    top: 80%;
-    left: 90%;
     color: #ffffff;
     text-decoration: none;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 0.2vw;
+    font-size: 1.2vw;
     text-shadow: #d8ccee 1px 0 10px;
     height: 6vw;
     width: 6vw;
@@ -196,7 +195,12 @@ img {
     left: 83%;
 }
 
-.home-btn:before {
+#back {
+  top: 80%;
+  left: 90%;
+}
+
+.style-btn:before {
     content: '';
     position: absolute;
     background: #ffffff;
@@ -209,17 +213,17 @@ img {
     transition-timing-function: cubic-bezier(1.000, -0.195, 0.000, 1.330);
 }
 
-.home-btn:hover {
+.style-btn:hover {
     color: black;
     transition: 1s;
 }
 
-.home-btn:hover:before {
+.style-btn:hover:before {
     width: 85%;
     height: 85%;
 }
 
-.home-btn:active:before, .btn:focus:before {
+.style-btn:active:before, .btn:focus:before {
     width: 100%;
     height: 100%;
 }
@@ -258,10 +262,10 @@ img {
 
 #imageBox {
   z-index: 999;
-  margin-top: 3%;
-  margin-left: 59%;
-  width: 640x;
-  height: 360px;
+  margin-top: 5%;
+  margin-left: 62%;
+  width: 32vw;
+  height: 18vw;
   border: 2px solid white;
 }
 
@@ -276,6 +280,8 @@ img {
 
 .container canvas, #param {
     position: absolute;
+    top: 0%;
+    left: 0%;
 }
 
 .container #param2 {
@@ -308,7 +314,7 @@ img {
 #param-container {
   font-size: 1.5vw;
   text-align: left;
-  margin: 2vw;
+  margin: 1.5vw;
 }
 
 #param-container2 {
@@ -320,22 +326,22 @@ img {
 
 #key {
   margin: 1.5vw;
-  font-size: 3vw;
+  font-size: 2.2vw;
 }
 
 #mode {
   margin: 1.5vw;
-  font-size: 3vw;
+  font-size: 2.2vw;
 }
 
 #prog {
   margin: 1.5vw;
-  font-size: 3vw;
+  font-size: 2.2vw;
 }
 
 #tetrad {
   margin: 1.5vw;
-  font-size: 3vw;
+  font-size: 2.2vw;
 }
 
 #key2 {
@@ -376,7 +382,6 @@ img {
 } */
 
 .slider {
-  width: 19.5vw;
   background-color: transparent;
   /* Removes some defaults */
   -webkit-appearance: none;
@@ -386,7 +391,7 @@ img {
     content:"VOLUME";
     position: absolute;
     font-family: 'Product Sans', sans-serif;
-    font-size: 13px;
+    font-size: 1.2vw;
     font-weight: bold;
     color: white;
     top: -7px;
@@ -553,12 +558,12 @@ img {
 }
 
 #palette div {
-  height: 70px;
-  width: 70px;
+  height: 6vw;
+  width: 6vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: small;
+  font-size: 1.2vw;
 
   border: 0.2px solid white;
 
@@ -570,3 +575,34 @@ img {
   text-shadow: 1px 1px #333;
 }
 
+.positionPlayStop{
+  position: absolute;
+  right: 0%;
+  top: 0%;
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.positionMenu{
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.position2D{
+  position: absolute;
+  right: 0%;
+  top: 0%;
+  margin-top: 9%;
+  margin-right: 20px;
+}
+
+.position3D{
+  position: absolute;
+  right: 0%;
+  top: 0%;
+  margin-top: 13%;
+  margin-right: 20px;
+}
