@@ -423,7 +423,7 @@ function draw() {
     for (i=0; i<n_s; i++){
       x_s[i] = random(-r_s*1.2, r_s*1.2);
       y_s[i] = random(-r_s, r_s);
-      z_s[i] = random(-r_s, r_s/4);  
+      z_s[i] = random(-r_s, r_s);  
       c_s[i] = white;
     }
   }
@@ -442,13 +442,13 @@ function draw() {
     }
     
     var d_s = Math.sqrt(x_s[i]**2 +  y_s[i]**2 + z_s[i]**2);
-    if(d_s>1500){
+    if(d_s>2900){
       strokeWeight(random([1, 2, 3]));
       stroke(c_s[i]);
       fill(c_s[i]);
       point(x_s[i], y_s[i], z_s[i]);
-      if(d_s < 2800){
-        var l = random([6, 7, 8]);
+      if(d_s < 3500){
+        var l = random([9, 10, 11]);
         strokeWeight(1);
         line(x_s[i] - l, y_s[i] - l, z_s[i] - l, x_s[i] + l, y_s[i] + l, z_s[i] + l);
         line(x_s[i] - l, y_s[i] - l, z_s[i] + l, x_s[i] + l, y_s[i] + l, z_s[i] - l);
