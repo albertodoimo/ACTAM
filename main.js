@@ -119,7 +119,7 @@ function ambient(id) {
 const tour = new Shepherd.Tour({
   useModalOverlay: true,
   defaultStepOptions: {
-      classes: 'btn-style',
+      classes: '',
       scrollTo: true
   }
 });
@@ -127,10 +127,10 @@ const tour = new Shepherd.Tour({
 // step #0
 tour.addStep({
   id: 'ambient-selection',
-  text: 'The buildings on this row allow to choose between different instruments to play the main melody',
+  text: 'prova',
   attachTo: {
-      element: '.shepard-ambient-selection',
-      on: 'left'
+      element: '.col',
+      on: 'bottom'
   },
   classes: 'example-step-extra-class',
   buttons: [
@@ -145,3 +145,28 @@ tour.addStep({
 
   ]
 });
+
+// step #1
+tour.addStep({
+  id: '',
+  text: 'prova',
+  attachTo: {
+      element: '.row',
+      on: 'right'
+  },
+  classes: 'example-step-extra-class',
+  buttons: [
+      {
+          text: 'Exit',
+          action: tour.complete
+      },
+      {
+          text: 'Next',
+          action: tour.next
+      }
+
+  ]
+});
+document.getElementById("letstart").onclick = function () {
+  tour.start();
+}
