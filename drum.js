@@ -380,10 +380,10 @@ let r_s = 2500;
 let x_s, y_s, z_s, c_s = [];
 let n_s = 120;
 let white = [255,255,255];
-let yellow = [255,255,80];
+let yellow = [255,255,180];
 let cyan = [120,180,255];
-let red = [255,100,100];
-let colors = [white, yellow, cyan, red];
+let red = [255,180,180];
+let colors = [white, white, white, yellow, cyan, red];
 
 function draw() {
   //BACKGROUND
@@ -441,7 +441,7 @@ function draw() {
       x_s.shift();
       y_s.shift();
       z_s.shift();
-      var col = random([0, 1, 2, 3]);
+      var col = random([0, 1, 2, 3, 4 ,5]);
       c_s.push(colors[col]);
       c_s.shift();
     }
