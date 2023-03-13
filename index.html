@@ -9,8 +9,8 @@
     <link href="https://fonts.cdnfonts.com/css/product-sans" rel="stylesheet">
     <style>@import url('https://fonts.cdnfonts.com/css/product-sans');</style>
     <title>The Sound of Space</title>
-    <script src="https://cdn.jsdelivr.net/npm/shepherd.js@8.3.1/dist/js/shepherd.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@8.3.1/dist/css/shepherd.css"/>
+    <script src="shepherd/shepherd.min.js"></script>
+    <link rel="stylesheet" href="shepherd/shepherd.css"/>
 </head>
 
 <body>
@@ -21,21 +21,25 @@
     <div class="title block">
         <h1 id="main-title">The Sound of Space</h1>
         <h3 id="sec-title">ACTAM Project - Generative Music</h3>
-        <a id="letstart" href="#ambient-selection" class="btn" onclick="tour.start()">LET'S START</a>
+        <a href="#ambient-selection" class="btn">LET'S START</a>
 
     </div>
 
-    <div style="position: absolute; left: 90.5%; top: 130%;">
-        <a href="#top" class="style-btn">BACK</a>
-    </div>
+    
     
     <div id="ambient-selection">
         <h1>Ambient Selection</h1>
         <p> The selected image will affect the soundscape</p>
-    
+        <div style="position: absolute; left: 90.5%; top: 10%;">
+            <a href="#top" class="style-btn">BACK</a>
+        </div>
+        <div style="position: absolute; left: 3%; top: 10%;">
+            <a id="guide" class="style-btn">GUIDE</a>
+        </div>
+
     <div class="row">
-        <div id="1" class="col" onclick="ambient(this.id)">
-            <img id="1" onclick="" src="Images/env/1.jpg">
+        <div id="1" class="col object1" onclick="flag(this.id)">
+            <img id="1" src="Images/env/1.jpg">
             <div class="layer">
                 <!-- <h3>1</h3> -->
             </div>

@@ -113,60 +113,56 @@ function ambient(id) {
     window.location.href = "param.html";
 }
 
+function flag(id) {
+  if (1==localStorage.getItem("guideflag")) {
+    ambient(1);
+    localStorage.setItem("guideflag", 1);
+  } else {
+    ambient(id)
+  }
+}
 
 // GUIDE TOUR
+
+var guideflag
+
+localStorage.setItem("guideflag", 0)
+localStorage.setItem("guideflag2", 0)
 
 const tour = new Shepherd.Tour({
   useModalOverlay: true,
   defaultStepOptions: {
-      classes: '',
+      classes: 'shadow-md bg-purple-dark',
       scrollTo: true
   }
 });
 
+
 // step #0
 tour.addStep({
-  id: 'ambient-selection',
-  text: 'prova',
+  id: 'step0',
+  text: 'Select one image to see which music parameters will be extracted. Try different images to change the music mood',
   attachTo: {
-      element: '.col',
+      element: '.object1',
       on: 'bottom'
   },
-  classes: 'example-step-extra-class',
+  classes: '',
   buttons: [
+    {
+        text: 'NEXT',
+        action: function () {
+        ambient(1)
+        }
+    },
       {
-          text: 'Exit',
+          text: 'EXIT',
           action: tour.complete
       },
-      {
-          text: 'Next',
-          action: tour.next
-      }
 
   ]
 });
 
-// step #1
-tour.addStep({
-  id: '',
-  text: 'prova',
-  attachTo: {
-      element: '.row',
-      on: 'right'
-  },
-  classes: 'example-step-extra-class',
-  buttons: [
-      {
-          text: 'Exit',
-          action: tour.complete
-      },
-      {
-          text: 'Next',
-          action: tour.next
-      }
-
-  ]
-});
-document.getElementById("letstart").onclick = function () {
+document.getElementById("guide").onclick = function () {
   tour.start();
+  localStorage.setItem("guideflag", 1);
 }

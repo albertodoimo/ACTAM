@@ -8,7 +8,10 @@
     <link rel="icon" href="Images/icon.png" type="image/png">
     <link href="https://fonts.cdnfonts.com/css/product-sans" rel="stylesheet">
     <style>@import url('https://fonts.cdnfonts.com/css/product-sans');</style>
+    <script src="shepherd/shepherd.min.js"></script>
+    <link rel="stylesheet" href="shepherd/shepherd.css"/>
     <title>Soundscape</title>
+    
 </head>
 
 <body>
@@ -17,10 +20,12 @@
         <div id="param">
             <h1>Soundscape</h1>
             <div id="palette"></div>
-            <div id="param-container"><h2>Detected key:</h2> <h2 id="key"></h2></div>
-            <div id="param-container"><h2>Detected mode:</h2> <h2 id="mode"></h2></div>
-            <div id="param-container"><h2>Detected progression:</h2> <h2 id="prog"></h2></div>
-            <div id="param-container"><h2>Detected chord type:</h2> <h2 id="tetrad"></h2></div>
+            <div id="param-big-container">
+                <div id="param-container"><h2>Detected key:</h2> <h2 id="key"></h2></div>
+                <div id="param-container"><h2>Detected mode:</h2> <h2 id="mode"></h2></div>
+                <div id="param-container"><h2>Detected progression:</h2> <h2 id="prog"></h2></div>
+                <div id="param-container"><h2>Detected chord type:</h2> <h2 id="tetrad"></h2></div>
+            </div>
         </div>
     </div>
 

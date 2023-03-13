@@ -2,6 +2,11 @@
 
 // Retrieving selected image path from local storage
 var environment = localStorage.getItem("environment");
+var guideflag = localStorage.getItem("guideflag");
+var guideflag2 = localStorage.getItem("guideflag2");
+
+console.log(guideflag);
+console.log(guideflag2);
 
 var count = 0;  // color counter ----------> CHORD PROGRESSION
 var ref;
@@ -594,3 +599,74 @@ class Star {
       ellipse(this.sx,this.sy,this.size,this.size);
     }
 };
+
+
+// GUIDE TOUR
+
+  const tour = new Shepherd.Tour({
+    useModalOverlay: true,
+    defaultStepOptions: {
+        classes: 'shadow-md bg-purple-dark',
+        scrollTo: true
+    }
+  });
+
+  // step #1
+  tour.addStep({
+    id: 'step1',
+    text: 'extracted palette',
+    attachTo: {
+        element: '#palette',
+        on: 'right'
+    },
+    classes: '',
+    buttons: [
+        {
+          text: 'NEXT',
+          action: tour.next  
+        },
+        {
+          text: 'EXIT',
+          action: tour.complete,
+            function () {localStorage.setItem("guideflag", 0)}
+          
+        },
+
+    ]
+  });
+
+  // step #2
+  tour.addStep({
+    id: 'step2',
+    text: 'extracted music parameters from the image',
+    attachTo: {
+        element: '#param-big-container',
+        on: 'right'
+    },
+    classes: '',
+    buttons: [
+        {
+          text: 'NEXT',
+          action: function () {
+          document.getElementById("ahead").click();
+          localStorage.setItem("guideflag", 0);
+          localStorage.setItem("guideflag2", 1);
+          }   
+        },
+        {
+          text: 'EXIT',
+          action: tour.complete,
+          function () {localStorage.setItem("guideflag", 0)}
+        
+        },
+
+    ]
+  });
+
+  console.log(guideflag);
+  console.log(guideflag2);
+
+if(guideflag==1){ 
+  tour.start();
+  localStorage.setItem("guideflag2", 0);
+}

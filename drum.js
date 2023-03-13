@@ -3,6 +3,10 @@ var m = localStorage.getItem("m");
 var p = localStorage.getItem("p");
 var t = localStorage.getItem("t");
 
+var guideflag2 = localStorage.getItem("guideflag2");
+
+console.log(guideflag2);
+
 // DICHIARO LE VARIABILI FUORI DALLA FUNZIONI
 // PERCHE' ABBIANO VISIBILITA' ANCHE NELLE ALTRE FUNZIONI
 let imgEarth;
@@ -257,7 +261,7 @@ function setup() {
     tendina[i] = createSelect();
     tendina[i].position(10 , 60 +  i * windowHeight/10);
     tendina[i].addClass("style-btn");
-    tendina[i].addClass("hide");
+    tendina[i].addClass("show");
     tendina[i].addClass("positionMenu");
     tendina[i].id(idTend[i]);
     tendina[i].style("height", "3vw");
@@ -274,7 +278,7 @@ function setup() {
 
     slidVol[i].position(65, (65 + 7 * windowHeight/10) -  i * windowHeight/10);
     slidVol[i].addClass("slider");
-    slidVol[i].addClass("hide");
+    slidVol[i].addClass("show");
     slidVol[i].addClass("volume");
     slidVol[i].addClass("positionMenu");
     slidVol[i].id(idVol[7 - i]);
@@ -286,8 +290,8 @@ function setup() {
   }
 
   //MENU
-  menuButton = createButton("Menu");
-  let hiddenMenu = true;
+  menuButton = createButton("Hide");
+  let hiddenMenu = false;
   //menuButton.position(20, 20);
   menuButton.addClass("style-btn");
   menuButton.addClass("positionMenu");
@@ -868,3 +872,135 @@ let bi = {
   distance: 2000,
   rotation: [0.2, -0.2, 0, 0],
 };
+
+
+
+// GUIDE TOUR
+
+const tour = new Shepherd.Tour({
+  useModalOverlay: true,
+  defaultStepOptions: {
+      classes: 'shadow-md bg-purple-dark',
+      scrollTo: false
+  }
+});
+
+// step #3
+tour.addStep({
+  id: 'mixer',
+  text: 'mix the sounds here!',
+  attachTo: {
+      element: '#mixer',
+      on: 'right'
+  },
+  classes: '',
+  buttons: [
+      {
+        text: 'NEXT',
+        action: tour.next  
+      },
+      {
+        text: 'EXIT',
+        action: tour.complete,
+        function () {localStorage.setItem("guideflag2", 0)}
+      
+      },
+
+  ]
+});
+
+// step #4
+tour.addStep({
+  id: 'step4',
+  text: 'extracted music parameters from the image',
+  attachTo: {
+      element: '.param2guide',
+      on: 'bottom'
+  },
+  classes: '',
+  buttons: [
+      {
+        text: 'NEXT',
+        action:tour.next
+      },
+      {
+        text: 'EXIT',
+        action: tour.complete,
+        function () {localStorage.setItem("guideflag2", 0)}
+      
+      },
+
+  ]
+});
+
+// step #5
+tour.addStep({
+  id: 'step5',
+  text: 'Click here to listen to sound',
+  attachTo: {
+      element: '.positionPlayStop',
+      on: 'left'
+  },
+  classes: '',
+  buttons: [
+      {
+        text: 'NEXT',
+        action:tour.next
+      },
+      {
+        text: 'EXIT',
+        action: tour.complete,
+        function () {localStorage.setItem("guideflag2", 0)}
+      
+      },
+
+  ]
+});
+
+// step #6
+tour.addStep({
+  id: '2d',
+  text: 'Set 2d environment ',
+  attachTo: {
+      element: '.position2D',
+      on: 'left'
+  },
+  classes: '',
+  buttons: [
+      {
+        text: 'NEXT',
+        action:tour.next
+      },
+      {
+        text: 'EXIT',
+        action: tour.complete,
+        function () {localStorage.setItem("guideflag2", 0)}
+      
+      },
+
+  ]
+});
+
+// step #7
+tour.addStep({
+  id: '3d',
+  text: 'Set 3d environment ',
+  attachTo: {
+      element: '.position3D',
+      on: 'bottom'
+  },
+  classes: '',
+  buttons: [
+      {
+        text: 'EXIT',
+        action: tour.complete
+      },
+
+  ]
+});
+
+console.log(guideflag2);
+
+if(guideflag2==1){
+tour.start();
+}
