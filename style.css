@@ -410,28 +410,36 @@ img {
 }
 
 #instr1::after {
-    content:"arpeg 1";
+    content:"Mercury - Arpeg 1";
+    opacity: 0.8;
 }
 #instr2::after {
-    content:"arpeg 2";
+    content:"Venus - Arpeg 2";
+    opacity: 0.8;
 }
 #instr3::after {
-    content:"lead";
+    content:"Earth - Lead";
+    opacity: 0.8;
 }
 #instr4::after {
-    content:"tonic";
+    content:"Mars - Tonic";
+    opacity: 0.8;
 }
 #instr5::after {
-    content:"third";
+    content:"Jupyter - Third";
+    opacity: 0.8;
 }
 #instr6::after {
-    content:"fifth";
+    content:"Saturn - Fifth";
+    opacity: 0.8;
 }
 #instr7::after {
-    content:"seventh/octave";
+    content:"Ur-anus - Seventh/Octave";
+    opacity: 0.8;
 }
 #instr8::after {
-    content:"bass";
+    content:"Neptune - Bass";
+    opacity: 0.8;
 }
 
 
@@ -587,11 +595,12 @@ img {
 
 .positionPlayStop{
   position: absolute;
-  right: 0%;
+  right: 3%;
   top: 0%;
   margin-top: 20px;
   margin-right: 20px;
   margin-left: 20px;
+  transform: translate(-50%);
 }
 
 .positionMenu{
@@ -600,20 +609,28 @@ img {
   top: 0%;
   margin-top: 20px;
   margin-left: 20px;
+  
 }
 
 .position2D{
   position: absolute;
-  right: 0%;
+  right: 3%;
   top: 0%;
   margin-top: 9%;
-  margin-right: 20px;
+  margin-right: 2vw;
+  width: 5vw;
+  height: 5vw;
+  transform: translate(-50%);
 }
 
 .position3D{
   position: absolute;
-  right: 0%;
+  right: 3%;
   top: 0%;
-  margin-top: 13%;
-  margin-right: 20px;
+  margin-top: 14.5%;
+  margin-right: 2vw;
+  width: 5vw;
+  height: 5vw;
+  transform: translate(-50%);
+
 }
