@@ -14,22 +14,22 @@ let imgSun;
 let imgMoon;
 var imgSky;
 let imgPlanets = [];
-let sunDim = 200;
+let sunDim = 50;
 //let planetOrbWidth = [170, 300, 500, 800, 1050, 1300, 1600, 1900];
 let planetOrbHeight = [
-  sunDim + 57,
-  50 + sunDim + 108,
-  150 + sunDim + 149,
-  180 + sunDim + 227,
-  sunDim + 588,
-  sunDim + 866.5,
-  sunDim + 1166,
-  sunDim + 1366,
+  sunDim + 14,
+  12.5 + sunDim + 27,
+  37.5 + sunDim + 37.25,
+  45 + sunDim + 56.75,
+  sunDim + 147,
+  sunDim + 216.625,
+  sunDim + 291.5,
+  sunDim + 341.5,
 ];
 let planetOrbWidth = planetOrbHeight.map((x) => x * 1.5);
 let planetTilt = [0, 0, -25, 0, 0, 0, 0, 0];
 let planetRotation = [0.005, 0.01, 0.015, 0.02, 0.025, 0.03, 0.035, 0.04];
-let planetDiameter = [24, 50, 63, 33, 140, 116, 50, 48];
+let planetDiameter = [6, 12.5, 15.75, 8.25, 35, 29, 12.5, 12];
 let bool = false;
 let easycam;
 
@@ -39,7 +39,7 @@ let playIsOff = true;
 let bpm = 20;
 //1= MEASURE, 4=BEAT
 //---------arp1,arp2,lead,chord4,chord3,chord2,chord1,bass--------------------------------------
-let planetRatios = [32, 24, 2, 5, 4, 3, 2, 1];
+let planetRatios = [32, 16, 2, 5, 4, 3, 2, 1];
 
 let chromas = [
   "C",
@@ -161,8 +161,8 @@ let arp2Envelope, arp2Filter, arp2Synth, arp2Loop;
 //Planets menus
 let tendina = [];
 let slidVol = [];
-let volumes = [-32, -36, -16, -24, -24, -24, -24, -16];
-let lista = ["1", "2", "3", "4", "5", "16", "24", "32"];
+let volumes = [-16, -23, -23, -23, -23, -19, -26, -100];
+let lista = ["1", "2", "3", "4", "5", "8", "16", "24", "32"];
 let refreshed = false;
 let idVol = [
   "instr1",
@@ -204,11 +204,11 @@ function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
   easycam = createEasyCam(); // creazione oggetto easycam con distanza iniziale
   easycam.setState(tri); // stato iniziale prospettico
-  easycam.setDistanceMax(2900);
+  easycam.setDistanceMax(725);
   easycam.setDistanceMin(sunDim+50);
   soundDesign();
 
-  frameRate(30);
+  frameRate(24);
   setAttributes("antialias", true);
   perspective(PI / 2, width / height, 0.1, 15000);
   textureWrap(CLAMP);
@@ -270,6 +270,7 @@ function setup() {
     for (let j = 0; j < lista.length; j++) {
       tendina[i].option(lista[j]);
     }
+    tendina[i].selected(planetRatios[i]);
   }
 
   //VOLUME SLIDERS
@@ -352,6 +353,13 @@ function changeRatio() {
   Tone.Transport.pause();
   playIsOff = true;
   button3.html("Play");
+  bassLoop.cancel();
+  for(let i=0; i<4; i++){
+  chordLoops[i].cancel();
+  }
+  leadLoop.cancel();
+  arp1Loop.cancel();
+  arp2Loop.cancel();
   soundDesign();
   
 }
@@ -545,14 +553,14 @@ function soundDesign() {
   let arp2NotesIndex = 0;
 
   reverb = new Tone.Reverb({
-    decay: 10,
-    wet: 0.8,
+    decay: 5,
+    wet: 0.7,
   });
 
   pingpong = new Tone.PingPongDelay({
-    delayTime: 0.4,
-    feedback: 0.5,
-    wet: 0.7,
+    delayTime: "2n",
+    feedback: 0.55,
+    wet: 0.6,
   });
 
   //BASSO
@@ -563,8 +571,8 @@ function soundDesign() {
     decay: (planetRatios[7] * 2).toString() + "n",
     sustain: 0,
     release: 0,
-    baseFrequency: "C0",
-    octaves: 5,
+    baseFrequency: "C1",
+    octaves: 4,
     attackCurve: "sine",
   });
 
@@ -611,7 +619,7 @@ function soundDesign() {
     console.log(chordNotes);
   }, planetRatios[7].toString() + "n").start(Tone.now());
 
-  //TETRADE CHORDS (ASYNC?)
+  //TETRADE CHORDS
   for (i = 0; i < 4; i++) {
     chordFilters[i] = new Tone.Filter(400, "lowpass");
 
@@ -728,23 +736,23 @@ function soundDesign() {
     leadEnvelope.triggerAttackRelease(planetRatios[2].toString() + "n", time);
   }, planetRatios[2].toString() + "n").start(Tone.now());
 
-  //DRY ARPEGGIATOR
+  //ARPEGGIATOR 1
   arp1Filter = new Tone.Filter(400, "lowpass");
 
   arp1Envelope = new Tone.FrequencyEnvelope({
-    attack: (planetRatios[1] * 8).toString() + "n",
-    decay: (planetRatios[1] * 4).toString() + "n",
+    attack: (planetRatios[1] * 30).toString() + "n",
+    decay: (planetRatios[1] * 8).toString() + "n",
     sustain: 0,
     release: 0,
     baseFrequency: "C0",
-    octaves: 7,
+    octaves: 5,
     attackCurve: "sine",
   });
 
   arp1Envelope.connect(arp1Filter.frequency);
 
   arp1Synth = new Tone.Synth({ oscillator: { type: "fmsine" } });
-  arp1Synth.chain(arp1Filter, reverb, Tone.Destination);
+  arp1Synth.chain(arp1Filter, pingpong, Tone.Destination);
   arp1Synth.volume.value = -100;
 
   arp1Loop = new Tone.Loop((time) => {
@@ -761,33 +769,33 @@ function soundDesign() {
     arp1Envelope.triggerAttackRelease(planetRatios[1].toString() + "n", time);
   }, planetRatios[1].toString() + "n").start(Tone.now());
 
-  //WET ARPEGGIATOR
+  //ARPEGGIATOR 2
   arp2Filter = new Tone.Filter(400, "lowpass");
 
   arp2Envelope = new Tone.FrequencyEnvelope({
-    attack: (planetRatios[0] * 8).toString() + "n",
+    attack: (planetRatios[0] * 32).toString() + "n",
     decay: (planetRatios[0] * 4).toString() + "n",
     sustain: 0,
     release: 0,
     baseFrequency: "C0",
-    octaves: 7,
+    octaves: 5,
     attackCurve: "sine",
   });
 
   arp2Envelope.connect(arp2Filter.frequency);
 
   arp2Synth = new Tone.Synth({ oscillator: { type: "fmsine" } });
-  arp2Synth.chain(arp2Filter, reverb, Tone.Destination);
+  arp2Synth.chain(arp2Filter, Tone.Destination);
   arp2Synth.volume.value = -100;
 
   arp2Loop = new Tone.Loop((time) => {
     arp2Synth.triggerAttackRelease(
-      chordNotes[arp2NotesIndex][chordNotesIndex] + "4",
+      selectedMode[arp2NotesIndex] + "4",
       planetRatios[0].toString() + "n",
       time
     );
     console.log(time);
-    if (arp2NotesIndex == 2) {
+    if (arp2NotesIndex == (selectedMode.length-1)) {
       arp2NotesIndex = 0;
     } else {
       arp2NotesIndex++;
@@ -863,13 +871,13 @@ function getRndInteger(min, max) {
 
 let tri = {
   center: [0, 0, 0],
-  distance: 2400,
+  distance: 600,
   rotation: [1, -0.3, 0, 0],
 };
 
 let bi = {
   center: [0, 0, 0],
-  distance: 2000,
+  distance: 500,
   rotation: [0.2, -0.2, 0, 0],
 };
 
