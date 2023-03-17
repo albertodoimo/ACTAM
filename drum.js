@@ -159,6 +159,8 @@ let arp1Envelope, arp1Filter, arp1Synth, arp1Loop;
 let arp2Envelope, arp2Filter, arp2Synth, arp2Loop;
 
 //Planets menus
+let tempVol = [];
+let muted = false;
 let tendina = [];
 let slidVol = [];
 let volumes = [-16, -23, -23, -23, -23, -19, -26, -50];
@@ -320,6 +322,31 @@ function setup() {
       }
     }
   });
+
+  //MUTE 
+  button4 = createButton("Mute");
+  button4.addClass("style-btn");
+  button4.addClass("positionMute");
+  button4.mouseClicked(function () {
+    if (!muted) {
+      muted = true;
+      button4.html("Unmute");
+      for (i = 0; i < 8; i++) {
+        tempVol[i] = slidVol[i].value();
+        volumes[i] = -50;
+        slidVol[i].value(-50);
+      }
+    }
+    else{
+      muted = false;
+      button4.html("Mute");
+      for (i = 0; i < 8; i++) {
+        volumes[i] = tempVol[i];
+        slidVol[i].value(tempVol[i]);
+      }
+    }
+    refreshVolumes();
+  });
     
     
     var key2 = document.getElementById("key2");
@@ -378,6 +405,8 @@ function refreshVolumes() {
 }
 
 function changeVolume() {
+  muted = false;
+  button4.html("Mute");
   console.log("Volumes");
   for (i = 0; i < 8; i++) {
     volumes[i] = slidVol[i].value();

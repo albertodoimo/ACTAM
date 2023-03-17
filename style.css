@@ -617,3 +617,11 @@ img {
   margin-top: 13%;
   margin-right: 20px;
 }
+
+.positionMute{
+  position: absolute;
+  right: 0%;
+  top: 55%;
+  margin-top: 13%;
+  margin-right: 20px;
+}
