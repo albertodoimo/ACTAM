@@ -1037,6 +1037,10 @@ tour.addStep({
   },
   classes: '',
   buttons: [
+    {
+      text: 'NEXT',
+      action:tour.next
+    },
       {
         text: 'EXIT',
         action: tour.complete
@@ -1045,6 +1049,23 @@ tour.addStep({
   ]
 });
 
+// step #8
+tour.addStep({
+  id: '3d',
+  text: 'Move in the 3D space using the mouse ',
+  attachTo: {
+      element: '',
+      on: ''
+  },
+  classes: '',
+  buttons: [
+      {
+        text: 'EXIT',
+        action: tour.complete
+      },
+
+  ]
+});
 console.log(guideflag2);
 
 if(guideflag2==1){
