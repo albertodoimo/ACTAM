@@ -67,7 +67,20 @@ let chromas = [
   "A#",
   "B",
 ];
-let chromas2 = ["C","Db","D","Eb","E","F","Gb","G","Ab","A","Bb","B"];
+let chromas2 = [
+  "C",
+  "Db",
+  "D",
+  "Eb",
+  "E",
+  "F",
+  "Gb",
+  "G",
+  "Ab",
+  "A",
+  "Bb",
+  "B",
+];
 
 let myScale = [];
 let majProf = [0, 2, 4, 5, 7, 9, 11];
@@ -90,14 +103,19 @@ console.log(myScale);
 
 let tetrad = [1, 3, 5, 7];
 
-
 let progression1 = [1, 5, 6, 4];
 let progression2 = [1, 4, 2, 5];
 let progression3 = [1, 4, 6, 5];
 let progression4 = [1, 6, 4];
 let progression5 = [1, 5];
 
-let progressionNames = ["I - V - VI - IV","I - IV - II - V","I - IV - VI - V","I - VI - IV","I - V"]
+let progressionNames = [
+  "I - V - VI - IV",
+  "I - IV - II - V",
+  "I - IV - VI - V",
+  "I - VI - IV",
+  "I - V",
+];
 
 //IMAGE PROCESSING
 let mean;
@@ -207,7 +225,7 @@ function setup() {
   easycam = createEasyCam(); // creazione oggetto easycam con distanza iniziale
   easycam.setState(tri); // stato iniziale prospettico
   easycam.setDistanceMax(725);
-  easycam.setDistanceMin(sunDim+50);
+  easycam.setDistanceMin(sunDim + 50);
   soundDesign();
 
   frameRate(24);
@@ -216,14 +234,14 @@ function setup() {
   textureWrap(CLAMP);
 
   button1 = createButton("2D"); // creazione bottoni per switching 2D/3D
-    //button1.position(windowWidth - 100, 120);
+  //button1.position(windowWidth - 100, 120);
   button1.addClass("style-btn");
-  button1.addClass("position2D")
+  button1.addClass("position2D");
 
   button2 = createButton("3D");
   //button2.position(windowWidth - 100, 185);
   button2.addClass("style-btn");
-  button2.addClass("position3D")
+  button2.addClass("position3D");
 
   button1.mouseClicked(set2d); // clickando i bottoni si switchano gli stati della easycamera, dichiarati di seguito
   button2.mouseClicked(set3d);
@@ -261,7 +279,7 @@ function setup() {
   //RATIO SELECTORS
   for (i = 0; i < 8; i++) {
     tendina[i] = createSelect();
-    tendina[i].position(10 , 60 +  i * windowHeight/10);
+    tendina[i].position(10, 60 + (i * windowHeight) / 10);
     tendina[i].addClass("style-btn");
     tendina[i].addClass("show");
     tendina[i].addClass("positionMenu");
@@ -279,7 +297,10 @@ function setup() {
   for (i = 0; i < 8; i++) {
     slidVol[i] = createSlider(-50, -16, volumes[i], 1);
 
-    slidVol[i].position(65, (65 + 7 * windowHeight/10) -  i * windowHeight/10);
+    slidVol[i].position(
+      65,
+      65 + (7 * windowHeight) / 10 - (i * windowHeight) / 10
+    );
     slidVol[i].addClass("slider");
     slidVol[i].addClass("show");
     slidVol[i].addClass("volume");
@@ -310,8 +331,7 @@ function setup() {
         tendina[i].removeClass("hide");
         slidVol[i].removeClass("hide");
       }
-    }
-    else {
+    } else {
       hiddenMenu = true;
       menuButton.html("Menu");
       for (i = 0; i < 8; i++) {
@@ -323,7 +343,7 @@ function setup() {
     }
   });
 
-  //MUTE 
+  //MUTE
   button4 = createButton("Mute");
   button4.addClass("style-btn");
   button4.addClass("positionMute");
@@ -336,8 +356,7 @@ function setup() {
         volumes[i] = -50;
         slidVol[i].value(-50);
       }
-    }
-    else{
+    } else {
       muted = false;
       button4.html("Mute");
       for (i = 0; i < 8; i++) {
@@ -347,26 +366,27 @@ function setup() {
     }
     refreshVolumes();
   });
-    
-    
-    document.getElementById("key2").textContent = "Detected key: " + " " + chromas2[k];
 
-    if(m==0){
-      document.getElementById("mode2").textContent = "Detected mode: " + "Minor";
-    }
-    else{
-      document.getElementById("mode2").textContent = "Detected mode: " + "Major";
-    }
+  document.getElementById("key2").textContent =
+    "Detected key: " + " " + chromas2[k];
 
-    document.getElementById("prog2").textContent = "Detected progression: " + progressionNames[p-1];
-  
-    if (t==0) {
-      document.getElementById("tetrad2").textContent = "Detected chord type: " + "Standard";
-    } else {
-      document.getElementById("tetrad2").textContent = "Detected chord type: " + "Seventh";
-    }
-
+  if (m == 0) {
+    document.getElementById("mode2").textContent = "Detected mode: " + "Minor";
+  } else {
+    document.getElementById("mode2").textContent = "Detected mode: " + "Major";
   }
+
+  document.getElementById("prog2").textContent =
+    "Detected progression: " + progressionNames[p - 1];
+
+  if (t == 0) {
+    document.getElementById("tetrad2").textContent =
+      "Detected chord type: " + "Standard";
+  } else {
+    document.getElementById("tetrad2").textContent =
+      "Detected chord type: " + "Seventh";
+  }
+}
 
 function changeRatio() {
   console.log("Ratios");
@@ -374,19 +394,18 @@ function changeRatio() {
     planetRatios[i] = tendina[i].value();
     console.log(planetRatios[i]);
   }
-  
+
   Tone.Transport.pause();
   playIsOff = true;
   button3.html("Play");
   bassLoop.cancel();
-  for(let i=0; i<4; i++){
-  chordLoops[i].cancel();
+  for (let i = 0; i < 4; i++) {
+    chordLoops[i].cancel();
   }
   leadLoop.cancel();
   arp1Loop.cancel();
   arp2Loop.cancel();
   soundDesign();
-  
 }
 
 function refreshVolumes() {
@@ -416,12 +435,15 @@ function changeVolume() {
 //Stars variables
 let s = 0;
 let r_s = 2500;
-let x_s, y_s, z_s, c_s = [];
+let x_s,
+  y_s,
+  z_s,
+  c_s = [];
 let n_s = 150;
-let white = [255,255,255];
-let yellow = [255,255,180];
-let cyan = [120,180,255];
-let red = [255,180,180];
+let white = [255, 255, 255];
+let yellow = [255, 255, 180];
+let cyan = [120, 180, 255];
+let red = [255, 180, 180];
 let colors = [white, white, white, yellow, cyan, red];
 
 function draw() {
@@ -440,7 +462,7 @@ function draw() {
   }
 
   // SKYBOX
-/*   if(s%20 == 0){
+  /*   if(s%20 == 0){
     x_s = [];
     y_s = [];
     z_s = [];  
@@ -458,58 +480,76 @@ function draw() {
     s = 0;
   } */
 
-  if(s==0){
+  if (s == 0) {
     s++;
     x_s = [];
     y_s = [];
     z_s = [];
     c_s = [];
-    for (i=0; i<n_s; i++){
-      x_s[i] = random(-r_s*1.2, r_s*1.2);
+    for (i = 0; i < n_s; i++) {
+      x_s[i] = random(-r_s * 1.2, r_s * 1.2);
       y_s[i] = random(-r_s, r_s);
-      z_s[i] = random(-r_s, r_s);  
+      z_s[i] = random(-r_s, r_s);
       c_s[i] = white;
     }
   }
 
-  for (i=0; i<n_s; i++){
-    if(i%(n_s/4)==0){
-      x_s.push(random(-r_s*1.2, r_s*1.2));
+  for (i = 0; i < n_s; i++) {
+    if (i % (n_s / 4) == 0) {
+      x_s.push(random(-r_s * 1.2, r_s * 1.2));
       y_s.push(random(-r_s, r_s));
       z_s.push(random(-r_s, r_s));
       x_s.shift();
       y_s.shift();
       z_s.shift();
-      var col = random([0, 1, 2, 3, 4 ,5]);
+      var col = random([0, 1, 2, 3, 4, 5]);
       c_s.push(colors[col]);
       c_s.shift();
     }
-    
-    var d_s = Math.sqrt(x_s[i]**2 +  y_s[i]**2 + z_s[i]**2);
-    if(d_s>2900){
-      if(i < n_s/10 || i > (9*n_s)/10){
+
+    var d_s = Math.sqrt(x_s[i] ** 2 + y_s[i] ** 2 + z_s[i] ** 2);
+    if (d_s > 2900) {
+      if (i < n_s / 10 || i > (9 * n_s) / 10) {
         strokeWeight(1);
         stroke(c_s[i], 80);
         fill(c_s[i], 80);
-      }
-      else{
+      } else {
         strokeWeight(random([3, 4]));
         stroke(c_s[i]);
         fill(c_s[i]);
       }
-      
-      
+
       point(x_s[i], y_s[i], z_s[i]);
-      if(d_s < 3200){
+      if (d_s < 3200) {
         var l = random([12, 13, 14]);
         strokeWeight(1);
-        line(x_s[i] - l, y_s[i] - l, z_s[i] - l, x_s[i] + l, y_s[i] + l, z_s[i] + l);
-        line(x_s[i] - l, y_s[i] - l, z_s[i] + l, x_s[i] + l, y_s[i] + l, z_s[i] - l);
-        line(x_s[i] - l, y_s[i] + l, z_s[i] + l, x_s[i] + l, y_s[i] - l, z_s[i] - l);
+        line(
+          x_s[i] - l,
+          y_s[i] - l,
+          z_s[i] - l,
+          x_s[i] + l,
+          y_s[i] + l,
+          z_s[i] + l
+        );
+        line(
+          x_s[i] - l,
+          y_s[i] - l,
+          z_s[i] + l,
+          x_s[i] + l,
+          y_s[i] + l,
+          z_s[i] - l
+        );
+        line(
+          x_s[i] - l,
+          y_s[i] + l,
+          z_s[i] + l,
+          x_s[i] + l,
+          y_s[i] - l,
+          z_s[i] - l
+        );
       }
     }
   }
-
 
   //SUN
   noStroke();
@@ -831,7 +871,7 @@ function soundDesign() {
       time
     );
     //console.log(time);
-    if (arp2NotesIndex == (selectedMode.length-1)) {
+    if (arp2NotesIndex == selectedMode.length - 1) {
       arp2NotesIndex = 0;
     } else {
       arp2NotesIndex++;
@@ -917,155 +957,151 @@ let bi = {
   rotation: [0.2, -0.2, 0, 0],
 };
 
-
-
 // GUIDE TOUR
 
 const tour = new Shepherd.Tour({
   useModalOverlay: true,
   defaultStepOptions: {
-      classes: 'shadow-md bg-purple-dark',
-      scrollTo: false
-  }
+    classes: "shadow-md bg-purple-dark",
+    scrollTo: false,
+  },
 });
 
 // step #3
 tour.addStep({
-  id: 'mixer',
-  text: 'mix the sounds here!',
+  id: "mixer",
+  text: "mix the sounds here!",
   attachTo: {
-      element: '#mixer',
-      on: 'right'
+    element: "#mixer",
+    on: "right",
   },
-  classes: '',
+  classes: "",
   buttons: [
-      {
-        text: 'NEXT',
-        action: tour.next  
+    {
+      text: "NEXT",
+      action: tour.next,
+    },
+    {
+      text: "EXIT",
+      action: tour.complete,
+      function() {
+        localStorage.setItem("guideflag2", 0);
       },
-      {
-        text: 'EXIT',
-        action: tour.complete,
-        function () {localStorage.setItem("guideflag2", 0)}
-      
-      },
-
-  ]
+    },
+  ],
 });
 
 // step #4
 tour.addStep({
-  id: 'step4',
-  text: 'extracted music parameters from the image',
+  id: "step4",
+  text: "extracted music parameters from the image",
   attachTo: {
-      element: '.param2guide',
-      on: 'bottom'
+    element: ".param2guide",
+    on: "bottom",
   },
-  classes: '',
+  classes: "",
   buttons: [
-      {
-        text: 'NEXT',
-        action:tour.next
+    {
+      text: "NEXT",
+      action: tour.next,
+    },
+    {
+      text: "EXIT",
+      action: tour.complete,
+      function() {
+        localStorage.setItem("guideflag2", 0);
       },
-      {
-        text: 'EXIT',
-        action: tour.complete,
-        function () {localStorage.setItem("guideflag2", 0)}
-      
-      },
-
-  ]
+    },
+  ],
 });
 
 // step #5
 tour.addStep({
-  id: 'step5',
-  text: 'Click here to listen to sound',
+  id: "step5",
+  text: "Click here to listen to sound",
   attachTo: {
-      element: '.positionPlayStop',
-      on: 'left'
+    element: ".positionPlayStop",
+    on: "left",
   },
-  classes: '',
+  classes: "",
   buttons: [
-      {
-        text: 'NEXT',
-        action:tour.next
+    {
+      text: "NEXT",
+      action: tour.next,
+    },
+    {
+      text: "EXIT",
+      action: tour.complete,
+      function() {
+        localStorage.setItem("guideflag2", 0);
       },
-      {
-        text: 'EXIT',
-        action: tour.complete,
-        function () {localStorage.setItem("guideflag2", 0)}
-      
-      },
-
-  ]
+    },
+  ],
 });
 
 // step #6
 tour.addStep({
-  id: '2d',
-  text: 'Set 2d environment ',
+  id: "2d",
+  text: "Set 2d environment ",
   attachTo: {
-      element: '.position2D',
-      on: 'left'
+    element: ".position2D",
+    on: "left",
   },
-  classes: '',
+  classes: "",
   buttons: [
-      {
-        text: 'NEXT',
-        action:tour.next
+    {
+      text: "NEXT",
+      action: tour.next,
+    },
+    {
+      text: "EXIT",
+      action: tour.complete,
+      function() {
+        localStorage.setItem("guideflag2", 0);
       },
-      {
-        text: 'EXIT',
-        action: tour.complete,
-        function () {localStorage.setItem("guideflag2", 0)}
-      
-      },
-
-  ]
+    },
+  ],
 });
 
 // step #7
 tour.addStep({
-  id: '3d',
-  text: 'Set 3d environment ',
+  id: "3d",
+  text: "Set 3d environment ",
   attachTo: {
-      element: '.position3D',
-      on: 'bottom'
+    element: ".position3D",
+    on: "bottom",
   },
-  classes: '',
+  classes: "",
   buttons: [
     {
-      text: 'NEXT',
-      action:tour.next
+      text: "NEXT",
+      action: tour.next,
     },
-      {
-        text: 'EXIT',
-        action: tour.complete
-      },
-
-  ]
+    {
+      text: "EXIT",
+      action: tour.complete,
+    },
+  ],
 });
 
 // step #8
 tour.addStep({
-  id: '3d',
-  text: 'Move in the 3D space using the mouse ',
+  id: "3d",
+  text: "Move in the 3D space using the mouse ",
   attachTo: {
-      element: '',
-      on: ''
+    element: "",
+    on: "",
   },
-  classes: '',
+  classes: "",
   buttons: [
-      {
-        text: 'EXIT',
-        action: tour.complete
-      },
-
-  ]
+    {
+      text: "EXIT",
+      action: tour.complete,
+    },
+  ],
 });
 console.log(guideflag2);
 
-if(guideflag2==1){
-tour.start();
+if (guideflag2 == 1) {
+  tour.start();
 }

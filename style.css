@@ -65,15 +65,15 @@ html {
 }
 
 @keyframes rotate {
-    to {
+  to {
     --angle: 360deg;
-    }
+  }
 }
 
 @property --angle {
-    syntax: '<angle>';
-    initial-value: 0deg;
-    inherits: false;
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
 }
 
 .btn {
@@ -139,7 +139,7 @@ html {
   transition: 1s;
 }
 
-.object1{
+.object1 {
 }
 img {
   width: 100%;
@@ -175,31 +175,31 @@ img {
 }
 
 .style-btn {
-    position: absolute;
-    color: #ffffff;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 0.2vw;
-    font-size: 1.2vw;
-    text-shadow: #d8ccee 1px 0 10px;
-    height: 6vw;
-    width: 6vw;
-    border: solid 1px #ffffff;
-    border-radius: 175px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    transition: 1s;
-    cursor: pointer;
-    z-index: 999;
-    background-color: #000000;
-    margin:5px;
+  position: absolute;
+  color: #ffffff;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.2vw;
+  font-size: 1.2vw;
+  text-shadow: #d8ccee 1px 0 10px;
+  height: 6vw;
+  width: 6vw;
+  border: solid 1px #ffffff;
+  border-radius: 175px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: 1s;
+  cursor: pointer;
+  z-index: 999;
+  background-color: #000000;
+  margin: 5px;
 }
 
 #ahead {
-    top: 80%;
-    left: 83%;
+  top: 80%;
+  left: 83%;
 }
 
 #back {
@@ -208,31 +208,32 @@ img {
 }
 
 .style-btn:before {
-    content: '';
-    position: absolute;
-    background: #ffffff;
-    width: 0;
-    height: 0;
-    z-index: -1;
-    border-radius: 175px;
-    box-shadow: 0px 0px 24px 1px rgba(224,199,224,0.2);
-    transition: all 500ms cubic-bezier(1.000, -0.195, 0.000, 1.330);
-    transition-timing-function: cubic-bezier(1.000, -0.195, 0.000, 1.330);
+  content: "";
+  position: absolute;
+  background: #ffffff;
+  width: 0;
+  height: 0;
+  z-index: -1;
+  border-radius: 175px;
+  box-shadow: 0px 0px 24px 1px rgba(224, 199, 224, 0.2);
+  transition: all 500ms cubic-bezier(1, -0.195, 0, 1.33);
+  transition-timing-function: cubic-bezier(1, -0.195, 0, 1.33);
 }
 
 .style-btn:hover {
-    color: black;
-    transition: 1s;
+  color: black;
+  transition: 1s;
 }
 
 .style-btn:hover:before {
-    width: 85%;
-    height: 85%;
+  width: 85%;
+  height: 85%;
 }
 
-.style-btn:active:before, .btn:focus:before {
-    width: 100%;
-    height: 100%;
+.style-btn:active:before,
+.btn:focus:before {
+  width: 100%;
+  height: 100%;
 }
 
 /* .layer h3 {
@@ -265,8 +266,6 @@ img {
   float: left;
 }
 
-
-
 #imageBox {
   z-index: 999;
   margin-top: 5%;
@@ -276,7 +275,6 @@ img {
   border: 2px solid white;
 }
 
-
 #imageBox canvas {
   object-fit: cover;
 }
@@ -285,39 +283,40 @@ img {
   position: relative;
 }
 
-.container canvas, #param {
-    position: absolute;
-    top: 0%;
-    left: 0%;
+.container canvas,
+#param {
+  position: absolute;
+  top: 0%;
+  left: 0%;
 }
 
 .container #param2 {
-    position: absolute;
-    top: 20px;
-    left:50%;
-    transform: translate(-50%);
-    width: 60%;
-    
-    display: flex;
-    justify-content: space-between;
-} 
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%);
+  width: 60%;
+
+  display: flex;
+  justify-content: space-between;
+}
 
 #param2 {
-    height: 5vw;
-    opacity: 0.8;
+  height: 5vw;
+  opacity: 0.8;
 }
 
 #param h2 {
   display: inline;
 }
 
-#param2 h3, h2 {
-    display: flex;
-    /* margin: 1vw; */
-    /* font-size: 1vw; */
-    align-items: center;
+#param2 h3,
+h2 {
+  display: flex;
+  /* margin: 1vw; */
+  /* font-size: 1vw; */
+  align-items: center;
 }
-
 
 #param-container {
   font-size: 1.5vw;
@@ -326,10 +325,10 @@ img {
 }
 
 #param-container2 {
-    font-size: 1vw;
-    text-align: center;
-    margin: auto;
-    display: flex;
+  font-size: 1vw;
+  text-align: center;
+  margin: auto;
+  display: flex;
 }
 
 #key {
@@ -353,27 +352,27 @@ img {
 }
 
 #key2 {
-    margin: auto;
-    font-size: 1vw;
-    display: inline;
-    left:100%;
+  margin: auto;
+  font-size: 1vw;
+  display: inline;
+  left: 100%;
 }
 
 #mode2 {
-    margin: auto;
-    font-size: 1vw;
-    display: inline;
+  margin: auto;
+  font-size: 1vw;
+  display: inline;
 }
 
 #prog2 {
-    margin: auto;
-    font-size: 1vw;
-    display: inline;
+  margin: auto;
+  font-size: 1vw;
+  display: inline;
 }
 #tetrad2 {
-    margin: auto;
-    font-size: 1vw;
-    display: inline;
+  margin: auto;
+  font-size: 1vw;
+  display: inline;
 }
 
 #color {
@@ -395,84 +394,83 @@ img {
   -webkit-appearance: none;
 }
 
-.slider::after{
-    content:"VOLUME";
-    position: absolute;
-    font-family: 'Product Sans', sans-serif;
-    font-size: 1.2vw;
-    font-weight: bold;
-    color: white;
-    top: -7px;
-    left: 50%;
-    transform: translate(-50%);
+.slider::after {
+  content: "VOLUME";
+  position: absolute;
+  font-family: "Product Sans", sans-serif;
+  font-size: 1.2vw;
+  font-weight: bold;
+  color: white;
+  top: -7px;
+  left: 50%;
+  transform: translate(-50%);
 }
 
 #instr1::after {
-    content:"Mercury - Arp 1";
-    opacity: 0.8;
-    font-size: x-small;
+  content: "Mercury - Arp 1";
+  opacity: 0.8;
+  font-size: x-small;
 }
 #instr2::after {
-    content:"Venus - Arp 2";
-    opacity: 0.8;
-    font-size: x-small;
+  content: "Venus - Arp 2";
+  opacity: 0.8;
+  font-size: x-small;
 }
 #instr3::after {
-    content:"Earth - Lead";
-    opacity: 0.8;
-    font-size: x-small;
+  content: "Earth - Lead";
+  opacity: 0.8;
+  font-size: x-small;
 }
 #instr4::after {
-    content:"Mars - Tonic";
-    opacity: 0.8;
-    font-size: x-small;
+  content: "Mars - Tonic";
+  opacity: 0.8;
+  font-size: x-small;
 }
 #instr5::after {
-    content:"Jupyter - 3rd";
-    opacity: 0.8;
-    font-size: x-small;
+  content: "Jupyter - 3rd";
+  opacity: 0.8;
+  font-size: x-small;
 }
 #instr6::after {
-    content:"Saturn - 5th";
-    opacity: 0.8;
-    font-size: x-small;
+  content: "Saturn - 5th";
+  opacity: 0.8;
+  font-size: x-small;
 }
 #instr7::after {
-    content:"Uranus - 7th/8ve";
-    opacity: 0.8;
-    font-size: x-small;
+  content: "Uranus - 7th/8ve";
+  opacity: 0.8;
+  font-size: x-small;
 }
 #instr8::after {
-    content:"Neptune - Bass";
-    opacity: 0.8;
-    font-size: x-small;
+  content: "Neptune - Bass";
+  opacity: 0.8;
+  font-size: x-small;
 }
 
-
-#pl1{
-    background-image: url('/Images/1.jpg');
+#pl1 {
+  background-image: url("/Images/1.jpg");
 }
-#pl2{
-    background-image: url('/Images/2.jpg');
+#pl2 {
+  background-image: url("/Images/2.jpg");
 }
-#pl3{
-    background-image: url('/Images/3bis.jpg');
-    background-size: cover;
+#pl3 {
+  background-image: url("/Images/3bis.jpg");
+  background-size: cover;
 }
-#pl4{
-    background-image: url('/Images/4.jpg');
+#pl4 {
+  background-image: url("/Images/4.jpg");
 }
-#pl5{
-    background-image: url('/Images/5.jpg');
+#pl5 {
+  background-image: url("/Images/5.jpg");
 }
-#pl6{
-    background-image: url('/Images/6.jpg');
+#pl6 {
+  background-image: url("/Images/6.jpg");
 }
-#pl7{
-    background-image: url('/Images/7.jpg');
+#pl7 {
+  background-image: url("/Images/7.jpg");
 }
-#pl8{
-    background-image: url('/Images/8.jpg');
+#pl8 {
+  background-image: url("/Images/8.jpg");
 }
 
 .slider::-webkit-slider-runnable-track {
@@ -502,10 +500,9 @@ img {
   transform: translate(0, 0.5px);
 }
 
-
-.hide{
-    opacity: 0;
-    animation: hidefade 1s;
+.hide {
+  opacity: 0;
+  animation: hidefade 1s;
 }
 
 @keyframes hidefade {
@@ -518,10 +515,10 @@ img {
   }
 }
 
-.show{
-    display: block;
-    animation: showfade 2s;
-  }
+.show {
+  display: block;
+  animation: showfade 2s;
+}
 
 @keyframes showfade {
   0% {
@@ -599,7 +596,7 @@ img {
   text-shadow: 1px 1px #333;
 }
 
-.positionPlayStop{
+.positionPlayStop {
   position: absolute;
   right: 3%;
   top: 0%;
@@ -609,16 +606,15 @@ img {
   transform: translate(-50%);
 }
 
-.positionMenu{
+.positionMenu {
   position: absolute;
   left: 0%;
   top: 0%;
   margin-top: 20px;
   margin-left: 20px;
-  
 }
 
-.position2D{
+.position2D {
   position: absolute;
   right: 3%;
   top: 0%;
@@ -629,7 +625,7 @@ img {
   transform: translate(-50%);
 }
 
-.position3D{
+.position3D {
   position: absolute;
   right: 3%;
   top: 0%;
@@ -638,10 +634,9 @@ img {
   width: 5vw;
   height: 5vw;
   transform: translate(-50%);
-
 }
 
-.positionMute{
+.positionMute {
   position: absolute;
   right: 0%;
   top: 55%;
