@@ -39,7 +39,7 @@ let playIsOff = true;
 let bpm = 20;
 //1= MEASURE, 4=BEAT
 //---------arp1,arp2,lead,chord4,chord3,chord2,chord1,bass--------------------------------------
-let planetRatios = [32, 16, 2, 5, 4, 3, 2, 1];
+let planetRatios = [32, 16, 2, 4, 4, 4, 2, 1];
 
 let chromas = [
   "C",
@@ -159,9 +159,11 @@ let arp1Envelope, arp1Filter, arp1Synth, arp1Loop;
 let arp2Envelope, arp2Filter, arp2Synth, arp2Loop;
 
 //Planets menus
+let tempVol = [];
+let muted = false;
 let tendina = [];
 let slidVol = [];
-let volumes = [-16, -23, -23, -23, -23, -19, -26, -100];
+let volumes = [-16, -23, -23, -23, -23, -19, -26, -50];
 let lista = ["1", "2", "3", "4", "5", "8", "16", "24", "32"];
 let refreshed = false;
 let idVol = [
@@ -275,7 +277,7 @@ function setup() {
 
   //VOLUME SLIDERS
   for (i = 0; i < 8; i++) {
-    slidVol[i] = createSlider(-100, -16, volumes[i], 1);
+    slidVol[i] = createSlider(-50, -16, volumes[i], 1);
 
     slidVol[i].position(65, (65 + 7 * windowHeight/10) -  i * windowHeight/10);
     slidVol[i].addClass("slider");
@@ -319,6 +321,31 @@ function setup() {
         slidVol[i].removeClass("show");
       }
     }
+  });
+
+  //MUTE 
+  button4 = createButton("Mute");
+  button4.addClass("style-btn");
+  button4.addClass("positionMute");
+  button4.mouseClicked(function () {
+    if (!muted) {
+      muted = true;
+      button4.html("Unmute");
+      for (i = 0; i < 8; i++) {
+        tempVol[i] = slidVol[i].value();
+        volumes[i] = -50;
+        slidVol[i].value(-50);
+      }
+    }
+    else{
+      muted = false;
+      button4.html("Mute");
+      for (i = 0; i < 8; i++) {
+        volumes[i] = tempVol[i];
+        slidVol[i].value(tempVol[i]);
+      }
+    }
+    refreshVolumes();
   });
     
     
@@ -376,6 +403,8 @@ function refreshVolumes() {
 }
 
 function changeVolume() {
+  muted = false;
+  button4.html("Mute");
   console.log("Volumes");
   for (i = 0; i < 8; i++) {
     volumes[i] = slidVol[i].value();
@@ -388,7 +417,7 @@ function changeVolume() {
 let s = 0;
 let r_s = 2500;
 let x_s, y_s, z_s, c_s = [];
-let n_s = 120;
+let n_s = 150;
 let white = [255,255,255];
 let yellow = [255,255,180];
 let cyan = [120,180,255];
@@ -458,12 +487,21 @@ function draw() {
     
     var d_s = Math.sqrt(x_s[i]**2 +  y_s[i]**2 + z_s[i]**2);
     if(d_s>2900){
-      strokeWeight(random([1, 2, 3]));
-      stroke(c_s[i]);
-      fill(c_s[i]);
+      if(i < n_s/10 || i > (9*n_s)/10){
+        strokeWeight(1);
+        stroke(c_s[i], 80);
+        fill(c_s[i], 80);
+      }
+      else{
+        strokeWeight(random([3, 4]));
+        stroke(c_s[i]);
+        fill(c_s[i]);
+      }
+      
+      
       point(x_s[i], y_s[i], z_s[i]);
-      if(d_s < 3500){
-        var l = random([9, 10, 11]);
+      if(d_s < 3200){
+        var l = random([12, 13, 14]);
         strokeWeight(1);
         line(x_s[i] - l, y_s[i] - l, z_s[i] - l, x_s[i] + l, y_s[i] + l, z_s[i] + l);
         line(x_s[i] - l, y_s[i] - l, z_s[i] + l, x_s[i] + l, y_s[i] + l, z_s[i] - l);
@@ -792,7 +830,7 @@ function soundDesign() {
       planetRatios[0].toString() + "n",
       time
     );
-    console.log(time);
+    //console.log(time);
     if (arp2NotesIndex == (selectedMode.length-1)) {
       arp2NotesIndex = 0;
     } else {
@@ -997,6 +1035,10 @@ tour.addStep({
   },
   classes: '',
   buttons: [
+    {
+      text: 'NEXT',
+      action:tour.next
+    },
       {
         text: 'EXIT',
         action: tour.complete
@@ -1005,6 +1047,23 @@ tour.addStep({
   ]
 });
 
+// step #8
+tour.addStep({
+  id: '3d',
+  text: 'Move in the 3D space using the mouse ',
+  attachTo: {
+      element: '',
+      on: ''
+  },
+  classes: '',
+  buttons: [
+      {
+        text: 'EXIT',
+        action: tour.complete
+      },
+
+  ]
+});
 console.log(guideflag2);
 
 if(guideflag2==1){
