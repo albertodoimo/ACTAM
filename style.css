@@ -138,12 +138,7 @@ html {
   border: 2px solid rgba(255, 255, 255, 0.318);
   transition: 1s;
 }
-<<<<<<< Updated upstream
 
-.object1 {
-}
-=======
->>>>>>> Stashed changes
 img {
   width: 100%;
   height: 100%;
@@ -178,28 +173,6 @@ img {
 }
 
 .style-btn {
-<<<<<<< Updated upstream
-  position: absolute;
-  color: #ffffff;
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.2vw;
-  font-size: 1.2vw;
-  text-shadow: #d8ccee 1px 0 10px;
-  height: 6vw;
-  width: 6vw;
-  border: solid 1px #ffffff;
-  border-radius: 175px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  transition: 1s;
-  cursor: pointer;
-  z-index: 999;
-  background-color: #000000;
-  margin: 5px;
-=======
     position: absolute;
     color: #ffffff;
     text-decoration: none;
@@ -220,7 +193,6 @@ img {
     z-index: 999;
     background-color: #000000;
     margin:5px;
->>>>>>> Stashed changes
 }
 
 #ahead {
@@ -327,14 +299,11 @@ img {
   justify-content: space-between;
 }
 
-<<<<<<< Updated upstream
 #param2 {
   height: 5vw;
   opacity: 0.8;
 }
 
-=======
->>>>>>> Stashed changes
 #param h2 {
   display: inline;
 }
@@ -423,59 +392,6 @@ h2 {
   -webkit-appearance: none;
 }
 
-<<<<<<< Updated upstream
-.slider::after {
-  content: "VOLUME";
-  position: absolute;
-  font-family: "Product Sans", sans-serif;
-  font-size: 1.2vw;
-  font-weight: bold;
-  color: white;
-  top: -7px;
-  left: 50%;
-  transform: translate(-50%);
-}
-
-#instr1::after {
-  content: "Mercury - Arp 1";
-  opacity: 0.8;
-  font-size: x-small;
-}
-#instr2::after {
-  content: "Venus - Arp 2";
-  opacity: 0.8;
-  font-size: x-small;
-}
-#instr3::after {
-  content: "Earth - Lead";
-  opacity: 0.8;
-  font-size: x-small;
-}
-#instr4::after {
-  content: "Mars - Tonic";
-  opacity: 0.8;
-  font-size: x-small;
-}
-#instr5::after {
-  content: "Jupyter - 3rd";
-  opacity: 0.8;
-  font-size: x-small;
-}
-#instr6::after {
-  content: "Saturn - 5th";
-  opacity: 0.8;
-  font-size: x-small;
-}
-#instr7::after {
-  content: "Uranus - 7th/8ve";
-  opacity: 0.8;
-  font-size: x-small;
-}
-#instr8::after {
-  content: "Neptune - Bass";
-  opacity: 0.8;
-  font-size: x-small;
-=======
 .slider::after{
     content:"VOLUME";
     position: absolute;
@@ -536,7 +452,6 @@ h2 {
     opacity: 0.8;
     width: 12vw;
     text-align: center;
->>>>>>> Stashed changes
 }
 
 #pl1 {
@@ -701,14 +616,9 @@ h2 {
   position: absolute;
   left: 0%;
   top: 0%;
-<<<<<<< Updated upstream
-  margin-top: 20px;
-  margin-left: 20px;
-=======
   margin-top: 2vw;
   margin-left: 2.5vw;
   
->>>>>>> Stashed changes
 }
 
 .position2D {
@@ -723,24 +633,6 @@ h2 {
 
 .position3D {
   position: absolute;
-<<<<<<< Updated upstream
-  right: 3%;
-  top: 0%;
-  margin-top: 14.5%;
-  margin-right: 2vw;
-  width: 5vw;
-  height: 5vw;
-  transform: translate(-50%);
-}
-
-.positionMute {
-  position: absolute;
-  right: 0%;
-  top: 55%;
-  margin-top: 13%;
-  margin-right: 20px;
-}
-=======
   right: 0%;
   top: 0%;
   margin-top: 14.5%;
@@ -758,4 +650,3 @@ h2 {
   margin-left: 10.5vw;
   
 }
->>>>>>> Stashed changes

@@ -33,60 +33,66 @@ for (var i = 0; i < stars; i++) {
 
 localStorage.clear();
   
-  let stars = [];
-  let sp;
-  
+let stars = [];
+let sp;
+
+
+function windowResized() {
+  resizeCanvas(windowWidth, Math.max(document.body.scrollHeight, document.documentElement.scrollHeight
+    ));
+
+}
 function setup() {
-    var canvas = createCanvas(windowWidth, Math.max(document.body.scrollHeight, document.documentElement.scrollHeight
-        ));
-    canvas.position(0,0);
-    canvas.style('z-index', '-1');
-    for (let i=0; i<1000; i++) {
-      stars.push(new Star());
-    }
+  var canvas = createCanvas(windowWidth, Math.max(document.body.scrollHeight, document.documentElement.scrollHeight
+      ));
+  canvas.position(0,0);
+  canvas.style('z-index', '-1');
+  for (let i=0; i<1000; i++) {
+    stars.push(new Star());
+  }
+}
+
+function draw() {
+  background(0);
+  sp = map(mouseX, 0, width, 0,15);
+  translate(width/2, height/2);
+  for (let i = 0; i < stars.length; i++) { 
+    stars[i].update();
+    stars[i].show();
+  }
+}
+
+class Star {
+  
+  constructor() {
+    this.x = random(-width,width);
+    this.y = random(-height,height);
+    this.z = random(width);
   }
   
-  function draw() {
-    background(0);
-    sp = map(mouseX, 0, width, 0,15);
-    translate(width/2, height/2);
-    for (let i = 0; i < stars.length; i++) { 
-      stars[i].update();
-      stars[i].show();
-    }
-  }
-  
-  class Star {
-    
-    constructor() {
+  update() {
+    this.z = this.z - sp;
+
+    if (this.z < 1) {
+      this.z = width;
       this.x = random(-width,width);
       this.y = random(-height,height);
-      this.z = random(width);
-    }
-    
-    update() {
-      this.z = this.z - sp;
-  
-      if (this.z < 1) {
-        this.z = width;
-        this.x = random(-width,width);
-        this.y = random(-height,height);
-  
-      }
-    }
-    
-    show() {
-      // fill(255, 255, 150, 170);
-      fill(255);
-      noStroke();
-      
-      this.sx = map(this.x / this.z, 0, 1, 0, width);
-      this.sy = map(this.y / this.z, 0, 1, 0, height);
-      
-      this.size = map(this.z,0,width,10,0); 
-      ellipse(this.sx,this.sy,this.size,this.size);
+
     }
   }
+  
+  show() {
+    // fill(255, 255, 150, 170);
+    fill(255);
+    noStroke();
+    
+    this.sx = map(this.x / this.z, 0, 1, 0, width);
+    this.sy = map(this.y / this.z, 0, 1, 0, height);
+    
+    this.size = map(this.z,0,width,10,0); 
+    ellipse(this.sx,this.sy,this.size,this.size);
+  }
+}
 
 
 // Uniform scrolling speed for the whole page

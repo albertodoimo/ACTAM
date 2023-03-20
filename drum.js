@@ -287,11 +287,7 @@ function setup() {
   //RATIO SELECTORS
   for (i = 0; i < 8; i++) {
     tendina[i] = createSelect();
-<<<<<<< Updated upstream
-    tendina[i].position(10, 60 + (i * windowHeight) / 10);
-=======
     tendina[i].position(windowWidth/50 , windowHeight/8 +  i * windowHeight/10);
->>>>>>> Stashed changes
     tendina[i].addClass("style-btn");
     tendina[i].addClass("show");
     //tendina[i].addClass("positionMenu");
@@ -309,14 +305,7 @@ function setup() {
   for (i = 0; i < 8; i++) {
     slidVol[i] = createSlider(-50, -16, volumes[i], 1);
 
-<<<<<<< Updated upstream
-    slidVol[i].position(
-      65,
-      65 + (7 * windowHeight) / 10 - (i * windowHeight) / 10
-    );
-=======
     slidVol[i].position(windowWidth/20, (windowHeight/8 + 7 * windowHeight/10) -  i * windowHeight/10);
->>>>>>> Stashed changes
     slidVol[i].addClass("slider");
     slidVol[i].addClass("show");
     slidVol[i].addClass("volume");
@@ -361,10 +350,6 @@ function setup() {
   });
 
   //MUTE
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
   button4 = createButton("Mute");
   button4.addClass("style-btn");
   button4.addClass("positionMute");

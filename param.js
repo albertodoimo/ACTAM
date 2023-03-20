@@ -8,6 +8,10 @@ var guideflag2 = localStorage.getItem("guideflag2");
 console.log(guideflag);
 console.log(guideflag2);
 
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight)
+}
+
 var count = 0;  // color counter ----------> CHORD PROGRESSION
 var ref;
 var alpha_channel = [];
