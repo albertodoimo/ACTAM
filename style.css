@@ -355,25 +355,25 @@ img {
 }
 
 #key2 {
-    margin: .5vw;
+    margin: auto;
     font-size: 1vw;
     display: inline;
     left:100%;
 }
 
 #mode2 {
-    margin: .5vw;
+    margin: auto;
     font-size: 1vw;
     display: inline;
 }
 
 #prog2 {
-    margin: .5vw;
+    margin: auto;
     font-size: 1vw;
     display: inline;
 }
 #tetrad2 {
-    margin: .5vw;
+    margin: auto;
     font-size: 1vw;
     display: inline;
 }

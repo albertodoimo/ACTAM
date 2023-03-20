@@ -322,23 +322,21 @@ function setup() {
   });
     
     
-    var key2 = document.getElementById("key2");
-    console.log(key2);
-    key2.textContent = chromas2[k];
+    document.getElementById("key2").textContent = "Detected key: " + " " + chromas2[k];
 
     if(m==0){
-      document.getElementById("mode2").textContent = "Minor";
+      document.getElementById("mode2").textContent = "Detected mode: " + "Minor";
     }
     else{
-      document.getElementById("mode2").textContent = "Major";
+      document.getElementById("mode2").textContent = "Detected mode: " + "Major";
     }
 
-    document.getElementById("prog2").textContent = progressionNames[p-1];
+    document.getElementById("prog2").textContent = "Detected progression: " + progressionNames[p-1];
   
     if (t==0) {
-      document.getElementById("tetrad2").textContent = "Standard";
+      document.getElementById("tetrad2").textContent = "Detected chord type: " + "Standard";
     } else {
-      document.getElementById("tetrad2").textContent = "Seventh";
+      document.getElementById("tetrad2").textContent = "Detected chord type: " + "Seventh";
     }
 
   }
