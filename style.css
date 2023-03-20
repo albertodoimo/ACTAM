@@ -304,9 +304,7 @@ img {
 
 #param2 {
     height: 5vw;
-}
-
-.param2guide{
+    opacity: 0.8;
 }
 
 #param h2 {
@@ -410,36 +408,44 @@ img {
 }
 
 #instr1::after {
-    content:"Mercury - Arpeg 1";
+    content:"Mercury - Arp 1";
     opacity: 0.8;
+    font-size: x-small;
 }
 #instr2::after {
-    content:"Venus - Arpeg 2";
+    content:"Venus - Arp 2";
     opacity: 0.8;
+    font-size: x-small;
 }
 #instr3::after {
     content:"Earth - Lead";
     opacity: 0.8;
+    font-size: x-small;
 }
 #instr4::after {
     content:"Mars - Tonic";
     opacity: 0.8;
+    font-size: x-small;
 }
 #instr5::after {
-    content:"Jupyter - Third";
+    content:"Jupyter - 3rd";
     opacity: 0.8;
+    font-size: x-small;
 }
 #instr6::after {
-    content:"Saturn - Fifth";
+    content:"Saturn - 5th";
     opacity: 0.8;
+    font-size: x-small;
 }
 #instr7::after {
-    content:"Ur-anus - Seventh/Octave";
+    content:"Uranus - 7th/8ve";
     opacity: 0.8;
+    font-size: x-small;
 }
 #instr8::after {
     content:"Neptune - Bass";
     opacity: 0.8;
+    font-size: x-small;
 }
 
 
@@ -624,18 +630,6 @@ img {
 }
 
 .position3D{
-  position: absolute;
-  right: 3%;
-  top: 0%;
-  margin-top: 14.5%;
-  margin-right: 2vw;
-  width: 5vw;
-  height: 5vw;
-  transform: translate(-50%);
-
-}
-
-.positionMute{
   position: absolute;
   right: 3%;
   top: 0%;
