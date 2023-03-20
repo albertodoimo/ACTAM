@@ -7,6 +7,10 @@ var guideflag2 = localStorage.getItem("guideflag2");
 
 console.log(guideflag2);
 
+addEventListener("dblclick", () => {easycam.setState(tri)});
+
+ondblclick = () => {};
+
 // DICHIARO LE VARIABILI FUORI DALLA FUNZIONI
 // PERCHE' ABBIANO VISIBILITA' ANCHE NELLE ALTRE FUNZIONI
 let imgEarth;
@@ -39,7 +43,7 @@ let playIsOff = true;
 let bpm = 20;
 //1= MEASURE, 4=BEAT
 //---------arp1,arp2,lead,chord4,chord3,chord2,chord1,bass--------------------------------------
-let planetRatios = [32, 16, 2, 4, 4, 4, 2, 1];
+let planetRatios = [8, 16, 2, 4, 4, 4, 4, 1];
 
 let chromas = [
   "C",
@@ -216,6 +220,10 @@ function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
   easycam.setViewport([0, 0, windowWidth, windowHeight]); // adattamento viewport nel caso
   // di resizing per la easycam
+  for (i = 0; i < 8; i++) {
+    tendina[i].position(windowWidth/50 , windowHeight/8 +  i * windowHeight/10);
+    slidVol[i].position(windowWidth/20, (windowHeight/8 + 7 * windowHeight/10) -  i * windowHeight/10);
+  }
 }
 
 function setup() {
@@ -279,13 +287,17 @@ function setup() {
   //RATIO SELECTORS
   for (i = 0; i < 8; i++) {
     tendina[i] = createSelect();
+<<<<<<< Updated upstream
     tendina[i].position(10, 60 + (i * windowHeight) / 10);
+=======
+    tendina[i].position(windowWidth/50 , windowHeight/8 +  i * windowHeight/10);
+>>>>>>> Stashed changes
     tendina[i].addClass("style-btn");
     tendina[i].addClass("show");
-    tendina[i].addClass("positionMenu");
+    //tendina[i].addClass("positionMenu");
     tendina[i].id(idTend[i]);
-    tendina[i].style("height", "3vw");
-    tendina[i].style("width", "3vw");
+    tendina[i].style("height", "3.8vw");
+    tendina[i].style("width", "3.8vw");
     tendina[i].changed(changeRatio);
     for (let j = 0; j < lista.length; j++) {
       tendina[i].option(lista[j]);
@@ -297,10 +309,14 @@ function setup() {
   for (i = 0; i < 8; i++) {
     slidVol[i] = createSlider(-50, -16, volumes[i], 1);
 
+<<<<<<< Updated upstream
     slidVol[i].position(
       65,
       65 + (7 * windowHeight) / 10 - (i * windowHeight) / 10
     );
+=======
+    slidVol[i].position(windowWidth/20, (windowHeight/8 + 7 * windowHeight/10) -  i * windowHeight/10);
+>>>>>>> Stashed changes
     slidVol[i].addClass("slider");
     slidVol[i].addClass("show");
     slidVol[i].addClass("volume");
@@ -308,6 +324,7 @@ function setup() {
     slidVol[i].id(idVol[7 - i]);
     slidVol[i].style("height", "3vw");
     slidVol[i].style("width", "10vw");
+    slidVol[i].style("margin")
     //slidVol[i].style('background-color', '#000000');
 
     slidVol[i].changed(changeVolume);
@@ -320,7 +337,7 @@ function setup() {
   menuButton.addClass("style-btn");
   menuButton.addClass("positionMenu");
   menuButton.style("height", "3vw");
-  menuButton.style("width", "6vw");
+  menuButton.style("width", "6.5vw");
   menuButton.mouseClicked(function () {
     if (hiddenMenu) {
       hiddenMenu = false;
@@ -344,9 +361,15 @@ function setup() {
   });
 
   //MUTE
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   button4 = createButton("Mute");
   button4.addClass("style-btn");
   button4.addClass("positionMute");
+  button4.style("height", "3vw");
+  button4.style("width", "6.5vw");
   button4.mouseClicked(function () {
     if (!muted) {
       muted = true;
@@ -693,7 +716,7 @@ function soundDesign() {
     }
     bassEnvelope.triggerAttackRelease(planetRatios[7].toString() + "n", time);
     console.log(chordNotes);
-  }, planetRatios[7].toString() + "n").start(Tone.now());
+  }, planetRatios[7].toString() + "n").start(0);
 
   //TETRADE CHORDS
   for (i = 0; i < 4; i++) {
@@ -728,7 +751,7 @@ function soundDesign() {
         planetRatios[6].toString() + "n",
         time
       );
-    }, planetRatios[6].toString() + "n").start(Tone.now());
+    }, planetRatios[6].toString() + "n").start(0);
   } else {
     chordLoops[0] = new Tone.Loop((time) => {
       chordSynths[0].triggerAttackRelease(
@@ -740,7 +763,7 @@ function soundDesign() {
         planetRatios[6].toString() + "n",
         time
       );
-    }, planetRatios[6].toString() + "n").start(Tone.now());
+    }, planetRatios[6].toString() + "n").start(0);
   }
 
   chordLoops[1] = new Tone.Loop((time) => {
@@ -753,7 +776,7 @@ function soundDesign() {
       planetRatios[5].toString() + "n",
       time
     );
-  }, planetRatios[5].toString() + "n").start(Tone.now());
+  }, planetRatios[5].toString() + "n").start(0);
 
   chordLoops[2] = new Tone.Loop((time) => {
     chordSynths[2].triggerAttackRelease(
@@ -765,7 +788,7 @@ function soundDesign() {
       planetRatios[4].toString() + "n",
       time
     );
-  }, planetRatios[4].toString() + "n").start(Tone.now());
+  }, planetRatios[4].toString() + "n").start(0);
 
   chordLoops[3] = new Tone.Loop((time) => {
     chordSynths[3].triggerAttackRelease(
@@ -777,7 +800,7 @@ function soundDesign() {
       planetRatios[3].toString() + "n",
       time
     );
-  }, planetRatios[3].toString() + "n").start(Tone.now());
+  }, planetRatios[3].toString() + "n").start(0);
 
   //LEAD
   leadFilter = new Tone.Filter(400, "lowpass");
@@ -810,7 +833,7 @@ function soundDesign() {
       leadNotesIndex++;
     }
     leadEnvelope.triggerAttackRelease(planetRatios[2].toString() + "n", time);
-  }, planetRatios[2].toString() + "n").start(Tone.now());
+  }, planetRatios[2].toString() + "n").start(0);
 
   //ARPEGGIATOR 1
   arp1Filter = new Tone.Filter(400, "lowpass");
@@ -843,7 +866,7 @@ function soundDesign() {
       arp1NotesIndex++;
     }
     arp1Envelope.triggerAttackRelease(planetRatios[1].toString() + "n", time);
-  }, planetRatios[1].toString() + "n").start(Tone.now());
+  }, planetRatios[1].toString() + "n").start(0);
 
   //ARPEGGIATOR 2
   arp2Filter = new Tone.Filter(400, "lowpass");
@@ -877,7 +900,7 @@ function soundDesign() {
       arp2NotesIndex++;
     }
     arp2Envelope.triggerAttackRelease(planetRatios[0].toString() + "n", time);
-  }, planetRatios[0].toString() + "n").start(Tone.now());
+  }, planetRatios[0].toString() + "n").start(0);
 
   //Tone.Transport.start();
   Tone.Transport.bpm.value = bpm;
