@@ -37,13 +37,9 @@ let planetDiameter = [6, 12.5, 15.75, 8.25, 35, 29, 12.5, 12];
 let bool = false;
 let easycam;
 
-//SOUND VARIABLES
-let reverb, pingpong;
+
 let playIsOff = true;
-let bpm = 20;
-//1= MEASURE, 4=BEAT
-//---------arp1,arp2,lead,chord4,chord3,chord2,chord1,bass--------------------------------------
-let planetRatios = [8, 16, 2, 4, 4, 4, 4, 1];
+let planetRatios = [0, 0, 16, 2, 2, 2, 2, 1];
 
 let chromas = [
   "C",
@@ -124,7 +120,48 @@ let progressionNames = [
 //IMAGE PROCESSING
 let mean;
 let maximum;
-let selectedMode = myScale; //-------------------------------------------------------------------------------------------------------------------
+let selectedMode = myScale; 
+//-------------------------------------------------------------------------------------------------------------------
+//SOUND
+let context = new window.AudioContext();
+let finalGain, bassGain, leadGain, delayGain, convolverGain;
+let bassOsc, leadOsc;
+let chordOsc=[];
+let chordGain=[];
+let msRep=8000;
+
+var j=1;
+const Aminor5=[110];
+for(var i=0; i<5; i++) //numero ottave
+    {
+      Aminor5.push(Aminor5[j-1]*Math.pow(2,3/12)) //C
+      j++
+      Aminor5.push(Aminor5[j-1]*Math.pow(2,2/12)) //D
+      j++
+      Aminor5.push(Aminor5[j-1]*Math.pow(2,2/12)) //E
+      j++
+      Aminor5.push(Aminor5[j-1]*Math.pow(2,3/12)) //G
+      j++
+      Aminor5.push(Aminor5[j-1]*Math.pow(2,2/12)) //A
+      j++
+    }
+//A MINOR 5 BASS
+var j=1;
+const Aminor5bass=[55];
+for(var i=0; i<2; i++) //numero ottave
+    {
+      Aminor5bass.push(Aminor5bass[j-1]*Math.pow(2,3/12)) //C
+      j++
+      Aminor5bass.push(Aminor5bass[j-1]*Math.pow(2,2/12)) //D
+      j++
+      Aminor5bass.push(Aminor5bass[j-1]*Math.pow(2,2/12)) //E
+      j++
+   
+    }
+
+
+
+
 
 switch (parseInt(p)) {
   case 1:
@@ -145,17 +182,12 @@ switch (parseInt(p)) {
 }
 
 //BASS
-let bassEnvelope, bassFilter, bassSynth1, bassSynth2, bassLoop;
 let bassNotes = [];
 for (i = 0; i < selectedProgression.length; i++) {
   bassNotes[i] = selectedMode[selectedProgression[i] - 1];
 }
 
 //CHORD
-let chordSynths = [];
-let chordFilters = [];
-let chordEnvelopes = [];
-let chordLoops = [];
 let chordNotes = [];
 for (i = 0; i < 4; i++) {
   chordNotes[i] = [];
@@ -170,23 +202,19 @@ for (i = 0; i < 4; i++) {
   }
 }
 //LEAD
-let leadEnvelope, leadFilter, leadSynth, leadLoop;
 let leadNotes = [];
 for (i = 0; i < selectedProgression.length; i++) {
   leadNotes[i] = selectedMode[selectedProgression[i] - 1];
 }
-//ARP1
-let arp1Envelope, arp1Filter, arp1Synth, arp1Loop;
-//ARP2
-let arp2Envelope, arp2Filter, arp2Synth, arp2Loop;
+
 
 //Planets menus
 let tempVol = [];
 let muted = false;
 let tendina = [];
 let slidVol = [];
-let volumes = [-16, -23, -23, -23, -23, -19, -26, -50];
-let lista = ["1", "2", "3", "4", "5", "8", "16", "24", "32"];
+let volumes = [1, 0.05, 0.05, 0.05, 0.05, 0.3, 0, 0];
+let lista = ["1", "2", "3", "4", "5", "8", "16"];
 let refreshed = false;
 let idVol = [
   "instr1",
@@ -276,10 +304,14 @@ function setup() {
   button3.mouseClicked(function () {
     if (playIsOff) {
       playIsOff = false;
+      playSound();
+      finalGain.gain.value=0.2;
       button3.html("Stop");
       refreshVolumes();
     } else {
       playIsOff = true;
+      stopSound();
+      finalGain.gain.value=0;
       button3.html("Play");
     }
   });
@@ -303,7 +335,7 @@ function setup() {
 
   //VOLUME SLIDERS
   for (i = 0; i < 8; i++) {
-    slidVol[i] = createSlider(-50, -16, volumes[i], 1);
+    slidVol[i] = createSlider(0, 1, volumes[i], 0.001);
 
     slidVol[i].position(windowWidth/20, (windowHeight/8 + 7 * windowHeight/10) -  i * windowHeight/10);
     slidVol[i].addClass("slider");
@@ -402,41 +434,30 @@ function changeRatio() {
     planetRatios[i] = tendina[i].value();
     console.log(planetRatios[i]);
   }
-
-  Tone.Transport.pause();
   playIsOff = true;
   button3.html("Play");
-  bassLoop.cancel();
-  for (let i = 0; i < 4; i++) {
-    chordLoops[i].cancel();
-  }
-  leadLoop.cancel();
-  arp1Loop.cancel();
-  arp2Loop.cancel();
-  soundDesign();
+  stopSound();
 }
 
 function refreshVolumes() {
   console.log("Refreshed");
-  bassSynth1.volume.value = volumes[0];
-  bassSynth2.volume.value = volumes[0];
-  bassSynth3.volume.value = volumes[0];
-  for (j = 0; j < 4; j++) {
-    chordSynths[j].volume.value = volumes[j + 1];
+  bassGain.gain.linearRampToValueAtTime(volumes[0], 0.1);
+  for(i=0; i<4; i++){
+    chordGain[i].gain.linearRampToValueAtTime(volumes[i+1], 0.1);
   }
-  leadSynth.volume.value = volumes[5];
-  arp1Synth.volume.value = volumes[6];
-  arp2Synth.volume.value = volumes[7];
+  leadGain.gain.linearRampToValueAtTime(volumes[5], 0.1);
 }
 
 function changeVolume() {
   muted = false;
   button4.html("Mute");
   console.log("Volumes");
+  
   for (i = 0; i < 8; i++) {
     volumes[i] = slidVol[i].value();
     console.log(volumes[i]);
   }
+  
   refreshVolumes();
 }
 
@@ -595,20 +616,20 @@ function draw() {
 
     //---------------------------------------------------------MIXER--------------------------------------------------------------------------
     if (!playIsOff) {
-      Tone.Transport.start();
+      //Tone.Transport.start();
       //refreshVolumes();
       //refreshed = true;
     } else {
+      /*
       Tone.Transport.pause();
-      bassSynth1.volume.value = -100;
-      bassSynth2.volume.value = -100;
-      bassSynth3.volume.value = -100;
+      bassSynth.volume.value = -100;
       for (j = 0; j < 4; j++) {
         chordSynths[j].volume.value = -100;
       }
       leadSynth.volume.value = -100;
       arp1Synth.volume.value = -100;
       arp2Synth.volume.value = -100;
+      */
     }
   }
   /*
@@ -630,265 +651,192 @@ function draw() {
 }
 
 function soundDesign() {
-  let bassNotesIndex = 0;
-  let chordNotesIndex = 0;
-  let leadNotesIndex = 0;
-  let arp1NotesIndex = 0;
-  let arp2NotesIndex = 0;
+  //SOUND
+  finalGain = context.createGain();
+  finalGain.gain.value=0.3;
 
-  reverb = new Tone.Reverb({
-    decay: 5,
-    wet: 0.7,
-  });
+  bassOsc = context.createOscillator();
+  bassGain = context.createGain();
 
-  pingpong = new Tone.PingPongDelay({
-    delayTime: "2n",
-    feedback: 0.55,
-    wet: 0.6,
-  });
-
-  //BASSO
-  bassFilter = new Tone.Filter(400, "lowpass");
-
-  bassEnvelope = new Tone.FrequencyEnvelope({
-    attack: (planetRatios[7] * 4).toString() + "n",
-    decay: (planetRatios[7] * 2).toString() + "n",
-    sustain: 0,
-    release: 0,
-    baseFrequency: "C1",
-    octaves: 4,
-    attackCurve: "sine",
-  });
-
-  bassEnvelope.connect(bassFilter.frequency);
-
-  bassSynth1 = new Tone.Synth({
-    oscillator: { type: "sawtooth", detune: "-10" },
-  });
-  bassSynth2 = new Tone.Synth({
-    oscillator: { type: "sawtooth", detune: "10" },
-  });
-  bassSynth3 = new Tone.Synth({ oscillator: { type: "fmsine" } });
-  bassSynth1.chain(bassFilter, reverb, Tone.Destination);
-  bassSynth2.chain(bassFilter, reverb, Tone.Destination);
-  bassSynth3.chain(bassFilter, reverb, Tone.Destination);
-  bassSynth1.volume.value = -100;
-  bassSynth2.volume.value = -100;
-  bassSynth3.volume.value = -100;
-
-  bassLoop = new Tone.Loop((time) => {
-    bassSynth1.triggerAttackRelease(
-      bassNotes[bassNotesIndex] + "1",
-      planetRatios[7].toString() + "n",
-      time
-    );
-    bassSynth2.triggerAttackRelease(
-      bassNotes[bassNotesIndex] + "1",
-      planetRatios[7].toString() + "n",
-      time
-    );
-    bassSynth3.triggerAttackRelease(
-      bassNotes[bassNotesIndex] + "1",
-      planetRatios[7].toString() + "n",
-      time
-    );
-    if (bassNotesIndex == bassNotes.length - 1) {
-      bassNotesIndex = 0;
-      chordNotesIndex = 0;
-    } else {
-      bassNotesIndex++;
-      chordNotesIndex++;
+  for(i=0; i<4; i++){
+    chordOsc[i] = context.createOscillator();
+    chordGain[i] = context.createGain();
     }
-    bassEnvelope.triggerAttackRelease(planetRatios[7].toString() + "n", time);
-    console.log(chordNotes);
-  }, planetRatios[7].toString() + "n").start(0);
 
-  //TETRADE CHORDS
-  for (i = 0; i < 4; i++) {
-    chordFilters[i] = new Tone.Filter(400, "lowpass");
+  leadOsc = context.createOscillator();
+  leadGain = context.createGain();
 
-    for (j = 6; j > 2; j--) {
-      chordEnvelopes[i] = new Tone.FrequencyEnvelope({
-        attack: (planetRatios[j] * 2).toString() + "n",
-        decay: (planetRatios[j] * 4).toString() + "n",
-        sustain: 0,
-        release: 0,
-        baseFrequency: "C0",
-        octaves: 5,
-        attackCurve: "sine",
-      });
-    }
-    chordEnvelopes[i].connect(chordFilters[i].frequency);
 
-    chordSynths[i] = new Tone.Synth({ oscillator: { type: "fmsine" } });
-    chordSynths[i].chain(chordFilters[i], reverb, Tone.Destination);
-    chordSynths[i].volume.value = -100;
+  delay = context.createDelay(100); //100 (sec) è il max delay time, se non lo specifico è 1 sec
+  delayGain = context.createGain();
+
+  convolverGain = context.createGain();
+  function impulseResponse(duration,decay){
+    var lenght=context.sampleRate*duration;
+    var impulse=context.createBuffer(1,lenght,context.sampleRate);
+    var IR = impulse.getChannelData(0);
+    for(var i=0; i<lenght; i++) IR[i]=(2*Math.random()-1)*Math.pow(1-i/lenght,decay);
+    return impulse;
   }
+  //Create impulse and convolver node
+  var impulse = impulseResponse(5, 2) //1 second impulse with decay value of 2
+  var convolver = new ConvolverNode(context,{buffer:impulse})
+  convolverGain.gain.value=0.9;
 
-  if (Boolean(t)) {
-    chordLoops[0] = new Tone.Loop((time) => {
-      chordSynths[0].triggerAttackRelease(
-        chordNotes[3][chordNotesIndex] + "3",
-        planetRatios[6].toString() + "n",
-        time
-      );
-      chordEnvelopes[0].triggerAttackRelease(
-        planetRatios[6].toString() + "n",
-        time
-      );
-    }, planetRatios[6].toString() + "n").start(0);
-  } else {
-    chordLoops[0] = new Tone.Loop((time) => {
-      chordSynths[0].triggerAttackRelease(
-        chordNotes[0][chordNotesIndex] + "4",
-        planetRatios[6].toString() + "n",
-        time
-      );
-      chordEnvelopes[0].triggerAttackRelease(
-        planetRatios[6].toString() + "n",
-        time
-      );
-    }, planetRatios[6].toString() + "n").start(0);
+  hi_filter= new BiquadFilterNode(context);
+
+  //setup
+  bassOsc.frequency.value=0;
+  bassOsc.start();
+  bassOsc.type="sine";
+  leadOsc.frequency.value=0;
+  leadOsc.start();
+  leadOsc.type="sine";
+  delay.delayTime.value=msRep/planetRatios[2]/1.5/1000;
+  delayGain.gain.value=0.7;
+  for(i=0; i<4; i++){
+    chordOsc[i].frequency.value=0;
+    chordOsc[i].start();
+    chordOsc[i].type="square";
   }
+  hi_filter.frequency.value=2000;
 
-  chordLoops[1] = new Tone.Loop((time) => {
-    chordSynths[1].triggerAttackRelease(
-      chordNotes[2][chordNotesIndex] + "3",
-      planetRatios[5].toString() + "n",
-      time
-    );
-    chordEnvelopes[1].triggerAttackRelease(
-      planetRatios[5].toString() + "n",
-      time
-    );
-  }, planetRatios[5].toString() + "n").start(0);
+  //CONNETTO I NODI
+  bassOsc.connect(bassGain);
+  bassGain.connect(finalGain);
 
-  chordLoops[2] = new Tone.Loop((time) => {
-    chordSynths[2].triggerAttackRelease(
-      chordNotes[1][chordNotesIndex] + "3",
-      planetRatios[4].toString() + "n",
-      time
-    );
-    chordEnvelopes[2].triggerAttackRelease(
-      planetRatios[4].toString() + "n",
-      time
-    );
-  }, planetRatios[4].toString() + "n").start(0);
+  leadOsc.connect(leadGain);
+  leadGain.connect(finalGain);
+  leadGain.connect(delay);
+  delay.connect(delayGain);
+  delayGain.connect(delay);
+  delay.connect(finalGain);
 
-  chordLoops[3] = new Tone.Loop((time) => {
-    chordSynths[3].triggerAttackRelease(
-      chordNotes[0][chordNotesIndex] + "3",
-      planetRatios[3].toString() + "n",
-      time
-    );
-    chordEnvelopes[3].triggerAttackRelease(
-      planetRatios[3].toString() + "n",
-      time
-    );
-  }, planetRatios[3].toString() + "n").start(0);
+  leadGain.connect(convolver);
+  delayGain.connect(convolver);
+  convolver.connect(convolverGain);
+  convolverGain.connect(finalGain);
 
-  //LEAD
-  leadFilter = new Tone.Filter(400, "lowpass");
+for(i=0; i<4; i++){
+  chordOsc[i].connect(chordGain[i]);
+  chordGain[i].connect(convolver);
+  chordGain[i].connect(finalGain);
+}
 
-  leadEnvelope = new Tone.FrequencyEnvelope({
-    attack: (planetRatios[2] * 2).toString() + "n",
-    decay: (planetRatios[2] * 4).toString() + "n",
-    sustain: 0,
-    release: 0,
-    baseFrequency: "C0",
-    octaves: 5,
-    attackCurve: "sine",
-  });
+finalGain.connect(hi_filter);
+hi_filter.connect(context.destination);
+//finalGain.connect(context.destination);
 
-  leadEnvelope.connect(leadFilter.frequency);
+}
 
-  leadSynth = new Tone.Synth({ oscillator: { type: "fmsine" } });
-  leadSynth.chain(leadFilter, reverb, pingpong, Tone.Destination);
-  leadSynth.volume.value = -100;
 
-  leadLoop = new Tone.Loop((time) => {
-    leadSynth.triggerAttackRelease(
-      leadNotes[leadNotesIndex] + "4",
-      planetRatios[2].toString() + "n",
-      time
-    );
-    if (leadNotesIndex == leadNotes.length - 1) {
-      leadNotesIndex = 0;
-    } else {
-      leadNotesIndex++;
+function quant(scale) 
+{
+  var a = Math.random()*(scale[scale.length-1]+1);
+  var delta=1000;
+  var quantizedNote=0;
+  for(var i=0; i<scale.length; i++)
+    {
+      if(Math.abs(scale[i]-a)<delta)
+        {
+          delta=Math.abs(scale[i]-a);
+          quantizedNote=scale[i];
+        }
     }
-    leadEnvelope.triggerAttackRelease(planetRatios[2].toString() + "n", time);
-  }, planetRatios[2].toString() + "n").start(0);
+  return quantizedNote
+}    
 
-  //ARPEGGIATOR 1
-  arp1Filter = new Tone.Filter(400, "lowpass");
 
-  arp1Envelope = new Tone.FrequencyEnvelope({
-    attack: (planetRatios[1] * 30).toString() + "n",
-    decay: (planetRatios[1] * 8).toString() + "n",
-    sustain: 0,
-    release: 0,
-    baseFrequency: "C0",
-    octaves: 5,
-    attackCurve: "sine",
-  });
+function stopSound()
+{
+  clearInterval(bassLoop);
+  clearInterval(chordLoop1);
+  clearInterval(chordLoop2);
+  clearInterval(chordLoop3);
+  clearInterval(chordLoop4);
+  clearInterval(leadLoop);
+  bassGain.gain.linearRampToValueAtTime(0, 0.1);
+  for(i=0; i<4; i++){
+    chordGain[i].gain.linearRampToValueAtTime(0, 0.1);
+  }
+  leadGain.gain.linearRampToValueAtTime(0, 0.1);
+}
 
-  arp1Envelope.connect(arp1Filter.frequency);
+function playSound()
+{
+  context.resume();  
+  bassLoop =  setInterval(playBass, msRep/planetRatios[7]);
+  chordLoop1 = setInterval(playChord1, msRep/planetRatios[6]);
+  chordLoop2 = setInterval(playChord2, msRep/planetRatios[5]);
+  chordLoop3 = setInterval(playChord3, msRep/planetRatios[4]);
+  chordLoop4 = setInterval(playChord4, msRep/planetRatios[3]);
+  leadLoop=setInterval(playLead, msRep/planetRatios[2]);
+}
 
-  arp1Synth = new Tone.Synth({ oscillator: { type: "fmsine" } });
-  arp1Synth.chain(arp1Filter, pingpong, Tone.Destination);
-  arp1Synth.volume.value = -100;
+function playBass()
+{
+  bassGain.gain.value=0;
+  bassOsc.frequency.value = quant(Aminor5bass);
+  const t0= context.currentTime;
+  t1= t0+Number(msRep/planetRatios[7]/1000/2);  
+  t2= t1+Number(msRep/planetRatios[7]/1000/2);
+  bassGain.gain.linearRampToValueAtTime(volumes[0], t1);
+  bassGain.gain.linearRampToValueAtTime(0, t2);
+}
 
-  arp1Loop = new Tone.Loop((time) => {
-    arp1Synth.triggerAttackRelease(
-      chordNotes[arp1NotesIndex][chordNotesIndex] + "4",
-      planetRatios[1].toString() + "n",
-      time
-    );
-    if (arp1NotesIndex == 2) {
-      arp1NotesIndex = 0;
-    } else {
-      arp1NotesIndex++;
-    }
-    arp1Envelope.triggerAttackRelease(planetRatios[1].toString() + "n", time);
-  }, planetRatios[1].toString() + "n").start(0);
+function playChord1()
+{
+    chordGain[0].gain.value=0;
+    chordOsc[0].frequency.value=quant(Aminor5);
+    const t0= context.currentTime;
+    t1= t0+Number(msRep/planetRatios[6]/1000/2);  
+    t2= t1+Number(msRep/planetRatios[6]/1000/2);
+    chordGain[0].gain.linearRampToValueAtTime(volumes[1], t1);
+    chordGain[0].gain.linearRampToValueAtTime(0, t2);
+}
 
-  //ARPEGGIATOR 2
-  arp2Filter = new Tone.Filter(400, "lowpass");
+function playChord2()
+{
+    chordGain[1].gain.value=0;
+    chordOsc[1].frequency.value=quant(Aminor5);
+    const t0= context.currentTime;
+    t1= t0+Number(msRep/planetRatios[5]/1000/2);  
+    t2= t1+Number(msRep/planetRatios[5]/1000/2);
+    chordGain[1].gain.linearRampToValueAtTime(volumes[2], t1);
+    chordGain[1].gain.linearRampToValueAtTime(0, t2);
+}
 
-  arp2Envelope = new Tone.FrequencyEnvelope({
-    attack: (planetRatios[0] * 32).toString() + "n",
-    decay: (planetRatios[0] * 4).toString() + "n",
-    sustain: 0,
-    release: 0,
-    baseFrequency: "C0",
-    octaves: 5,
-    attackCurve: "sine",
-  });
+function playChord3()
+{
+    chordGain[2].gain.value=0;
+    chordOsc[2].frequency.value=quant(Aminor5);
+    const t0= context.currentTime;
+    t1= t0+Number(msRep/planetRatios[4]/1000/2);  
+    t2= t1+Number(msRep/planetRatios[4]/1000/2);
+    chordGain[2].gain.linearRampToValueAtTime(volumes[3], t1);
+    chordGain[2].gain.linearRampToValueAtTime(0, t2);
+}
 
-  arp2Envelope.connect(arp2Filter.frequency);
+function playChord4()
+{
+    chordGain[3].gain.value=0;
+    chordOsc[3].frequency.value=quant(Aminor5);
+    const t0= context.currentTime;
+    t1= t0+Number(msRep/planetRatios[3]/1000/2);  
+    t2= t1+Number(msRep/planetRatios[3]/1000/2);
+    chordGain[3].gain.linearRampToValueAtTime(volumes[4], t1);
+    chordGain[3].gain.linearRampToValueAtTime(0, t2);
+}
 
-  arp2Synth = new Tone.Synth({ oscillator: { type: "fmsine" } });
-  arp2Synth.chain(arp2Filter, Tone.Destination);
-  arp2Synth.volume.value = -100;
-
-  arp2Loop = new Tone.Loop((time) => {
-    arp2Synth.triggerAttackRelease(
-      selectedMode[arp2NotesIndex] + "4",
-      planetRatios[0].toString() + "n",
-      time
-    );
-    //console.log(time);
-    if (arp2NotesIndex == selectedMode.length - 1) {
-      arp2NotesIndex = 0;
-    } else {
-      arp2NotesIndex++;
-    }
-    arp2Envelope.triggerAttackRelease(planetRatios[0].toString() + "n", time);
-  }, planetRatios[0].toString() + "n").start(0);
-
-  //Tone.Transport.start();
-  Tone.Transport.bpm.value = bpm;
+function playLead()
+{
+  leadGain.gain.value=0;
+  leadOsc.frequency.value = quant(Aminor5);
+  const t0= context.currentTime;
+  t1= t0+Number(msRep/planetRatios[2]/1000/4);  
+  t2= t1+Number(msRep/planetRatios[2]/1000/4);
+  leadGain.gain.linearRampToValueAtTime(volumes[5], t1);
+  leadGain.gain.linearRampToValueAtTime(0, t2);
 }
 
 function planet(
@@ -915,10 +863,10 @@ function planet(
   //Tone.Transport.bpm.value BPM
   //Tone.Transport.bpm.value/60/4 MEASURES PER SECOND (1n in Tone transport reference)
   //2*Math.PI
-  var revolutionRate =
-    2 *
-    Math.PI *
-    (Tone.Transport.seconds * (Tone.Transport.bpm.value / 60 / 4) * modifier);
+
+
+  var revolutionRate = 2 * Math.PI *(context.currentTime/(msRep/modifier/1000));
+
   translate(
     sin(revolutionRate) * orbitWidth,
     0,
