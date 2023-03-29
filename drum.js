@@ -393,8 +393,8 @@ function setup() {
       button4.html("Unmute");
       for (i = 0; i < 8; i++) {
         tempVol[i] = slidVol[i].value();
-        volumes[i] = -50;
-        slidVol[i].value(-50);
+        volumes[i] = 0;
+        slidVol[i].value(0);
       }
     } else {
       muted = false;
