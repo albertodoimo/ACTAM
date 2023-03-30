@@ -37,7 +37,7 @@ let planetDiameter = [6, 12.5, 15.75, 8.25, 35, 29, 12.5, 12];
 let bool = false;
 let easycam;
 
-
+let revolutionRate = 0;
 let playIsOff = true;
 let planetRatios = [0, 0, 16, 2, 2, 2, 2, 1];
 
@@ -132,7 +132,7 @@ let msRep=8000;
 
 var j=1;
 const Aminor5=[110];
-for(var i=0; i<5; i++) //numero ottave
+for(var i=0; i<3; i++) //numero ottave
     {
       Aminor5.push(Aminor5[j-1]*Math.pow(2,3/12)) //C
       j++
@@ -304,7 +304,8 @@ function setup() {
   button3.mouseClicked(function () {
     if (playIsOff) {
       playIsOff = false;
-      playSound();
+      sync();
+      //playSound();
       finalGain.gain.value=0.2;
       button3.html("Stop");
       refreshVolumes();
@@ -650,6 +651,33 @@ function draw() {
   //text("blue", bSlider.x * 2 + bSlider.width, 95);
 }
 
+let chroma = "";
+function getNoteFreq(chroma, scaleNum){
+  //Example: getNote("C", 4)
+  var index = 0;
+  index = chromas.indexOf(chroma);
+  var freq = 0;
+  freq =  32.703 * Math.pow(2, (index/12) + (scaleNum-1)) ;
+  return freq;
+}
+
+function sync() {
+  console.log("sync?");
+  if(
+    !(
+    (-0.05<sin(revolutionRate) && sin(revolutionRate)<0.05)
+    &&
+    cos(revolutionRate)>0.95
+    )
+    ){
+      window.setTimeout(sync, 100); /* this checks the flag every 100 milliseconds*/
+    } 
+    else {
+      playSound();
+      console.log("syncato!");
+    }
+}
+
 function soundDesign() {
   //SOUND
   finalGain = context.createGain();
@@ -865,7 +893,7 @@ function planet(
   //2*Math.PI
 
 
-  var revolutionRate = 2 * Math.PI *(context.currentTime/(msRep/modifier/1000));
+  revolutionRate = 2 * Math.PI *(context.currentTime/(msRep/modifier/1000));
 
   translate(
     sin(revolutionRate) * orbitWidth,
