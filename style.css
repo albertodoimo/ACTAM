@@ -406,13 +406,13 @@ h2 {
 }
 
 #instr1::after {
-    content:"Mercury - Arp. 1";
+    content:"Mercury - Arp. 2";
     opacity: 0.8;
     width: 12vw;
     text-align: center;
 }
 #instr2::after {
-    content:"Venus - Arp. 2";
+    content:"Venus - Arp. 1";
     opacity: 0.8;
     width: 12vw;
     text-align: center;

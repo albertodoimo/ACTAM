@@ -38,8 +38,9 @@ let bool = false;
 let easycam;
 
 let revolutionRate = 0;
+let movePlanet=0;
 let playIsOff = true;
-let planetRatios = [0, 0, 16, 2, 2, 2, 2, 1];
+let planetRatios = [16, 8, 16, 2, 2, 2, 2, 1];
 
 let chromas = [
   "C",
@@ -101,7 +102,9 @@ for (i = 0; i < 7; i++) {
 
 console.log(myScale);
 
-let tetrad = [1, 3, 5, 7];
+let tetrad;
+if(t=0){tetrad=[1, 3, 5, 8];}
+else{tetrad=[1, 3, 5, 7];}
 
 let progression1 = [1, 5, 6, 4];
 let progression2 = [1, 4, 2, 5];
@@ -124,43 +127,11 @@ let selectedMode = myScale;
 //-------------------------------------------------------------------------------------------------------------------
 //SOUND
 let context = new window.AudioContext();
-let finalGain, bassGain, leadGain, delayGain, convolverGain;
-let bassOsc, leadOsc;
+let finalGain, bassGain, leadGain, arp1Gain, arp2Gain, delayGain, convolverGain;
+let bassOsc, leadOsc, arp1Osc, arp2Osc;
 let chordOsc=[];
 let chordGain=[];
 let msRep=8000;
-
-var j=1;
-const Aminor5=[110];
-for(var i=0; i<3; i++) //numero ottave
-    {
-      Aminor5.push(Aminor5[j-1]*Math.pow(2,3/12)) //C
-      j++
-      Aminor5.push(Aminor5[j-1]*Math.pow(2,2/12)) //D
-      j++
-      Aminor5.push(Aminor5[j-1]*Math.pow(2,2/12)) //E
-      j++
-      Aminor5.push(Aminor5[j-1]*Math.pow(2,3/12)) //G
-      j++
-      Aminor5.push(Aminor5[j-1]*Math.pow(2,2/12)) //A
-      j++
-    }
-//A MINOR 5 BASS
-var j=1;
-const Aminor5bass=[55];
-for(var i=0; i<2; i++) //numero ottave
-    {
-      Aminor5bass.push(Aminor5bass[j-1]*Math.pow(2,3/12)) //C
-      j++
-      Aminor5bass.push(Aminor5bass[j-1]*Math.pow(2,2/12)) //D
-      j++
-      Aminor5bass.push(Aminor5bass[j-1]*Math.pow(2,2/12)) //E
-      j++
-   
-    }
-
-
-
 
 
 switch (parseInt(p)) {
@@ -184,7 +155,8 @@ switch (parseInt(p)) {
 //BASS
 let bassNotes = [];
 for (i = 0; i < selectedProgression.length; i++) {
-  bassNotes[i] = selectedMode[selectedProgression[i] - 1];
+  bassNotes[i] = getNoteFreq(selectedMode[selectedProgression[i] - 1], 2);
+  
 }
 
 //CHORD
@@ -193,27 +165,43 @@ for (i = 0; i < 4; i++) {
   chordNotes[i] = [];
   for (j = 0; j < selectedProgression.length; j++) {
     if (selectedProgression[j] - 1 + (tetrad[i] - 1) < selectedMode.length) {
-      chordNotes[i][j] =
-        selectedMode[selectedProgression[j] - 1 + (tetrad[i] - 1)];
+      chordNotes[i][j] = selectedMode[selectedProgression[j] - 1 + (tetrad[i] - 1)];
     } else {
-      chordNotes[i][j] =
-        selectedMode[selectedProgression[j] - 1 + (tetrad[i] - 1) - 7];
+      chordNotes[i][j] = selectedMode[selectedProgression[j] - 1 + (tetrad[i] - 1) - 7];
     }
   }
 }
+
 //LEAD
 let leadNotes = [];
-for (i = 0; i < selectedProgression.length; i++) {
-  leadNotes[i] = selectedMode[selectedProgression[i] - 1];
+let pentatonica;
+if(t=0){pentatonica=[1, 3, 4, 5, 8];}
+else{pentatonica=[1, 3, 4, 5, 7];}
+for (i = 0; i < pentatonica.length; i++) {
+  leadNotes[i] = getNoteFreq(selectedMode[pentatonica[i]-1], 4);
+  leadNotes[i+pentatonica.length] = getNoteFreq(selectedMode[pentatonica[i]-1], 5);
 }
 
+//Stars variables
+let s = 0;
+let r_s = 2500;
+let x_s,
+  y_s,
+  z_s,
+  c_s = [];
+let n_s = 150;
+let white = [255, 255, 255];
+let yellow = [255, 255, 180];
+let cyan = [120, 180, 255];
+let red = [255, 180, 180];
+let colors = [white, white, white, yellow, cyan, red];
 
 //Planets menus
 let tempVol = [];
 let muted = false;
 let tendina = [];
 let slidVol = [];
-let volumes = [1, 0.05, 0.05, 0.05, 0.05, 0.3, 0, 0];
+let volumes = [1, 0.05, 0.05, 0.05, 0.05, 0.3, 0.05, 0.1];
 let lista = ["1", "2", "3", "4", "5", "8", "16"];
 let refreshed = false;
 let idVol = [
@@ -307,12 +295,13 @@ function setup() {
       sync();
       //playSound();
       finalGain.gain.value=0.2;
+      delayGain.gain.value=0.7;
       button3.html("Stop");
-      refreshVolumes();
     } else {
       playIsOff = true;
       stopSound();
       finalGain.gain.value=0;
+      delayGain.gain.value=0;
       button3.html("Play");
     }
   });
@@ -438,6 +427,8 @@ function changeRatio() {
   playIsOff = true;
   button3.html("Play");
   stopSound();
+  finalGain.gain.value=0;
+  delayGain.gain.value=0;
 }
 
 function refreshVolumes() {
@@ -447,6 +438,8 @@ function refreshVolumes() {
     chordGain[i].gain.linearRampToValueAtTime(volumes[i+1], 0.1);
   }
   leadGain.gain.linearRampToValueAtTime(volumes[5], 0.1);
+  arp1Gain.gain.linearRampToValueAtTime(volumes[6], 0.1);
+  arp2Gain.gain.linearRampToValueAtTime(volumes[7], 0.1);
 }
 
 function changeVolume() {
@@ -462,23 +455,10 @@ function changeVolume() {
   refreshVolumes();
 }
 
-//Stars variables
-let s = 0;
-let r_s = 2500;
-let x_s,
-  y_s,
-  z_s,
-  c_s = [];
-let n_s = 150;
-let white = [255, 255, 255];
-let yellow = [255, 255, 180];
-let cyan = [120, 180, 255];
-let red = [255, 180, 180];
-let colors = [white, white, white, yellow, cyan, red];
-
 function draw() {
   //BACKGROUND
   background(0, 0, 0, 0);
+
 
   //muro invisibile per limiti della sfera
   let currentDist = Math.sqrt(
@@ -492,7 +472,7 @@ function draw() {
   }
 
   // SKYBOX
-  /*   if(s%20 == 0){
+     if(s%20 == 0){
     x_s = [];
     y_s = [];
     z_s = [];  
@@ -501,15 +481,15 @@ function draw() {
       y_s.push(random(-4000, 4000));
       z_s.push(random(-4000, 4000));
     }
-     /////  push();
+     push();
     noStroke();
     texture(environmentSelectedImg);
     rotateY(frameCount * 0.0005);
     sphere(4000);
-    ///////pop(); 
+    pop(); 
     s = 0;
-  } */
-
+  } 
+/*
   if (s == 0) {
     s++;
     x_s = [];
@@ -580,7 +560,7 @@ function draw() {
       }
     }
   }
-
+*/
   //SUN
   noStroke();
   rotateY(PI);
@@ -605,7 +585,8 @@ function draw() {
       planetRotation[i],
       imgPlanets[i],
       planetDiameter[i],
-      planetRatios[i]
+      planetRatios[i],
+      movePlanet
     );
     /* if(i==2){   //MOON
           push();
@@ -674,6 +655,7 @@ function sync() {
     } 
     else {
       playSound();
+      movePlanet=1;
       console.log("syncato!");
     }
 }
@@ -694,6 +676,11 @@ function soundDesign() {
   leadOsc = context.createOscillator();
   leadGain = context.createGain();
 
+  arp1Osc = context.createOscillator();
+  arp1Gain = context.createGain();
+
+  arp2Osc = context.createOscillator();
+  arp2Gain = context.createGain();
 
   delay = context.createDelay(100); //100 (sec) è il max delay time, se non lo specifico è 1 sec
   delayGain = context.createGain();
@@ -720,6 +707,12 @@ function soundDesign() {
   leadOsc.frequency.value=0;
   leadOsc.start();
   leadOsc.type="sine";
+  arp1Osc.frequency.value=0;
+  arp1Osc.start();
+  arp1Osc.type="sine";
+  arp2Osc.frequency.value=0;
+  arp2Osc.start();
+  arp2Osc.type="sine";
   delay.delayTime.value=msRep/planetRatios[2]/1.5/1000;
   delayGain.gain.value=0.7;
   for(i=0; i<4; i++){
@@ -751,12 +744,20 @@ for(i=0; i<4; i++){
   chordGain[i].connect(finalGain);
 }
 
+arp1Osc.connect(arp1Gain);
+arp1Gain.connect(finalGain);
+arp1Gain.connect(delay);
+//arp1Gain.connect(convolver);
+
+arp2Osc.connect(arp2Gain);
+arp2Gain.connect(finalGain);
+//arp2Gain.connect(convolver);
+
 finalGain.connect(hi_filter);
 hi_filter.connect(context.destination);
 //finalGain.connect(context.destination);
 
 }
-
 
 function quant(scale) 
 {
@@ -774,7 +775,6 @@ function quant(scale)
   return quantizedNote
 }    
 
-
 function stopSound()
 {
   clearInterval(bassLoop);
@@ -783,11 +783,17 @@ function stopSound()
   clearInterval(chordLoop3);
   clearInterval(chordLoop4);
   clearInterval(leadLoop);
+  clearInterval(arp1Loop);
+  clearInterval(arp2Loop);
   bassGain.gain.linearRampToValueAtTime(0, 0.1);
   for(i=0; i<4; i++){
     chordGain[i].gain.linearRampToValueAtTime(0, 0.1);
   }
   leadGain.gain.linearRampToValueAtTime(0, 0.1);
+  delayGain.gain.linearRampToValueAtTime(0, 0.1);
+  arp1Gain.gain.linearRampToValueAtTime(0, 0.1);
+  arp2Gain.gain.linearRampToValueAtTime(0, 0.1);
+  movePlanet=0;
 }
 
 function playSound()
@@ -799,34 +805,43 @@ function playSound()
   chordLoop3 = setInterval(playChord3, msRep/planetRatios[4]);
   chordLoop4 = setInterval(playChord4, msRep/planetRatios[3]);
   leadLoop=setInterval(playLead, msRep/planetRatios[2]);
+  arp1Loop=setInterval(playArp1, msRep/planetRatios[1]);
+  arp2Loop=setInterval(playArp2, msRep/planetRatios[0]);
 }
 
+let bassNotesIndex=0;
 function playBass()
 {
   bassGain.gain.value=0;
-  bassOsc.frequency.value = quant(Aminor5bass);
-  const t0= context.currentTime;
+  bassOsc.frequency.value = bassNotes[bassNotesIndex];
+  if(bassNotesIndex<bassNotes.length-1){bassNotesIndex++;}
+  else{bassNotesIndex=0;}
+  t0= context.currentTime;
   t1= t0+Number(msRep/planetRatios[7]/1000/2);  
   t2= t1+Number(msRep/planetRatios[7]/1000/2);
   bassGain.gain.linearRampToValueAtTime(volumes[0], t1);
   bassGain.gain.linearRampToValueAtTime(0, t2);
 }
 
+let chordNotesIndex=0;
 function playChord1()
 {
-    chordGain[0].gain.value=0;
-    chordOsc[0].frequency.value=quant(Aminor5);
-    const t0= context.currentTime;
-    t1= t0+Number(msRep/planetRatios[6]/1000/2);  
-    t2= t1+Number(msRep/planetRatios[6]/1000/2);
-    chordGain[0].gain.linearRampToValueAtTime(volumes[1], t1);
-    chordGain[0].gain.linearRampToValueAtTime(0, t2);
+  if(bassNotesIndex==0){chordNotesIndex=bassNotes.length-1}
+  else{chordNotesIndex=bassNotesIndex-1}
+
+  chordGain[0].gain.value=0;
+  chordOsc[0].frequency.value=getNoteFreq(chordNotes[3][chordNotesIndex], getRndInteger(4, 5));
+  const t0= context.currentTime;
+  t1= t0+Number(msRep/planetRatios[6]/1000/2);  
+  t2= t1+Number(msRep/planetRatios[6]/1000/2);
+  chordGain[0].gain.linearRampToValueAtTime(volumes[1], t1);
+  chordGain[0].gain.linearRampToValueAtTime(0, t2);
 }
 
 function playChord2()
 {
     chordGain[1].gain.value=0;
-    chordOsc[1].frequency.value=quant(Aminor5);
+    chordOsc[1].frequency.value=getNoteFreq(chordNotes[2][chordNotesIndex], getRndInteger(4, 5));
     const t0= context.currentTime;
     t1= t0+Number(msRep/planetRatios[5]/1000/2);  
     t2= t1+Number(msRep/planetRatios[5]/1000/2);
@@ -837,7 +852,7 @@ function playChord2()
 function playChord3()
 {
     chordGain[2].gain.value=0;
-    chordOsc[2].frequency.value=quant(Aminor5);
+    chordOsc[2].frequency.value=getNoteFreq(chordNotes[1][chordNotesIndex], getRndInteger(4, 5));
     const t0= context.currentTime;
     t1= t0+Number(msRep/planetRatios[4]/1000/2);  
     t2= t1+Number(msRep/planetRatios[4]/1000/2);
@@ -848,7 +863,7 @@ function playChord3()
 function playChord4()
 {
     chordGain[3].gain.value=0;
-    chordOsc[3].frequency.value=quant(Aminor5);
+    chordOsc[3].frequency.value=getNoteFreq(chordNotes[0][chordNotesIndex], getRndInteger(4, 5));
     const t0= context.currentTime;
     t1= t0+Number(msRep/planetRatios[3]/1000/2);  
     t2= t1+Number(msRep/planetRatios[3]/1000/2);
@@ -859,12 +874,42 @@ function playChord4()
 function playLead()
 {
   leadGain.gain.value=0;
-  leadOsc.frequency.value = quant(Aminor5);
+  leadOsc.frequency.value = quant(leadNotes);
   const t0= context.currentTime;
   t1= t0+Number(msRep/planetRatios[2]/1000/4);  
   t2= t1+Number(msRep/planetRatios[2]/1000/4);
   leadGain.gain.linearRampToValueAtTime(volumes[5], t1);
   leadGain.gain.linearRampToValueAtTime(0, t2);
+}
+
+let arp1NotesIndex=0;
+function playArp1(){
+  arp1Gain.gain.value=0;
+  arp1Osc.frequency.value = getNoteFreq(selectedMode[arp1NotesIndex], 5);
+  if(arp1NotesIndex<selectedMode.length-1){arp1NotesIndex++;}
+  else{arp1NotesIndex=0;}
+  const t0= context.currentTime;
+  t1= t0+Number(msRep/planetRatios[1]/1000/4);  
+  t2= t1+Number(msRep/planetRatios[1]/1000/4);
+  arp1Gain.gain.linearRampToValueAtTime(volumes[6], t1);
+  arp1Gain.gain.linearRampToValueAtTime(0, t2);
+}
+
+let arp2NotesIndex=0;
+function playArp2(){
+  arp2Gain.gain.value=0;
+  console.log(arp2NotesIndex);
+  console.log(chordNotesIndex);
+  console.log(chordNotes);
+  console.log(chordNotes[arp2NotesIndex][chordNotesIndex]);
+  arp2Osc.frequency.value=getNoteFreq(chordNotes[arp2NotesIndex][chordNotesIndex], 5);
+  if(arp2NotesIndex<3){arp2NotesIndex++;}
+  else{arp2NotesIndex=0;}
+  const t0= context.currentTime;
+  t1= t0+Number(msRep/planetRatios[0]/1000/4);  
+  t2= t1+Number(msRep/planetRatios[0]/1000/4);
+  arp2Gain.gain.linearRampToValueAtTime(volumes[7], t1);
+  arp2Gain.gain.linearRampToValueAtTime(0, t2);
 }
 
 function planet(
@@ -874,7 +919,8 @@ function planet(
   rotation,
   skin,
   diameter,
-  modifier
+  modifier,
+  movePlanet
 ) {
   push();
 
@@ -896,9 +942,9 @@ function planet(
   revolutionRate = 2 * Math.PI *(context.currentTime/(msRep/modifier/1000));
 
   translate(
-    sin(revolutionRate) * orbitWidth,
+    sin(revolutionRate*movePlanet) * orbitWidth,
     0,
-    cos(revolutionRate) * orbitHeight
+    cos(revolutionRate*movePlanet) * orbitHeight
   );
   rotateZ(tilt);
   rotateY(frameCount * rotation);
