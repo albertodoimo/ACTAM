@@ -652,8 +652,10 @@ function sync() {
     )
     ){
       window.setTimeout(sync, 100); /* this checks the flag every 100 milliseconds*/
+      document.getElementById("loading").textContent = "LOADING...";
     } 
     else {
+      document.getElementById("loading").textContent = "";
       playSound();
       movePlanet=1;
       console.log("syncato!");

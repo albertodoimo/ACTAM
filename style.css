@@ -650,3 +650,15 @@ h2 {
   margin-left: 10.5vw;
   
 }
+
+#loading {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  margin-top: 9%;
+  width: 12vw;
+  height: 3vw;
+  text-align: center;
+  font-size: 2.5vw;
+  opacity: 0.8;
+}
