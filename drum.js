@@ -394,7 +394,7 @@ function setup() {
         slidVol[i].value(tempVol[i]);
       }
     }
-    refreshVolumes();
+    //refreshVolumes();
   });
 
   document.getElementById("key2").textContent =
@@ -430,7 +430,7 @@ function changeRatio() {
   finalGain.gain.value=0;
   delayGain.gain.value=0;
 }
-
+/*
 function refreshVolumes() {
   console.log("Refreshed");
   bassGain.gain.linearRampToValueAtTime(volumes[0], 0.1);
@@ -441,7 +441,7 @@ function refreshVolumes() {
   arp1Gain.gain.linearRampToValueAtTime(volumes[6], 0.1);
   arp2Gain.gain.linearRampToValueAtTime(volumes[7], 0.1);
 }
-
+*/
 function changeVolume() {
   muted = false;
   button4.html("Mute");
@@ -452,7 +452,7 @@ function changeVolume() {
     console.log(volumes[i]);
   }
   
-  refreshVolumes();
+  //refreshVolumes();
 }
 
 function draw() {
@@ -652,8 +652,10 @@ function sync() {
     )
     ){
       window.setTimeout(sync, 100); /* this checks the flag every 100 milliseconds*/
+      document.getElementById("loading").textContent = "LOADING...";
     } 
     else {
+      document.getElementById("loading").textContent = "";
       playSound();
       movePlanet=1;
       console.log("syncato!");
