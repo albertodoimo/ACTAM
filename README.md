@@ -73,7 +73,7 @@ These informations are processed in order to generate an array of frequecies for
 let  bassNotes = [];
 
 for (i = 0; i < selectedProgression.length; i++) {
-bassNotes[i] = getNoteFreq(selectedMode[selectedProgression[i] - 1], 2);
+	bassNotes[i] = getNoteFreq(selectedMode[selectedProgression[i] - 1], 2);
 }
 ```
 For what concerns the the chord notes we applied a **2:1 subsampling starting** from the detected scale. Lead notes (which are played by the Earth) **are generated randomly from the pentatonic scale** of the key and this translates in a semi-generative design. Finally the first arpeggiator cycles through the notes of the whole scale while the second one plays the notes of the chord sequentially.
