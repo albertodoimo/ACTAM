@@ -80,7 +80,7 @@ For what concerns the the chord notes we applied a **2:1 subsampling starting** 
 
 ### Oscillators, Gain and Effect Nodes
 The first step in the creation of sound is the generation of the oscillators: `context.createOscillator().`This occours in the `SoundDesign` function, where all nodes are created and connected.
-Each planet has its own oscillator, in particular, every oscillator has a sine wave exept for the chord planets i.e. Uranus Saturn Jupiter and Mars which are characterized by a square wave. The waveform of the oscillator is set as follows: `osc.type="sine";`
+Each planet has its own oscillator, in particular, every oscillator is a sine wave exept for the chord planets i.e. Uranus Saturn Jupiter and Mars which are characterized by a square wave. The waveform of the oscillator is set as follows: `osc.type="sine";`
 
 Each oscillator has its volume controlled by a `gainNode` which is instanciated this way:
 `context.createGain()`. In addition to this, a final gain has been created as to control the master volume of the application.
