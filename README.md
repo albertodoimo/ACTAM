@@ -22,18 +22,15 @@ IMAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
  Graphical Implementation
 -
-In order to generate a 3D environment we relied on p5.js, a JavaScript library for creative coding. In particular we focused on its capabilities of simplifying the WEBGL implementation. When creating the `canvas` in the `Setup` function of p5, we declare a third parameter, `WEBGL`, which sets the environment to 3D:
+In order to generate a 3D environment we relied on p5.js, a JavaScript library for creative coding. In particular we focused on its capabilities of simplifying the WEBGL implementation. When creating the `canvas` in the `setup` function of p5, we declare a third parameter, `WEBGL`, which sets the environment to 3D:
 ```
 function  setup() {
 	createCanvas(windowWidth, windowHeight, WEBGL);
-	...
 ```
 Additionaly, in order to allow the user to control the camera point in the 3D perspective, we employed another library, `p5.EasyCam` which is also declared in the `Setup` function as follows:
 ```
-	...
 	easycam = createEasyCam(); 
 	easycam.setState(tri);
-	...
 ```
 This library offers the possibility to set various parameters for example the minimum and maximum distance from the center of view and some predefined states among witch the user can switch with the perspective buttons of the GUI.
 
