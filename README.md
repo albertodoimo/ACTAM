@@ -2,11 +2,15 @@
 
 This project was developed in the context of the "**_Advanced Coding Tools and Methodologies_**" course held at [Politecnico di Milano](https://www.polimi.it/) for the Master's Degree in [Music and Acoustic Engineering](https://suono.polimi.it/). The task was to design and implement a musical web application based on the `HTML`/`CSS`/`JavaScript` framework.
 
+</br>
+
 ## _Concept_
 
 The chosen architecture is that of a **generative computer music system**. Starting from an interactive, space-themed environment, the user is supposed to choose a picture from a pre-selected set of images representing stars and galaxies. The application then uses complex image processing algorythms to extract qualitative **_visual data_** from the picture (namely, its _color palette_, its _brightness_, etc.) and converts them to **_musical data_** (that is _mode_, _key_, _progression_, etc.), that are finally used to generate in real-time a **procedurally sequenced musical piece**. The result is achieved by sequencing different instruments and interlacing their _cyclic behaviour_ according to different ratios. The resulting piece will have a **strong ambient flavor**, to reference the kind of soundscape people usually associate to space.
 
 It is also possible to receive visual feedback about the musical fabric via the themed **_tridimensional graphical user interface_**, which associates each played instrument to a revolving planet of the Solar System, as if it were a sort of drum machine.
+
+</br>
 
 ## Overview
 
@@ -32,13 +36,15 @@ The second page displays the user-selected image and the extracted features, bot
 
 _The algorithms on which the extraction of the musical features from the image is based will be discussed in detail in a specific section, along with the corresponding visual parameters_.
 
+</br>
+
 ### Graphical Interface
 
 The last page is meant to give a visual representation of the interweaving musical textures by means of a graphic design inspired to our Solar System's aesthetic. Each planet corresponds to a synthesized sound, and its _period of revolution_ is proportional to the ratio at which the corresponding note (or series of notes) is played. When the planet crosses the _median axis_ of the screen (refer to the position in which the planets are represented in the image below), the note attack is triggered.
 
-</br></br>
+</br>
+
 ![Screenshot of the second page, the parameter extraction one.](Images/README/page3.png)
-</br></br>
 
 As the GUI suggests, the user can:
 
@@ -48,22 +54,143 @@ As the GUI suggests, the user can:
 - Drag the mouse and/or scroll the mousewheel to _move in the 3D space_;
 - Switch from a _tridimensional perspective_ to a _bidimensional_ one (and vice versa).
 
-In addition, notice how the user-selected picture is wrapped around the skybox of the tridimensional space and t
+The musical specifications computed before are shown on the top of the screen. In addition, notice how the user-selected picture is _wrapped around the skybox_ of the tridimensional space.
 
-## Third page, solar system and audio
+</br>
 
-After the image processing and the conversion to musical parameters is completed, the user can proceed to the following page.
-As the GUI suggests the user can:
+## Palette Extraction Algorithm
 
-- Set the volume and the ratio of playing for each planet from the left menu
-- Mute all planets
-- Play and stop the synth
-- Drag the mouse and scroll the mousewheel to move in the 3D space.
-- Switch from a 3D perspective to a two-dimensional one and vice versa.
+In the examined project, the color palette of the selected picture is associated to the complexity of the **chord progression** of the generated musical piece and to its **tonality**. Extracting a palette from an image means detecting a set of colors that capture the "mood" of the image. To do so, we followed the steps described below:
 
-Moreover, the GUI displays the musical specifications calculated before on the top part of the screen in order to allow the user to have a direct feedback on what he is hearing.
+- Load the selected image into a canvas;
+- Extract the image information;
+- build an array of colors;
+- apply **color quantization**.
 
-IMAGEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+The extracted palette is then ordered by luminance and appended to the HTML document to display it in the dedicated page.
+
+</br>
+
+### **Image Data Extraction**
+
+The image is loaded into a `canvas` element by means of the `.onload` event handler. This allows us to access the image data, via the `gatImageData()` method of the canvas API. The `.onload` function handles all the computation related to the extraction of the picture data.
+
+```javascript
+img.onload = function() {
+  c.height = img.height/3.5;
+  c.width = img.width/3.5;
+  ctx.drawImage(img, 0, 0, img.width/3.5, img.height/3.5);
+  ctx.imageSmoothingEnabled = false;  // 
+  const imageData = ctx.getImageData(0, 0, c.width, c.height);
+  [...]
+}
+```
+
+The data returned from `getImageData()` contains _all the pixels in the image_ in the following format:
+
+```javascript
+{
+  data: [34,11,234,37,22,212,111,289...],
+  colorSpace: "srgb",
+  height: 720,
+  width: 480
+}
+```
+
+In order to ease the readability of the data set, we need to get rid of the pieces of information relative to the alpha channel, thus converting the data **from RGBA to RGB color space**. This is achieved by means of the `buildRgb()` function:
+
+```javascript
+const buildRgb = (imageData) => {
+  const rgbValues = [];
+  let c = 0;
+  for (let i = 0; i < imageData.length; i += 4) {
+    alpha_channel[c] = imageData[i + 3];
+    c++;
+    const rgb = {
+      r: imageData[i],
+      g: imageData[i + 1],
+      b: imageData[i + 2],
+    };
+    rgbValues.push(rgb);
+  }
+  return rgbValues;
+};
+```
+
+As said before, to build a palette we need to find a way to select the colors that represent the picture the most. In order to do so, we employed a **color quantization** algorithm.
+
+</br>
+
+### **Color Quantization**: the _Median Cut_ algorithm
+
+</br>
+
+>_Color quantization is a process that reduces the number of colors in images without
+>loss of quality and of important global information._
+> -- <cite>[Reference](https://link.springer.com/content/pdf/10.1007/978-3-540-85920-8_91.pdf)</cite>
+
+</br>
+
+To achieve this, we employed an implementation of the so-called **median-cut algorithm**. The sequence of steps on which the method is based is reported below:
+
+1. Consider the entirety of the RGB values of _**all the pixels**_ of the image;
+2. Find out which color channel (red, green or blue) has the **greatest range**;
+3. **Sort the pixels** accordingly[^1].
+4. After sorting the pixels, _the **upper half** of the pixels are moved into a new set_ and **the process is repeated** for each of the new subsets until the number of subsets equals the desided number of colors of the palette.
+5. To finally obtain the palette, _the pixels in each set must be_ **averaged**.
+
+[^1]: If the red channel has the greatest range, a pixel with an RGB value (12, 67, 255) is less than a pixel whose RGB value is (83, 150, 243), since 12 < 83.
+
+The name of the algorithm comes from the fact that _the sets of pixels are divided into two at their median_. Here is the code for the `quantization()` and the `findBiggestColorRange()` functions:
+
+```javascript
+const quantization = (rgbValues, depth) => {
+  const MAX_DEPTH = 4;
+
+  // MAX_DEPTH: number of desired colors by power of 2 -> maximum of 16 colors per palette
+  // in the examined case
+
+  // BASE CASE: we enter it when our depth is equal to the MAX_DEPTH, in our case 4, 
+  // then add up all the values and divide by half to get the average.
+
+  if (depth === MAX_DEPTH || rgbValues.length === 0) {
+    const color = rgbValues.reduce(
+      (prev, curr) => {
+        prev.r += curr.r;
+        prev.g += curr.g;
+        prev.b += curr.b;
+
+        return prev;
+      },
+      {
+        r: 0,
+        g: 0,
+        b: 0,
+      }
+    );
+
+    color.r = Math.round(color.r / rgbValues.length);
+    color.g = Math.round(color.g / rgbValues.length);
+    color.b = Math.round(color.b / rgbValues.length);
+    return [color];
+  }
+
+  // RECURSION
+  const componentToSortBy = findBiggestColorRange(rgbValues);
+  rgbValues.sort((p1, p2) => {
+    return p1[componentToSortBy] - p2[componentToSortBy];
+  });
+
+  const mid = rgbValues.length / 2;
+  return [
+    ...quantization(rgbValues.slice(0, mid), depth + 1),
+    ...quantization(rgbValues.slice(mid + 1), depth + 1),
+  ];
+
+};
+```
+
+</br></br>
 
 ## Graphical Implementation
 
