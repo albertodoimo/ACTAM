@@ -34,11 +34,20 @@ The second page displays the user-selected image and the extracted features, bot
 ![Screenshot of the second page, the parameter extraction one.](Images/README/page2.png)
 </br></br>
 
-_The algorithms on which the extraction of the musical features from the image is based will be discussed in detail in a specific section, along with the corresponding visual parameters_.
+_The algorithms on which the extraction of the musical features from the image is based will be discussed in detail in a specific section, along with the corresponding visual parameters_. Here we report the correlations between the visual and the musical parameters:
+
+---
+
+- Average **Color** $\longrightarrow$ _Key_
+- Average **Brightness** $\longrightarrow$ _Mode_ (Major/Minor)
+- Color Complexity (**Palette Dimension**) $\longrightarrow$ _Chord Progression_
+- Average **Alpha** $\longrightarrow$ _Triad/Tetrad_
+
+---
 
 </br>
 
-### Graphical Interface
+### **3D Visualizer**
 
 The last page is meant to give a visual representation of the interweaving musical textures by means of a graphic design inspired to our Solar System's aesthetic. Each planet corresponds to a synthesized sound, and its _period of revolution_ is proportional to the ratio at which the corresponding note (or series of notes) is played. When the planet crosses the _median axis_ of the screen (refer to the position in which the planets are represented in the image below), the note attack is triggered.
 
@@ -58,7 +67,91 @@ The musical specifications computed before are shown on the top of the screen. I
 
 </br>
 
-## Palette Extraction Algorithm
+<img src="Images/README/Scriabin-Circle.svg" align="right" width="30%" style="margin: 15px;">
+
+
+## **Key Computation - _Average Color_**
+
+The main idea behind the project revolves around the association between visual features, such as colors, and musical features, such as the tonality of a piece. There have been many attempts, throughout history, to perform an **association bewteen colors and musical tonalities**. One of the most famous is the "**Clavier à Lumières**", a musical instrument invented by **_Aleksandr Nikolaevič Skrjabin_**, a Russian pianist and composer who claimed to be a **synesthete**, in 1915. The image on the side represents Skrjabin's _key-to-color mapping_. Notice how the colored keys, placed in the **circle of fifths**, form a _**spectrum**_. This led many to doubt about the truthfulness of Skrjabin's claim of experiencing synesthesia. Nonetheless, it is an interesting approach, upon which we based our computation.
+
+In order to compute the **average color** of the selected picture, a specific library was employed: `fast-average-color`. Once computed, the average color is fed to the `computeKey` function, that by means of the `Color.js` library computes the **perceptive distance** (**Delta E 2000 algorithm**, see below for reference) between the average color and each of the reference colors associated with the 12 keys according to Skrjabin and returns the key corresponding to the minimum distance. Each color is defined employing the _**proprietary color object provided by the library**_.
+
+```javascript
+// Color.js --> Reference Color Objects
+var ut = new Color("srgb", [255, 0, 0]);
+var sol = new Color("srgb", [250, 120, 0]);
+var re = new Color("srgb", [250, 250, 0]);
+var la = new Color("srgb", [0, 255, 0]);
+var mi = new Color("srgb", [190, 255, 255]);
+var si = new Color("srgb", [50, 190, 250]);
+var sol_b = new Color("srgb", [110, 60, 250]);
+var re_b = new Color("srgb", [160, 0, 255]);
+var la_b = new Color("srgb", [200, 125, 250]);
+var mi_b = new Color("srgb", [255, 0, 0]);
+var si_b = new Color("srgb",[150, 80, 120]);
+var fa = new Color("srgb", [100, 0, 0]);
+
+const computeKey = (avg) => {
+  let color1 = new Color({space: "srgb", coords: [avg[0], avg[1], avg[2]]});
+  let min = color1.deltaE2000(dict.C);
+  let color_key;
+  let diff = [];
+  let i = 0;
+
+  for (const [key, value] of Object.entries(dict)) {
+    diff = color1.deltaE2000(value);
+    if (diff < min) {
+      color_key = key;
+      reference = value.coords; 
+      // reference is the RGB color code of the Scriabin's color associated with 
+      // the returned key. The Color.js attribute ".coords" returns as an array the 
+      // RGB coordinates of the color
+      min = diff;
+    }
+  };
+  return [color_key, reference];
+};
+```
+
+---
+
+### **Delta E 2000** - [More Information](http://zschuessler.github.io/DeltaE/learn/)
+
+Delta E is a **metric** that aims at being compatible with the human eye color perception. On a typical scale, the $\Delta E$ value ranges from 0 to 100, and from a _qualitative point of view_ the ranges can be described as follows:
+
+<center>
+
+| $\Delta E$ | Perception |
+| ----------- | ----------- |
+| $\le1.0$ | Not perceptible by human eyes. |
+| $1-2$ | Perceptible through close observation. |
+| $2-10$ | Perceptible at a glance. |
+| $11-49$ | Colors are more similar than opposite. |
+| $11-49$ | Colors are exactly opposite. |
+
+</center>
+
+There are three $\Delta E$ algrithms, and there are quite a few inconsistencies between them. $\mathbf{\Delta E_{2000}}$ (the one employed in the project) **is the most recent, complex and accurate one**.
+
+</br>
+
+<center>
+<img src="Images/README/formula-cie00.png" width="70%">
+</center>
+
+</br>
+
+We should like to reiterate the qualitative nature of the algorithm by means of a quote:
+
+> _Delta E accuracy must be confirmed through the very tool it was meant to 
+> remove subjectivity from - a pair of human eyes_.
+> -- [Reference](http://zschuessler.github.io/DeltaE/learn/)
+
+---
+
+</br>
+
+## **Chord Progression Computation - _Palette Extraction Algorithm_**
 
 In the examined project, the color palette of the selected picture is associated to the complexity of the **chord progression** of the generated musical piece and to its **tonality**. Extracting a palette from an image means detecting a set of colors that capture the "mood" of the image. To do so, we followed the steps described below:
 
@@ -190,7 +283,96 @@ const quantization = (rgbValues, depth) => {
 };
 ```
 
-</br></br>
+### **Palette Building**
+
+Once the desired depth has been reached and the average color for each pixels subset has been computed, it is time to actually build the palette. Notice how, for aesthetic purposes, the colors are firstly ordered by [**luminance**](https://developer.mozilla.org/en-US/docs/Web/Accessibility/Understanding_Colors_and_Luminance). For more information about _relative luminance_, please refer to the linked webpage. The relative code is reported below.
+
+```javascript
+// ORDERING BY LUMINANCE
+const orderByLuminance = (rgbValues) => {
+  const calculateLuminance = (p) => {
+    return 0.2126 * p.r + 0.7152 * p.g + 0.0722 * p.b;
+  };
+
+  return rgbValues.sort((p1, p2) => {
+    return calculateLuminance(p2) - calculateLuminance(p1);
+  });
+};
+
+// COLOR DISTANCE computation
+const calculateColorDifference = (color1, color2) => {
+  const rDifference = Math.pow(color2.r - color1.r, 2);
+  const gDifference = Math.pow(color2.g - color1.g, 2);
+  const bDifference = Math.pow(color2.b - color1.b, 2);
+
+  return rDifference + gDifference + bDifference;
+};
+
+// PALETTE BUILDING
+const buildPalette = (colorsList) => {
+  const paletteContainer = document.getElementById("palette");
+  
+  // Reset the HTML (just to be safe)
+  paletteContainer.innerHTML = "";
+
+  const orderedByColor = orderByLuminance(colorsList);
+
+  for (let i = 0; i < orderedByColor.length; i++) {
+    const hexColor = rgbToHex(orderedByColor[i]);
+
+    if (i > 0) {
+      const difference = calculateColorDifference(
+        orderedByColor[i],
+        orderedByColor[i - 1]
+      );
+
+      // If the color distance is less than 120 we consider the color too similar to the
+      //  last one, and thus ignore it
+      if (difference < 120) {
+        continue;
+      };
+    };
+
+    count++;
+
+    // Creates the div and text elements for the color and the caption and appends it 
+    // to the document
+    const colorElement = document.createElement("div");
+    colorElement.style.backgroundColor = hexColor;
+    colorElement.appendChild(document.createTextNode(hexColor));
+    paletteContainer.appendChild(colorElement);
+  };
+};
+```
+
+Notice how the color difference is computed via a simple **Euclidean distance**:
+
+$$ d^2 = (R_2-R_1)^2+(G_2-G_1)^2+(B_2-B_1)^2 $$
+
+The color complexity (i.e. the _number of colors in the palette_) will affect the **complexity of the chord progression** of the generated music piece. Since most of the palettes extracted from the selectable images reached the $2^4=16$ colors limit, we normalized the values on the average transparency computed via the `tetrad()` function (the variable `count` stores the number of colors in the palette):
+
+```javascript
+token = tetrad(imageData, c) * 100 * count;
+
+if (token < 100) {
+  param.p = 5;
+  document.getElementById("prog").textContent = "I - V";
+} else if (token > 101 && token < 200) {
+  param.p = 4;
+  document.getElementById("prog").textContent = "I - VI - IV";
+} else if (token > 201 && token < 300) {
+  param.p = 3;
+  document.getElementById("prog").textContent = "I - IV - VI - V";
+} else if (token > 301 && token < 400) {
+  param.p = 2;
+  document.getElementById("prog").textContent = "I - IV - II - V";
+} else if (token > 401) {
+  param.p = 1;
+  document.getElementById("prog").textContent = "I - V - VI - IV";
+}
+```
+
+</br>
 
 ## Graphical Implementation
 
@@ -198,7 +380,9 @@ In order to generate a 3D environment we relied on p5.js, a JavaScript library f
 
 ```javascript
 function  setup() {
- createCanvas(windowWidth, windowHeight, WEBGL);
+  createCanvas(windowWidth, windowHeight, WEBGL);
+  [...]
+}
 ```
 
 Additionaly, in order to allow the user to control the camera point in the 3D perspective, we employed another library, `p5.EasyCam` which is also declared in the `Setup` function as follows:
@@ -256,7 +440,7 @@ These informations are processed in order to generate an array of frequecies for
 let  bassNotes = [];
 
 for (i = 0; i < selectedProgression.length; i++) {
- bassNotes[i] = getNoteFreq(selectedMode[selectedProgression[i] - 1], 2);
+  bassNotes[i] = getNoteFreq(selectedMode[selectedProgression[i] - 1], 2);
 }
 ```
 
@@ -299,18 +483,18 @@ C-->Q[hi-pass filter]-->R[context.destination]
 Each planet has its own `play` function which controls the notes to be played and the envelope applied to the gain of the synth. An index cycles thorugh the array of frequencies that will be played every time the function is called. At the same time the `gainNode` gain is linearly shaped to reach the desired volume before going back to 0. In other terms the synth is being shaped by a triangular-shaped envelope.
 
 ```javascript
-let  bassNotesIndex=0;
+let  bassNotesIndex = 0;
 function  playBass()
 {
- bassGain.gain.value=0;
- bassOsc.frequency.value = bassNotes[bassNotesIndex];
- if(bassNotesIndex<bassNotes.length-1){bassNotesIndex++;}
- else{bassNotesIndex=0;}
- t0= context.currentTime;
- t1= t0+Number(msRep/planetRatios[7]/1000/2);
- t2= t1+Number(msRep/planetRatios[7]/1000/2);
- bassGain.gain.linearRampToValueAtTime(volumes[0], t1);
- bassGain.gain.linearRampToValueAtTime(0, t2);
+  bassGain.gain.value = 0;
+  bassOsc.frequency.value = bassNotes[bassNotesIndex];
+  if (bassNotesIndex < bassNotes.length-1) { bassNotesIndex++; }
+  else { bassNotesIndex = 0; }
+  t0 = context.currentTime;
+  t1 = t0 + Number(msRep/planetRatios[7]/1000/2);
+  t2 = t1 + Number(msRep/planetRatios[7]/1000/2);
+  bassGain.gain.linearRampToValueAtTime(volumes[0], t1);
+  bassGain.gain.linearRampToValueAtTime(0, t2);
 }
 ```
 
