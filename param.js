@@ -343,7 +343,7 @@ const computeKey = (avg) => {
   return [color_key, reference];
 };
 
-//! MODE COMPUTAYION (BRIGHTNESS)
+//! MODE COMPUTATION (BRIGHTNESS)
 const isItDark = (imageData, c) => {
   var fuzzy = 0.1;
   var data = imageData.data;
