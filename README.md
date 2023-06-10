@@ -67,7 +67,7 @@ The musical specifications computed before are shown on the top of the screen. I
 
 </br>
 
-<img src="Images/README/Scriabin-Circle.svg" align="right" width="30%" style="margin: 15px;">
+<img src="Images/README/Scriabin-Circle.svg" align="right" width="40%" style="margin: 15px;">
 
 
 ## **Key Computation - _Average Color_**
@@ -150,6 +150,10 @@ We should like to reiterate the qualitative nature of the algorithm by means of 
 ---
 
 </br>
+
+## **Mode Computation - _Brightness_**
+
+To estimate the brightness of the 
 
 ## **Chord Progression Computation - _Palette Extraction Algorithm_**
 
