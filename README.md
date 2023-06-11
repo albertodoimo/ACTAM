@@ -38,9 +38,9 @@ _The algorithms on which the extraction of the musical features from the image i
 
 ---
 
-- Average **Color** $\longrightarrow$ _Key_
-- Average **Brightness** $\longrightarrow$ _Mode_ (Major/Minor)
-- Color Complexity (**Palette Dimension**) $\longrightarrow$ _Chord Progression_
+- Average **Color** $\longrightarrow$ [_Key_](#key-computation---average-color)
+- Average **Brightness** $\longrightarrow$ [_Mode_](#mode-computation---brightness) (Major/Minor)
+- Chromatic Variety (**Palette Dimension**) and **Brightness** $\longrightarrow$ [_Chord Progression_](#chord-progression-computation---palette-extraction-algorithm)
 - Average **Alpha** $\longrightarrow$ _Triad/Tetrad_
 
 ---
@@ -72,9 +72,9 @@ The musical specifications computed before are shown on the top of the screen. I
 
 ## **Key Computation - _Average Color_**
 
-The main idea behind the project revolves around the association between visual features, such as colors, and musical features, such as the tonality of a piece. There have been many attempts, throughout history, to perform an **association bewteen colors and musical tonalities**. One of the most famous is the "**Clavier à Lumières**", a musical instrument invented by **_Aleksandr Nikolaevič Skrjabin_**, a Russian pianist and composer who claimed to be a **synesthete**, in 1915. The image on the side represents Skrjabin's _key-to-color mapping_. Notice how the colored keys, placed in the **circle of fifths**, form a _**spectrum**_. This led many to doubt about the truthfulness of Skrjabin's claim of experiencing synesthesia. Nonetheless, it is an interesting approach, upon which we based our computation.
+The main idea behind the project revolves around the association between visual features, such as colors, and musical features, such as the tonality of a piece. There have been many attempts, throughout history, to perform an **association bewteen colors and musical tonalities**. One of the most famous is the "**Clavier à Lumières**", a musical instrument invented by **_Aleksandr Nikolaevič Skrjabin_**, a Russian pianist and composer who claimed to be a **synesthete**, in 1915. Skrjabin's instrument was basically a piano that projected a _colored light beam in correspondence of all notes or key changes_. The image on the side represents **Skrjabin's _key-to-color mapping_**. Notice how the colored keys, placed in the **circle of fifths**, form a _**spectrum**_: this led to a lot of doubts about the truthfulness of Skrjabin's claim of experiencing synesthesia. Nonetheless, it is an interesting approach, upon which we based our computation.
 
-In order to compute the **average color** of the selected picture, a specific library was employed: `fast-average-color`. Once computed, the average color is fed to the `computeKey` function, that by means of the `Color.js` library computes the **perceptive distance** (**Delta E 2000 algorithm**, see below for reference) between the average color and each of the reference colors associated with the 12 keys according to Skrjabin and returns the key corresponding to the minimum distance. Each color is defined employing the _**proprietary color object provided by the library**_.
+In order to compute the **average color** of the selected picture, a specific library was employed: `fast-average-color`. Once computed, the average color is fed to the `computeKey` function, that by means of the `Color.js` library computes the **perceptive distance** ([**Delta E 2000 algorithm**](#delta-e-2000---more-information), see below for reference) between the average color and each of the reference colors associated with the 12 keys according to Skrjabin and returns the key corresponding to the minimum color distance. Each color is defined employing the _**proprietary color object provided by the library**_.
 
 ```javascript
 // Color.js --> Reference Color Objects
@@ -104,7 +104,7 @@ const computeKey = (avg) => {
       color_key = key;
       reference = value.coords; 
       // reference is the RGB color code of the Scriabin's color associated with 
-      // the returned key. The Color.js attribute ".coords" returns as an array the 
+      // the returned key. The Color.js method ".coords" returns as an array the 
       // RGB coordinates of the color
       min = diff;
     }
@@ -144,7 +144,7 @@ There are three $\Delta E$ algrithms, and there are quite a few inconsistencies 
 We should like to reiterate the qualitative nature of the algorithm by means of a quote:
 
 > _Delta E accuracy must be confirmed through the very tool it was meant to 
-> remove subjectivity from - a pair of human eyes_.
+> remove subjectivity from: a pair of human eyes_.
 > -- [Reference](http://zschuessler.github.io/DeltaE/learn/)
 
 ---
@@ -153,7 +153,33 @@ We should like to reiterate the qualitative nature of the algorithm by means of 
 
 ## **Mode Computation - _Brightness_**
 
-To estimate the brightness of the 
+To estimate the brightness of the picture we employed a simple yet effective approach. By averaging their RGB coordinates, we associated a **grey value** to each pixel and computed the total grey value of the image by summing over all the pixels of the image. We then determine the **light level** of the picture via normalization of the total grey value by the area of the canvas. Finally, _if the ratio falls below a certain threshold_ (arbitrarily set to 100, in this case) the image is dubbed dark. The condition is relaxed by means of a variable named `fuzzy`, which divides the area. The `isItDark()` function is entrusted with the described process:
+
+```javascript
+const isItDark = (imageData, c) => {
+  var fuzzy = 1.5;
+  var threshold = 100;
+  var data = imageData.data;
+  var r,g,b;
+  var totalGrey = 0;
+
+  for(let x = 0, len = data.length; x < len; x+=4) {
+    r = data[x];
+    g = data[x+1];
+    b = data[x+2];
+    grey = Math.floor((r+g+b) / 3);
+
+    totalGrey += grey;
+  }
+
+  var area = (c.width * c.height) / fuzzy,
+    lightLevel = Math.floor(totalGrey / area)
+  
+    return (lightLevel < threshold)
+};
+```
+
+</br>
 
 ## **Chord Progression Computation - _Palette Extraction Algorithm_**
 
@@ -353,24 +379,26 @@ Notice how the color difference is computed via a simple **Euclidean distance**:
 
 $$ d^2 = (R_2-R_1)^2+(G_2-G_1)^2+(B_2-B_1)^2 $$
 
-The color complexity (i.e. the _number of colors in the palette_) will affect the **complexity of the chord progression** of the generated music piece. Since most of the palettes extracted from the selectable images reached the $2^4=16$ colors limit, we normalized the values on the average transparency computed via the `tetrad()` function (the variable `count` stores the number of colors in the palette):
+The color complexity (i.e. the _number of colors in the palette_) was initially supposed to affect the **complexity of the chord progression** of the generated music piece. Since most of the palettes extracted from the selectable images reached the $2^4=16$ colors limit, we normalized the values on the light level computed via the `seventh()` function and the grey value computed via the `isItDark()` function (the variable `count` stores the number of colors in the palette):
 
 ```javascript
-token = tetrad(imageData, c) * 100 * count;
-
-if (token < 100) {
+light = (seventh(imageData, c)[1] < 0.1) ? 0.1 : seventh(imageData, c)[1];
+grey = isItDark(imageData, c)[1]
+token = count * light * grey;
+  
+if (token < 50) {
   param.p = 5;
   document.getElementById("prog").textContent = "I - V";
-} else if (token > 101 && token < 200) {
+} else if (token > 50 && token < 150) {
   param.p = 4;
   document.getElementById("prog").textContent = "I - VI - IV";
-} else if (token > 201 && token < 300) {
+} else if (token > 150 && token < 250) {
   param.p = 3;
   document.getElementById("prog").textContent = "I - IV - VI - V";
-} else if (token > 301 && token < 400) {
+} else if (token > 250 && token < 300) {
   param.p = 2;
   document.getElementById("prog").textContent = "I - IV - II - V";
-} else if (token > 401) {
+} else if (token > 300) {
   param.p = 1;
   document.getElementById("prog").textContent = "I - V - VI - IV";
 }
