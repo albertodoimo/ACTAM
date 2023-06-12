@@ -1,6 +1,35 @@
-# **THE SOUND OF SPACE**
+# THE SOUND OF SPACE
 
 This project was developed in the context of the "**_Advanced Coding Tools and Methodologies_**" course held at [Politecnico di Milano](https://www.polimi.it/) for the Master's Degree in [Music and Acoustic Engineering](https://suono.polimi.it/). The task was to design and implement a musical web application based on the `HTML`/`CSS`/`JavaScript` framework.
+
+</br>
+
+## Table of Contents
+
+- [THE SOUND OF SPACE](#the-sound-of-space)
+  - [Table of Contents](#table-of-contents)
+  - [_Concept_](#concept)
+  - [Overview](#overview)
+    - [_Environment Selection_](#environment-selection)
+    - [_Extracted Parameters_](#extracted-parameters)
+    - [3D Visualizer](#3d-visualizer)
+  - [Key Computation - _Average Color_](#key-computation---average-color)
+    - [Delta E 2000 - More Information](#delta-e-2000---more-information)
+  - [Mode Computation - _Brightness_](#mode-computation---brightness)
+  - [Chord Type Computation - _Lightness_](#chord-type-computation---lightness)
+  - [Chord Progression Computation - _Palette Extraction Algorithm_](#chord-progression-computation---palette-extraction-algorithm)
+    - [Image Data Extraction](#image-data-extraction)
+    - [Color Quantization: the _Median Cut_ algorithm](#color-quantization-the-median-cut-algorithm)
+    - [Palette Building](#palette-building)
+  - [Graphical Implementation](#graphical-implementation)
+  - [Sound Implementation](#sound-implementation)
+    - [Musical Style](#musical-style)
+    - [Framework's choice](#frameworks-choice)
+    - [Notes calculation from Image Processing data](#notes-calculation-from-image-processing-data)
+    - [Oscillators, Gain and Effect Nodes](#oscillators-gain-and-effect-nodes)
+    - [Loops and Envelopes](#loops-and-envelopes)
+    - [Controls](#controls)
+    - [Planets and Audio Synchronization](#planets-and-audio-synchronization)
 
 </br>
 
@@ -40,14 +69,14 @@ _The algorithms on which the extraction of the musical features from the image i
 
 - Average **Color** $\longrightarrow$ [_Key_](#key-computation---average-color)
 - Average **Brightness** $\longrightarrow$ [_Mode_](#mode-computation---brightness) (Major/Minor)
-- Chromatic Variety (**Palette Dimension**) and **Brightness** $\longrightarrow$ [_Chord Progression_](#chord-progression-computation---palette-extraction-algorithm)
-- Average **Alpha** $\longrightarrow$ _Triad/Tetrad_
+- Chromatic Variety (**Palette Dimension**), **Brightness** and **Lightness** $\longrightarrow$ [_Chord Progression_](#chord-progression-computation---palette-extraction-algorithm)
+- **Lightness** $\longrightarrow$ _Triad/Tetrad_
 
 ---
 
 </br>
 
-### **3D Visualizer**
+### 3D Visualizer
 
 The last page is meant to give a visual representation of the interweaving musical textures by means of a graphic design inspired to our Solar System's aesthetic. Each planet corresponds to a synthesized sound, and its _period of revolution_ is proportional to the ratio at which the corresponding note (or series of notes) is played. When the planet crosses the _median axis_ of the screen (refer to the position in which the planets are represented in the image below), the note attack is triggered.
 
@@ -70,7 +99,7 @@ The musical specifications computed before are shown on the top of the screen. I
 <img src="Images/README/Scriabin-Circle.svg" align="right" width="40%" style="margin: 15px;">
 
 
-## **Key Computation - _Average Color_**
+## Key Computation - _Average Color_
 
 The main idea behind the project revolves around the association between visual features, such as colors, and musical features, such as the tonality of a piece. There have been many attempts, throughout history, to perform an **association bewteen colors and musical tonalities**. One of the most famous is the "**Clavier à Lumières**", a musical instrument invented by **_Aleksandr Nikolaevič Skrjabin_**, a Russian pianist and composer who claimed to be a **synesthete**, in 1915. Skrjabin's instrument was basically a piano that projected a _colored light beam in correspondence of all notes or key changes_. The image on the side represents **Skrjabin's _key-to-color mapping_**. Notice how the colored keys, placed in the **circle of fifths**, form a _**spectrum**_: this led to a lot of doubts about the truthfulness of Skrjabin's claim of experiencing synesthesia. Nonetheless, it is an interesting approach, upon which we based our computation.
 
@@ -115,7 +144,7 @@ const computeKey = (avg) => {
 
 ---
 
-### **Delta E 2000** - [More Information](http://zschuessler.github.io/DeltaE/learn/)
+### Delta E 2000 - [More Information](http://zschuessler.github.io/DeltaE/learn/)
 
 Delta E is a **metric** that aims at being compatible with the human eye color perception. On a typical scale, the $\Delta E$ value ranges from 0 to 100, and from a _qualitative point of view_ the ranges can be described as follows:
 
@@ -151,7 +180,7 @@ We should like to reiterate the qualitative nature of the algorithm by means of 
 
 </br>
 
-## **Mode Computation - _Brightness_**
+## Mode Computation - _Brightness_
 
 To estimate the brightness of the picture we employed a simple yet effective approach. By averaging their RGB coordinates, we associated a **grey value** to each pixel and computed the total grey value of the image by summing over all the pixels of the image. We then determine the **light level** of the picture via normalization of the total grey value by the area of the canvas. Finally, _if the ratio falls below a certain threshold_ (arbitrarily set to 100, in this case) the image is dubbed dark. The condition is relaxed by means of a variable named `fuzzy`, which divides the area. The `isItDark()` function is entrusted with the described process:
 
@@ -181,7 +210,32 @@ const isItDark = (imageData, c) => {
 
 </br>
 
-## **Chord Progression Computation - _Palette Extraction Algorithm_**
+## Chord Type Computation - _Lightness_
+
+At the design stage it was chosen to limit the quality of the progression chords to two possibilities: a simple **major/minor triad** and a **seventh tetrad**. In order to associate a chord species to the user-selected image, we employed an algorithm whose purpose was to determine _how bright the colors of the picture are_ (we refer to this feature as "**_lightness_**"). To do so, we simply counted how much pixels presented at least one RGB channel value above the 200 threshold, and normalized it on the total number of pixels. _The lightness threshold_ (0.02) _was determined_, as were all the other thresholds of the project, _**empirically**_.
+
+```javascript
+const seventh = (imageData, c) => {
+  let data = imageData.data;
+  let r,g,b, max_rgb;
+  let light = 0;
+
+  for(let x = 0, len = data.length; x < len; x+=4) {
+    r = data[x];
+    g = data[x+1];
+    b = data[x+2];
+
+    if (r >= 200 && g >= 200 && b >= 200)
+      light++;
+  }
+
+  return [(light / (c.width*c.height) < 0.02), (light / (c.width*c.height))];
+};
+```
+
+</br>
+
+## Chord Progression Computation - _Palette Extraction Algorithm_
 
 In the examined project, the color palette of the selected picture is associated to the complexity of the **chord progression** of the generated musical piece and to its **tonality**. Extracting a palette from an image means detecting a set of colors that capture the "mood" of the image. To do so, we followed the steps described below:
 
@@ -194,7 +248,7 @@ The extracted palette is then ordered by luminance and appended to the HTML docu
 
 </br>
 
-### **Image Data Extraction**
+### Image Data Extraction
 
 The image is loaded into a `canvas` element by means of the `.onload` event handler. This allows us to access the image data, via the `gatImageData()` method of the canvas API. The `.onload` function handles all the computation related to the extraction of the picture data.
 
@@ -244,7 +298,7 @@ As said before, to build a palette we need to find a way to select the colors th
 
 </br>
 
-### **Color Quantization**: the _Median Cut_ algorithm
+### Color Quantization: the _Median Cut_ algorithm
 
 </br>
 
@@ -313,7 +367,7 @@ const quantization = (rgbValues, depth) => {
 };
 ```
 
-### **Palette Building**
+### Palette Building
 
 Once the desired depth has been reached and the average color for each pixels subset has been computed, it is time to actually build the palette. Notice how, for aesthetic purposes, the colors are firstly ordered by [**luminance**](https://developer.mozilla.org/en-US/docs/Web/Accessibility/Understanding_Colors_and_Luminance). For more information about _relative luminance_, please refer to the linked webpage. The relative code is reported below.
 
@@ -408,7 +462,7 @@ if (token < 50) {
 
 ## Graphical Implementation
 
-In order to generate a 3D environment we relied on p5.js, a JavaScript library for creative coding. In particular we focused on its capabilities of simplifying the WEBGL implementation. When creating the `canvas` in the `setup` function of p5, we declare a third parameter, `WEBGL`, which sets the environment to 3D:
+In order to generate a 3D environment we relied on `p5.js`, a JavaScript library for _creative coding_. In particular, we focused on its ability to simplify the `WebGL` implementation. When creating the `canvas` in the `setup` function of p5, we declare a third parameter, `WEBGL`, which sets the environment to 3D:
 
 ```javascript
 function  setup() {
