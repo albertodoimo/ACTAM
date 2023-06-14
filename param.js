@@ -343,8 +343,30 @@ const computeKey = (avg) => {
   return [color_key, reference];
 };
 
-//! MODE COMPUTAYION (BRIGHTNESS)
+//! MODE COMPUTATION (BRIGHTNESS)
 const isItDark = (imageData, c) => {
+  var fuzzy = 1.5;
+  var threshold = 100;
+  var data = imageData.data;
+  var r,g,b;
+  var totalGrey = 0;
+
+  for(let x = 0, len = data.length; x < len; x+=4) {
+    r = data[x];
+    g = data[x+1];
+    b = data[x+2];
+    grey = Math.floor((r+g+b) / 3);
+
+    totalGrey += grey;
+  }
+
+  var area = (c.width * c.height) / fuzzy,
+    lightLevel = Math.floor(totalGrey / area);
+
+    return [(lightLevel < threshold), lightLevel]
+};
+
+/* const isItDark = (imageData, c) => {
   var fuzzy = 0.1;
   var data = imageData.data;
   var r,g,b, max_rgb;
@@ -364,13 +386,30 @@ const isItDark = (imageData, c) => {
 
   var dl_diff = ((light - dark) / (c.width*c.height));
   if (dl_diff + fuzzy < 0)
-    return true; /* Dark. */
+    return true;
   else
-    return false;  /* Not dark. */
-};
+    return false;
+}; */
 
 //! TETRAD SPECIES COMPUTATION (ALPHA CHANNEL)
-const tetrad = (imageData, c) => {
+const seventh = (imageData, c) => {
+  let data = imageData.data;
+  let r,g,b, max_rgb;
+  let light = 0;
+
+  for(let x = 0, len = data.length; x < len; x+=4) {
+    r = data[x];
+    g = data[x+1];
+    b = data[x+2];
+
+    if (r >= 200 && g >= 200 && b >= 200)
+      light++;
+  }
+
+  return [(light / (c.width*c.height) < 0.02), (light / (c.width*c.height))];
+};
+
+/* const tetrad = (imageData, c) => {
   let data = imageData.data;
   let r,g,b, max_rgb;
   let light = 0;
@@ -386,7 +425,7 @@ const tetrad = (imageData, c) => {
   }
 
   return (light / (c.width*c.height));
-};
+}; */
 
 
 //? --------------------------> COMPUTATION ZONE <-------------------------- ?//
@@ -475,7 +514,7 @@ img.onload = function() {
 
 
   //! BRIGHTNESS (MODE)
-  const dark = isItDark(imageData, c);
+  const dark = isItDark(imageData, c)[0];
   dark ? param.m = 0 : param.m = 1;
 
   // Insert the mode caption in the corresponding <div>
@@ -488,7 +527,7 @@ img.onload = function() {
   else document.getElementById("mode").style.textShadow = "rgba(" + avg[0].toString() + ", " + avg[1].toString() + ", " + avg[2].toString() + ") 1px 0 30px";
 
   //! TETRAD SPECIES
-  if (tetrad(imageData, c) < 0.15) {
+  if (seventh(imageData, c)[0]) {
     param.t = 0;
     document.getElementById("tetrad").textContent = "Standard";
   } else {
@@ -498,19 +537,24 @@ img.onload = function() {
   document.getElementById("tetrad").style.textShadow = "rgba(" + avg[0].toString() + ", " + avg[1].toString() + ", " + avg[2].toString() + ") 1px 0 30px";
 
   //! NUMBER OF COLORS in the palette (CHORD PROGRESSION COMPLEXITY)
-  if (tetrad(imageData, c) * 100 * count < 100) {
+  
+  light = (seventh(imageData, c)[1] < 0.1) ? 0.1 : seventh(imageData, c)[1];
+  grey = isItDark(imageData, c)[1];
+  token = count * light * grey;
+  
+  if (token < 50) {
     param.p = 5;
     document.getElementById("prog").textContent = "I - V";
-  } else if (tetrad(imageData, c) * 100 * count > 101 && tetrad(imageData, c)* 100 * count < 200) {
+  } else if (token > 50 && token < 150) {
     param.p = 4;
     document.getElementById("prog").textContent = "I - VI - IV";
-  } else if (tetrad(imageData, c) * 100 * count > 201 && tetrad(imageData, c)* 100 * count < 300) {
+  } else if (token > 150 && token < 250) {
     param.p = 3;
     document.getElementById("prog").textContent = "I - IV - VI - V";
-  } else if (tetrad(imageData, c) * 100 * count > 301 && tetrad(imageData, c)* 100 * count < 400) {
+  } else if (token > 250 && token < 300) {
     param.p = 2;
     document.getElementById("prog").textContent = "I - IV - II - V";
-  } else if (tetrad(imageData, c) * 100 * count > 401) {
+  } else if (token > 300) {
     param.p = 1;
     document.getElementById("prog").textContent = "I - V - VI - IV";
   }
