@@ -4,6 +4,12 @@ This project was developed in the context of the "**_Advanced Coding Tools and M
 
 </br>
 
+The system can be tested by the user in two ways: 
+
+- <a href="http://albertodoimo.github.io/" target="_blank" rel="noopener noreferrer">Hosted Website</a>
+- Downloading the whole project from GitHub and running it using VS CODE live server
+ 
+
 ## Table of Contents
 
 - [THE SOUND OF SPACE](#the-sound-of-space)
