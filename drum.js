@@ -294,8 +294,6 @@ function setup() {
       playIsOff = false;
       sync();
       //playSound();
-      finalGain.gain.value=0.2;
-      delayGain.gain.value=0.7;
       button3.html("Stop");
     } else {
       playIsOff = true;
@@ -801,6 +799,8 @@ function stopSound()
 function playSound()
 {
   context.resume();  
+  finalGain.gain.value=0.2;
+  delayGain.gain.value=0.7;
   bassLoop =  setInterval(playBass, msRep/planetRatios[7]);
   chordLoop1 = setInterval(playChord1, msRep/planetRatios[6]);
   chordLoop2 = setInterval(playChord2, msRep/planetRatios[5]);
