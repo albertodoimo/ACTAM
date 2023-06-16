@@ -49,7 +49,14 @@ It is also possible to receive visual feedback about the musical fabric via the 
 
 ## Overview
 
-The application is structured in three web pages: the **_environment selection_** one, the that displays the **_extracted parameters_** and finally the **_graphical interface_**. The user can choose to be led through each one of them _step by step_, by selecting the appropriate `GUIDE` button.
+The application is structured in three web pages: the **_environment selection_** one, the one that displays the **_extracted parameters_** and finally the **_graphical interface_**. The user can choose to be led through each one of them _step by step_, by selecting the appropriate `GUIDE` button.
+
+<p align="center">
+  <img src="Images/README/guideButton.png" width="20%" >
+  <img src="Images/README/guideButton2.png" width="20%" >
+</p>
+
+The guide is an automatic walk through all the pages to explain to the user every part and functionality of the application. 
 
 From a coding perspective, the data relative to the user's selections and the extracted parameters is saved and retrieved across pages by means of the `localStorage` read-only property of the `window` interface. This allows access to a `Storage` object for the `Document`'s origin, enabling the **_stored data_** to be **saved across browser sessions**.
 
@@ -98,7 +105,7 @@ As the GUI suggests, the user can:
 - Drag the mouse and/or scroll the mousewheel to _move in the 3D space_;
 - Switch from a _tridimensional perspective_ to a _bidimensional_ one (and vice versa).
 
-The musical specifications computed before are shown on the top of the screen. In addition, notice how the user-selected picture is _wrapped around the skybox_ of the tridimensional space.
+The musical specifications computed before are shown on the top of the screen. In addition, to create a more immersive environment the user-selected picture is _wrapped around the skybox_ of the tridimensional space.
 
 </br>
 
@@ -166,7 +173,7 @@ Delta E is a **metric** that aims at being compatible with the human eye color p
 
 </center>
 
-There are three $\Delta E$ algrithms, and there are quite a few inconsistencies between them. $\mathbf{\Delta E_{2000}}$ (the one employed in the project) **is the most recent, complex and accurate one**.
+There are three $\Delta E$ algorithms, and there are quite a few inconsistencies between them. $\mathbf{\Delta E_{2000}}$ (the one employed in the project) **is the most recent, complex and accurate one**.
 
 </br>
 
@@ -616,3 +623,10 @@ revolutionRate = 2*Math.PI*(context.currentTime/(msRep/modifier/1000));
 where `msRep` is a constant that defines the general bpm of the system and `modifier` is the `planetRatio[]` value passed to the `planet()` function.
 
 At the same time the planets need to be synched with the sound as to avoid phase shifts between motion and sound. This task is performed by the `synch()` function which checks if: `sin(revolutionRate)==0 && cos(revolutionRate)==1`. If the condition is true the planets and the audio are synchronized so the planets can start moving `movePlanet=1;` and the audio can start playing `playSound();` During the time needed for this to happen a loading text is displayed.
+
+## Group members
+
+- Enrico Dalla Mora ()
+- Alberto Doimo (alberto.doimo@mail.polimi.it)
+- Federico Caroppo ()
+- Riccardo Iaccarino (riccardo.iaccarino@mail.polimi.it)
