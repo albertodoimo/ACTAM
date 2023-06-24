@@ -67,7 +67,5 @@ The whole system is based on the library p5.js, an interpretation of Processing 
 
 The GUI consists in a few buttons and a series of drop-down menus and sliders. On the top-right corner there is the Play/Stop button which controls the sound, assuring a correct synchronization of the beat with the planets before starting to play and move the elements. Immediately below there are two buttons related to the camera, which let the user change its perspective between a "2D" (from the top) and the default "3D" one. On the other side of the screen there is the part of the user interface that controls the sound: the Mute/Unmute button function's is pretty straight forward, whereas the Menu/Hide one controls the display of a pop-up menu. The latter consists in eight drop-down menus that offer different options for the rhythmic relations between the synths and eight sliders that simply control their volume. On the top of the page the extracted parameters are carried over from the previous page, so that the user always knows what they are listening to. -->
 
-APPUNTI alberto su readme:
--->aggiungere commento su cross platform optimization
--->commento sulla guide che non va su firefox 
+APPUNTI su readme:
 -->mancano mail alla fine 

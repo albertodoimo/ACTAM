@@ -8,6 +8,12 @@ The system can be tested by the user in two ways:
 
 - <a href="http://albertodoimo.github.io/" target="_blank" rel="noopener noreferrer">Hosted Website</a>
 - Downloading the whole project from GitHub and running it using VS CODE live server
+
+NOTE:
+
+- The system was developed using EDGE, CHROME, OPERA. Some bugs and poor performances can be found in other browsers. 
+- Internet connection is needed while using the website. 
+
  
 
 ## Table of Contents
@@ -56,7 +62,7 @@ The application is structured in three web pages: the **_environment selection_*
   <img src="Images/README/guideButton2.png" width="20%" >
 </p>
 
-The guide is an automatic walk through all the pages to explain to the user every part and functionality of the application. 
+The guide is an automatic walk through all the pages to explain to the user every part and functionality of the application. It was created with <a href="https://shepherdjs.dev/" target="_blank" rel="noopener noreferrer">Shepherd.js</a> library. 
 
 From a coding perspective, the data relative to the user's selections and the extracted parameters is saved and retrieved across pages by means of the `localStorage` read-only property of the `window` interface. This allows access to a `Storage` object for the `Document`'s origin, enabling the **_stored data_** to be **saved across browser sessions**.
 
@@ -491,7 +497,7 @@ Additionaly, in order to allow the user to control the camera point in the 3D pe
  easycam.setState(tri);
 ```
 
-This library offers the possibility to set various parameters for example the minimum and maximum distance from the center of view and some predefined states among witch the user can switch with the perspective buttons of the GUI.
+This library offers the possibility to set various parameters for example the minimum and maximum distance from the center of view and some predefined states among which the user can switch with the perspective buttons of the GUI.
 
 The planets have a dedicated function to which an array of values, one for each planet, is passed in the instantiation of the object. In this function several p5 features are used:
 
@@ -514,11 +520,13 @@ The planets have a dedicated function to which an array of values, one for each 
 
 The `planet()` function will finally be called one time for each planet inside the `draw()` function of p5.
 
+All the graphics are optimized to work with different screen dimensions.
+
 ## Sound Implementation
 
 ### Musical Style
 
-Given the concept of representing the sound through a sort of rhythmic wheel which consists of the planets of the Solar System, we decided to keep the musical style consinstent with the environment and therefore we tried to achieve a space-like flavour for the sound. Ambient music has surely been our greatest influence in this field and in particular the drone-like, slowly-raising synths of the "Blade Runner" soundtrack by the great Vangelis, along with most of Brian Eno's works.
+Given the concept of representing the sound through a sort of rhythmic wheel which consists of the planets of the Solar System, we decided to keep the musical style consistent with the environment and therefore we tried to achieve a space-like flavour for the sound. Ambient music has surely been our greatest influence in this field and in particular the drone-like, slowly-raising synths of the "Blade Runner" soundtrack by the great Vangelis, along with most of Brian Eno's works.
 
 ### Framework's choice
 
