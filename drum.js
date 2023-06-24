@@ -323,7 +323,13 @@ function setup() {
 
   //VOLUME SLIDERS
   for (i = 0; i < 8; i++) {
-    slidVol[i] = createSlider(0, 1, volumes[i], 0.001);
+    if(i=7){
+      slidVol[i] = createSlider(0, 1, volumes[i], 0.001);
+    }
+    else{
+      
+    slidVol[i] = createSlider(0, 0.5, volumes[i], 0.001);
+    }
 
     slidVol[i].position(windowWidth/20, (windowHeight/8 + 7 * windowHeight/10) -  i * windowHeight/10);
     slidVol[i].addClass("slider");
