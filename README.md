@@ -632,9 +632,13 @@ where `msRep` is a constant that defines the general bpm of the system and `modi
 
 At the same time the planets need to be synched with the sound as to avoid phase shifts between motion and sound. This task is performed by the `synch()` function which checks if: `sin(revolutionRate)==0 && cos(revolutionRate)==1`. If the condition is true the planets and the audio are synchronized so the planets can start moving `movePlanet=1;` and the audio can start playing `playSound();` During the time needed for this to happen a loading text is displayed.
 
+<p align="center">
+  <img src="Images/README/loading.png" width="20%" >
+</p>
+
 ## Group members
 
-- Enrico Dalla Mora ()
+- Enrico Dalla Mora (enrico.dalla@hotmail.it)
 - Alberto Doimo (alberto.doimo@mail.polimi.it)
-- Federico Caroppo ()
+- Federico Caroppo (caroppo.federico.00@gmail.com)
 - Riccardo Iaccarino (riccardo.iaccarino@mail.polimi.it)
