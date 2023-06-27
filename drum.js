@@ -326,8 +326,11 @@ function setup() {
     if(i==7){
       slidVol[i] = createSlider(0, 1, volumes[i], 0.001);
     }
-    else{
+    else if(i==2){
       slidVol[i] = createSlider(0, 0.5, volumes[i], 0.001);
+    }
+    else{
+      slidVol[i] = createSlider(0, 0.3, volumes[i], 0.001);
     }
 
     slidVol[i].position(windowWidth/20, (windowHeight/8 + 7 * windowHeight/10) -  i * windowHeight/10);
