@@ -7,12 +7,12 @@ This project was developed in the context of the "**_Advanced Coding Tools and M
 The system can be tested by the user in two ways: 
 
 - <a href="http://albertodoimo.github.io/" target="_blank" rel="noopener noreferrer">Hosted Website</a>
-- Downloading the whole project from GitHub and running it using VS CODE live server
+- Downloading the whole project from GitHub and running it using VS Code live server.
 
 NOTE:
 
-- The system was developed using EDGE, CHROME, OPERA. Some bugs and poor performances can be found in other browsers. 
-- Internet connection is needed while using the website. 
+- The system is compatible with Edge, Chrome and Opera. Bugs and poor performances may affect the user experience in other browsers.
+- An Internet connection is necessary to use the website. 
 
  
 
