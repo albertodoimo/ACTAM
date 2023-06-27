@@ -323,10 +323,10 @@ function setup() {
 
   //VOLUME SLIDERS
   for (i = 0; i < 8; i++) {
-    if(i==7){
+    if(i==0){
       slidVol[i] = createSlider(0, 1, volumes[i], 0.001);
     }
-    else if(i==2){
+    else if(i==5){
       slidVol[i] = createSlider(0, 0.5, volumes[i], 0.001);
     }
     else{
