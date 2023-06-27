@@ -623,7 +623,7 @@ As we already mentioned in the Graphical Implementation section, the planets mov
 The planets trace their orbit in the exact time interval that schedules the callback of the function `play` for each planet. Here we report the value that controls the translation along the ellipse (the translation code has already been reported in the graphical section):
 
 ```javascript
-revolutionRate = 2*Math.PI*(context.currentTime/(msRep/modifier/1000));
+revolutionRate = 2 * Math.PI * (context.currentTime/(msRep/modifier/1000));
 ```
 
 where `msRep` is a constant that defines the general bpm of the system and `modifier` is the `planetRatio[]` value passed to the `planet()` function.
