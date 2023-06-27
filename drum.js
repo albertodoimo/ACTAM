@@ -226,6 +226,7 @@ function preload() {
   imgMoon = loadImage("Images/moon.jpg");
 
   environmentSelectedImg = loadImage(localStorage.getItem("environment"));
+  wrappedSelectedImg = loadImage(localStorage.getItem("wrapped"));
 
   for (i = 0; i < 8; i++) {
     imgPlanets[i] = loadImage("Images/" + (i + 1).toString(10) + ".jpg");
@@ -252,7 +253,7 @@ function setup() {
   easycam.setDistanceMin(sunDim + 50);
   soundDesign();
 
-  frameRate(24);
+  frameRate(50);
   setAttributes("antialias", true);
   perspective(PI / 2, width / height, 0.1, 15000);
   textureWrap(CLAMP);
@@ -489,7 +490,7 @@ function draw() {
     }
      push();
     noStroke();
-    texture(environmentSelectedImg);
+    texture(wrappedSelectedImg);
     rotateY(frameCount * 0.0005);
     sphere(4000);
     pop(); 

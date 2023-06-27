@@ -110,12 +110,16 @@ $('#Anchors').click(function(e){
 
 // Get Selected Environment
 var selectedAmbient
-
+var wrappedAmbient
 
 function ambient(id) {
     selectedAmbient = "Images/env/" + id.toString() + ".jpg"
+    wrappedAmbient = "Images/env/" + id.toString() + "sk.jpg"
     localStorage.setItem("environment", null)
     localStorage.setItem("environment", selectedAmbient)
+    localStorage.setItem("wrapped", null)
+    localStorage.setItem("wrapped", wrappedAmbient)
+    console.log('dfr')
     window.location.href = "param.html";
 }
 

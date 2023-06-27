@@ -2,6 +2,7 @@
 
 // Retrieving selected image path from local storage
 var environment = localStorage.getItem("environment");
+var wrapped = localStorage.getItem("wrapped");
 var guideflag = localStorage.getItem("guideflag");
 var guideflag2 = localStorage.getItem("guideflag2");
 
