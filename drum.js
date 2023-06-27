@@ -253,7 +253,7 @@ function setup() {
   easycam.setDistanceMin(sunDim + 50);
   soundDesign();
 
-  frameRate(50);
+  frameRate(24);
   setAttributes("antialias", true);
   perspective(PI / 2, width / height, 0.1, 15000);
   textureWrap(CLAMP);
