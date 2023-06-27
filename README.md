@@ -636,7 +636,7 @@ At the same time the planets need to be synched with the sound as to avoid phase
 
 ## Group members
 
-- Enrico Dalla Mora (enrico.dalla@hotmail.it)
+- Enrico Dalla Mora (enrico1.dalla@mail.polimi.it)
 - Alberto Doimo (alberto.doimo@mail.polimi.it)
-- Federico Caroppo (caroppo.federico.00@gmail.com)
+- Federico Caroppo (federico.caroppo@mail.polimi.it)
 - Riccardo Iaccarino (riccardo.iaccarino@mail.polimi.it)
