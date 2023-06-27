@@ -2,8 +2,6 @@
 
 This project was developed in the context of the "**_Advanced Coding Tools and Methodologies_**" course held at [Politecnico di Milano](https://www.polimi.it/) for the Master's Degree in [Music and Acoustic Engineering](https://suono.polimi.it/). The task was to design and implement a musical web application based on the `HTML`/`CSS`/`JavaScript` framework.
 
-</br>
-
 The system can be tested by the user in two ways: 
 
 - <a href="http://albertodoimo.github.io/" target="_blank" rel="noopener noreferrer">Hosted Website</a>
