@@ -82,7 +82,7 @@ _The algorithms on which the extraction of the musical features from the image i
 - Average **Color** $\longrightarrow$ [_Key_](#key-computation---average-color)
 - Average **Brightness** $\longrightarrow$ [_Mode_](#mode-computation---brightness) (Major/Minor)
 - Chromatic Variety (**Palette Dimension**), **Brightness** and **Lightness** $\longrightarrow$ [_Chord Progression_](#chord-progression-computation---palette-extraction-algorithm)
-- **Lightness** $\longrightarrow$ _Triad/Tetrad_
+- **Lightness** $\longrightarrow$ [_Triad/Tetrad_](#chord-type-computation---lightness)
 
 ---
 
