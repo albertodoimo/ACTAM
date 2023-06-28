@@ -54,8 +54,8 @@ It is also possible to receive visual feedback about the musical fabric via the 
 
 The application is structured in three web pages: the **_environment selection_** one, the one that displays the **_extracted parameters_** and finally the **_graphical interface_**. The user can choose to be led through each one of them _step by step_, by selecting the appropriate `GUIDE` button. The guide automatically leads the user through all the pages, explaining every part and functionality of the application. It was created by means of the <a href="https://shepherdjs.dev/" target="_blank" rel="noopener noreferrer">Shepherd.js</a> library.
 
-  <img src="Images/README/guideButton.png" width="15%" align="right">
-  <img src="Images/README/guideButton2.png" width="15%" align="right">
+  <img src="Images/README/guideButton.png" width="10%" align="right">
+  <img src="Images/README/guideButton2.png" width="10%" align="right">
 
 From a coding perspective, the data relative to the user's selections and the extracted parameters is saved and retrieved across pages by means of the `localStorage` read-only property of the `window` interface. This allows access to a `Storage` object for the `Document`'s origin, enabling the **_stored data_** to be **saved across browser sessions**.
 
