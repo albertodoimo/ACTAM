@@ -545,12 +545,12 @@ The sound components was originally implemented via the library `Tone.js` becaus
 
 The parameter extraction process returns the following encapsulated data:
 
-- Detected key
-- Mode (major or minor)
-- Chord progression
-- Tetrad type
+- Detected key;
+- Mode (major or minor);
+- Chord progression;
+- Chord type.
 
-These informations are processed in order to generate an array of frequecies for each synth/planet. The synth will then cycle through this sequence according to its ratio of playing. The bass notes, for example, are extracted from the selected scale, mode and chord progression as follows:
+These informations are processed in order to generate an array of frequecies for each synth/planet. The synth will then cycle through this sequence according to its playing ratio. The bass notes, for example, are extracted from the selected scale, mode and chord progression as follows:
 
 ```javascript
 let  bassNotes = [];
@@ -560,25 +560,24 @@ for (i = 0; i < selectedProgression.length; i++) {
 }
 ```
 
-For what concerns the the chord notes we applied a **2:1 subsampling starting** from the detected scale. Lead notes (which are played by the Earth) **are generated randomly from the pentatonic scale** of the key and this translates in a semi-generative design. Finally the first arpeggiator cycles through the notes of the whole scale while the second one plays the notes of the chord sequentially.
+Concerning the chord notes, we applied a **2:1 subsampling** starting from the detected scale. Lead notes (which are played by planet Earth) are **generated randomly** from the _pentatonic scale_ in the selected key. This translates to a **_semi-generative design_**.
+
+Finally, the _first arpeggiator_ cycles through the notes of the whole scale, while the _second_ one plays the notes of the chord sequentially.
 
 ### Oscillators, Gain and Effect Nodes
 
-The first step in the creation of sound is the generation of the oscillators: `context.createOscillator().`This occours in the `SoundDesign` function, where all nodes are created and connected.
-Each planet has its own oscillator, in particular, every oscillator is a sine wave exept for the chord planets i.e. Uranus Saturn Jupiter and Mars which are characterized by a square wave. The waveform of the oscillator is set as follows: `osc.type="sine";`
+The first step in the synthesis is the creation of the oscillators: `context.createOscillator().` This happens in the `SoundDesign` function, where all the nodes are created and connected. Each planet has its own oscillator: every oscillator is a _sine wave_, except for the "chord planets", i.e. Uranus, Saturn, Jupiter and Mars, which are characterized by a _square wave_. The waveform of the oscillator is set as follows: `osc.type = "sine"`.
 
-Each oscillator has its volume controlled by a `gainNode` which is instanciated this way:
-`context.createGain()`. In addition to this, a final gain has been created as to control the master volume of the application.
+Each oscillator has its volume controlled by a `gainNode`, which is instantiated the following way: `context.createGain()`. In addition to this, a final gain has been created in order to control the _master volume_.
 
-Moreover some effects are being created:
+Moreover, some effects were created:
 
-- A `convolver` reverb, to which an impulse responce buffer was fed:
-  `convolver = new  ConvolverNode(context,{buffer:impulse})`
-  The impulse buffer is actually being created by the function `impulseResponce(duration, decay)` which basically fills every sample of the buffer with a random value between -1 and 1 scaled by a decreasing exponential which slope is linked to the `duration` and `decay` parameters. The `convolver` also has its `gainNode`;
-- A `delay` which is connected through a feedback loop with its gain (the gain value will control the amount of feedback) `delay = context.createDelay` which time can be set as follows: `delay.delayTime.value=...`;
-- An `high-pass filter` which is used to cut undesired frequencies before the output: `hi_filter= new  BiquadFilterNode(context)`which cutoff frequency can be set by: `hi_filter.frequency.value=...`;
+- A **convolver reverb**, to which an impulse responce buffer was fed:
+  `convolver = new  ConvolverNode(context,{buffer:impulse})`. The impulse buffer is actually being created by the function `impulseResponce(duration, decay)`, which basically fills every sample of the buffer with a random value between -1 and 1 scaled by a decreasing exponential whose slope is linked to the `duration` and `decay` parameters. `convolver` also has its `gainNode`;
+- A **delay**, connected through a feedback loop to its gain (so that _the gain value will control the amount of feedback_): `delay = context.createDelay`. The delay time can be set as follows: `delay.delayTime.value = ...`;
+- A **high-pass filter**, that is used to cut undesired frequencies before the output: `hi_filter= new  BiquadFilterNode(context)`which cutoff frequency can be set by: `hi_filter.frequency.value=...`;
 
-The connection between the various nodes is reported in the graph below:
+The ***nodes network*** is represented in the graph below:
 
 ```mermaid
 graph LR
@@ -596,7 +595,7 @@ C-->Q[hi-pass filter]-->R[context.destination]
 
 ### Loops and Envelopes
 
-Each planet has its own `play` function which controls the notes to be played and the envelope applied to the gain of the synth. An index cycles thorugh the array of frequencies that will be played every time the function is called. At the same time the `gainNode` gain is linearly shaped to reach the desired volume before going back to 0. In other terms the synth is being shaped by a triangular-shaped envelope.
+Each planet has its own `play` function, which controls the notes to be played and the envelope applied to the gain of the synth. An index cycles thorugh the array of frequencies that will be played every time the function is called. At the same time the `gainNode` gain is linearly shaped to reach the desired volume before going back to 0. In other words, **the synth is being shaped by a triangular-shaped envelope**.
 
 ```javascript
 let  bassNotesIndex = 0;
@@ -614,32 +613,32 @@ function  playBass()
 }
 ```
 
-These function are then scheduled with the respective ratios by the `PlaySound()` function which is called once the play button is pressed:
+These functions are then scheduled with the respective ratios by the `PlaySound()` function, that is called once the play button is pressed:
 
 ```javascript
 bassLoop = setInterval(playBass, msRep/planetRatios[7]);
 ```
 
-Once the stop button is pressed the `stopSound()` function is called, which will clear the scheduled intervals and set the volumes to 0.
+Once the stop button is clicked, the `stopSound()` function is called. It will clear the scheduled intervals and set the volumes to 0.
 
 ### Controls
 
-- The user can set the volume of a synth by adjusting the correspondent slider. Once this is done the `changeVolume()` function is called which adjusts the corresponding value of the array `volumes[]`.
-- The mute button sets all the values of the array `volumes[]` to 0 after saving the values on a temporary array which will be used to restore the volumes once the unmute button is pressed.
-- Finally, in order to change the ratio of playing of a planet we needed to stop the whole sound as to be able to re-schedule the `play` function of that planet without loosing the sync with the others. The `changeRatio()` function therfore sets the new value of the array `planeRatios[]` and calls the `stopSound()` function. The user will then need to hit the play button once again and wait for the planets to sync and start playing again.
+- The user can set the volume of a synth by adjusting the corresponding slider. Once this is done the `changeVolume()` function is called, adjusting the corresponding value of the array `volumes[]`.
+- The mute button sets all the values of the array `volumes[]` to 0, after saving the old values in a temporary array, that will be used to restore the volumes once the unmute button is activated.
+- Finally, in order to change the ratio of playing of a planet, it was necessary to stop the whole sound to be able to re-schedule the `play` function of that planet without loosing sync with respect to the others. Therefore, the `changeRatio()` function sets the new value of the array `planeRatios[]` and calls the `stopSound()` function. The user will then need to hit the play button once again and wait for the planets to sync.
 
 ### Planets and Audio Synchronization
 
-As we already mentioned in the Graphical Implementation section, the planets move synchronously with the audio. In particular the synth will start playing a new note when the corresponding planet passes the closest vertical semiaxis of the ellipse it is tracing. The volume (controlled by the envelope) will reach its maximum when the planet passes the opposite semiaxis. This is achieved in the following way:
-The planets trace their orbit in the exact time interval that schedules the callback of the function `play` for each planet. Here we report the value that controls the translation along the ellipse (the translation code has already been reported in the graphical section):
+As we already mentioned in the [Graphical Implementation](#graphical-implementation) section, the planets move synchronously with the audio. In particular, **the synth will start playing a new note when the corresponding planet crosses the closest vertical semiaxis of the ellipse it is tracing**. The volume (controlled by the envelope) will reach its maximum when the planet passes the opposite semiaxis. This is achieved in the following way:
+the planets trace their orbit in the exact time interval that schedules the callback of the function `play` for each planet. Below, we report the value that controls the translation along the ellipse (the translation code has already been reported in the graphical section):
 
 ```javascript
 revolutionRate = 2 * Math.PI * (context.currentTime/(msRep/modifier/1000));
 ```
 
-where `msRep` is a constant that defines the general bpm of the system and `modifier` is the `planetRatio[]` value passed to the `planet()` function.
+where `msRep` is a constant that defines the general BPM of the system and `modifier` is the `planetRatio[]` value passed to the `planet()` function.
 
-At the same time the planets need to be synched with the sound as to avoid phase shifts between motion and sound. This task is performed by the `synch()` function which checks if: `sin(revolutionRate)==0 && cos(revolutionRate)==1`. If the condition is true the planets and the audio are synchronized so the planets can start moving `movePlanet=1;` and the audio can start playing `playSound();` During the time needed for this to happen a loading text is displayed.
+At the same time the planets need to be synced with the sound to avoid phase shifts. This task is performed by the `synch()` function which checks if: `sin(revolutionRate)==0 && cos(revolutionRate)==1`. If the condition is true the planets and the audio are synchronized. Thus, the planets can start moving (`movePlanet = 1`) and the audio can start playing (`playSound()`). During the time needed for this to happen, a loading text is displayed.
 
 <p align="center">
   <img src="Images/README/loading.png" width="20%" >
@@ -647,7 +646,7 @@ At the same time the planets need to be synched with the sound as to avoid phase
 
 ## Group members
 
-- Enrico Dalla Mora (enrico.dalla@hotmail.it)
+- Enrico Dalla Mora (enrico1.dalla@mail.polimi.it)
 - Alberto Doimo (alberto.doimo@mail.polimi.it)
-- Federico Caroppo (caroppo.federico.00@gmail.com)
+- Federico Caroppo (federico.caroppo@mail.polimi.it)
 - Riccardo Iaccarino (riccardo.iaccarino@mail.polimi.it)
