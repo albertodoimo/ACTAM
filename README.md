@@ -528,7 +528,7 @@ Given the concept of representing the sound through a sort of rhythmic wheel whi
 
 ### Framework's choice
 
-The sound was originally implemented with the library `Tone.js` because of its intuitiveness and its various features, in particular the transport functions to play and pause the loops and the easiness of implementation. Unfortunately, as the project was increasing in complexity during the final stages of work, we discovered that `Tone` is very inefficient and heavy computationally-wise, so we re-implemented the sound using the `AudioContext` environment which did the job very nicely.
+The sound was originally implemented with the library `Tone.js` because of its intuitiveness and its various features, in particular the transport functions to play and pause the loops and the easiness of implementation. Unfortunately, as the project was increasing in complexity during the final stages of work, we discovered that `Tone` is very inefficient and heavy on a computational level, so we re-implemented the sound using the `AudioContext` environment which did the job very nicely.
 
 ### Notes calculation from Image Processing data
 
