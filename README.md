@@ -2,17 +2,15 @@
 
 This project was developed in the context of the "**_Advanced Coding Tools and Methodologies_**" course held at [Politecnico di Milano](https://www.polimi.it/) for the Master's Degree in [Music and Acoustic Engineering](https://suono.polimi.it/). The task was to design and implement a musical web application based on the `HTML`/`CSS`/`JavaScript` framework.
 
-The system can be tested by the user in two ways: 
+The system can be tested by the user in two ways:
 
 - Via the <a href="http://albertodoimo.github.io/" target="_blank" rel="noopener noreferrer">Hosted Website</a>.
-- Downloading the whole project from GitHub and running it using VS Code live server.
+- Downloading the whole project from GitHub and running it using VS Code _Live Server_.
 
 Please note that:
 
-- The system is compatible with Edge, Chrome and Opera. Bugs and poor performances may affect the user experience in other browsers.
-- An Internet connection is necessary to use the website. 
-
- 
+- The system is compatible with **Edge**, **Chrome** and **Opera**. Bugs and poor performances may affect the user experience in other browsers.
+- An Internet connection is necessary to use the website.
 
 ## Table of Contents
 
@@ -40,6 +38,7 @@ Please note that:
     - [Loops and Envelopes](#loops-and-envelopes)
     - [Controls](#controls)
     - [Planets and Audio Synchronization](#planets-and-audio-synchronization)
+  - [Group members](#group-members)
 
 </br>
 
@@ -53,13 +52,10 @@ It is also possible to receive visual feedback about the musical fabric via the 
 
 ## Overview
 
-The application is structured in three web pages: the **_environment selection_** one, the one that displays the **_extracted parameters_** and finally the **_graphical interface_**. The user can choose to be led through each one of them _step by step_, by selecting the appropriate `GUIDE` button. The guide automatically leads the user through all the pages, explaining every part and functionality of the application. It was created by means of the <a href="https://shepherdjs.dev/" target="_blank" rel="noopener noreferrer">Shepherd.js</a> library. 
+The application is structured in three web pages: the **_environment selection_** one, the one that displays the **_extracted parameters_** and finally the **_graphical interface_**. The user can choose to be led through each one of them _step by step_, by selecting the appropriate `GUIDE` button. The guide automatically leads the user through all the pages, explaining every part and functionality of the application. It was created by means of the <a href="https://shepherdjs.dev/" target="_blank" rel="noopener noreferrer">Shepherd.js</a> library.
 
-
-<p align="center">
-  <img src="Images/README/guideButton.png" width="20%" >
-  <img src="Images/README/guideButton2.png" width="20%" >
-</p>
+  <img src="Images/README/guideButton.png" width="15%" align="right">
+  <img src="Images/README/guideButton2.png" width="15%" align="right">
 
 From a coding perspective, the data relative to the user's selections and the extracted parameters is saved and retrieved across pages by means of the `localStorage` read-only property of the `window` interface. This allows access to a `Storage` object for the `Document`'s origin, enabling the **_stored data_** to be **saved across browser sessions**.
 
@@ -112,7 +108,7 @@ The musical specifications computed before are shown on the top of the screen. I
 
 </br>
 
-<img src="Images/README/Scriabin-Circle.svg" align="right" width="40%" style="margin: 15px;">
+<img src="Images/README/Scriabin-Circle.svg" align="right" width="30%" style="margin: 15px;">
 
 
 ## Key Computation - _Average Color_
