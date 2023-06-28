@@ -474,7 +474,7 @@ if (token < 50) {
 
 ## Graphical Implementation
 
-In order to generate a 3D environment we relied on `p5.js`, a JavaScript library for _creative coding_. In particular, we focused on its ability to simplify the `WebGL` implementation. When creating the `canvas` in the `setup` function of p5, we declare a third parameter, `WEBGL`, which sets the environment to 3D:
+In order to generate a 3D environment we employed `p5.js`, a JavaScript library for _creative coding_. In particular, we focused on its ability to simplify the `WebGL` implementation. </br></br> When creating the `canvas` in the `setup` function of p5, the parameter `WEBGL` sets the environment to tridimensional:
 
 ```javascript
 function  setup() {
@@ -483,16 +483,16 @@ function  setup() {
 }
 ```
 
-Additionaly, in order to allow the user to control the camera point in the 3D perspective, we employed another library, `p5.EasyCam` which is also declared in the `Setup` function as follows:
+Additionally, in order to enable the user to control the camera in the context of the tridimensional perspective, we relied on another library, i.e. `p5.EasyCam`. The corresponding object is also declared in the `Setup` function:
 
 ```javascript
  easycam = createEasyCam();
  easycam.setState(tri);
 ```
 
-This library offers the possibility to set various parameters for example the minimum and maximum distance from the center of view and some predefined states among which the user can switch with the perspective buttons of the GUI.
+The object named `tri` is nothing but a pre-declared camera state, which sets automatically the camera settings which we associated to the starting 3D perspective. The library offers a wide choice of customizxable parameters (for example, the _minimum and maximum distances from the center of view_).
 
-The planets have a dedicated function to which an array of values, one for each planet, is passed in the instantiation of the object. In this function several p5 features are used:
+The planets have a dedicated function which takes an array of values (one for each planet), is passed in the instantiation of the object. In this function several p5 features are used:
 
 - The planet is created as polygonal sphere with the `sphere(diameter);` code;
 - The planet is textured by clamping an image, previously loaded in the `preload` function, with the p5 expressions `textureWrap(CLAMP);` and `texture(skin);`
