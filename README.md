@@ -565,7 +565,7 @@ Moreover some effects are being created:
   `convolver = new  ConvolverNode(context,{buffer:impulse})`
   The impulse buffer is actually being created by the function `impulseResponce(duration, decay)` which basically fills every sample of the buffer with a random value between -1 and 1 scaled by a decreasing exponential which slope is linked to the `duration` and `decay` parameters. The `convolver` also has its `gainNode`;
 - A `delay` which is connected through a feedback loop with its gain (the gain value will control the amount of feedback) `delay = context.createDelay` which time can be set as follows: `delay.delayTime.value=...`;
-- An `high-pass filter` which is used to cut undesired frequencies before the output: `hi_filter= new  BiquadFilterNode(context)`which cutoff frequency can be set by: `hi_filter.frequency.value=...`;
+- An `low-pass filter` which is used to cut undesired frequencies before the output: `low_filter= new  BiquadFilterNode(context)`which cutoff frequency can be set by: `low_filter.frequency.value=...`;
 
 The connection between the various nodes is reported in the graph below:
 
@@ -580,7 +580,7 @@ I-->C
 M[arp1Osc]-->N[arp1Gain]-->C
 N-->I
 O[arp2Osc]-->P[arp2Gain]-->C
-C-->Q[hi-pass filter]-->R[context.destination]
+C-->Q[low-pass filter]-->R[context.destination]
 ```
 
 ### Loops and Envelopes
