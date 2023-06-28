@@ -30,10 +30,12 @@ Please note that:
     - [Color Quantization: the _Median Cut_ algorithm](#color-quantization-the-median-cut-algorithm)
     - [Palette Building](#palette-building)
   - [Graphical Implementation](#graphical-implementation)
+    - [Program Flow](#program-flow)
+    - [3D Environment](#3d-environment)
   - [Sound Implementation](#sound-implementation)
     - [Musical Style](#musical-style)
-    - [Framework's choice](#frameworks-choice)
-    - [Notes calculation from Image Processing data](#notes-calculation-from-image-processing-data)
+    - [Framework Choice](#framework-choice)
+    - [From the Image Processing to the Music](#from-the-image-processing-to-the-music)
     - [Oscillators, Gain and Effect Nodes](#oscillators-gain-and-effect-nodes)
     - [Loops and Envelopes](#loops-and-envelopes)
     - [Controls](#controls)
@@ -474,7 +476,21 @@ if (token < 50) {
 
 ## Graphical Implementation
 
-In order to generate a 3D environment we employed `p5.js`, a JavaScript library for _creative coding_. In particular, we focused on its ability to simplify the `WebGL` implementation. </br></br> When creating the `canvas` in the `setup` function of p5, the parameter `WEBGL` sets the environment to tridimensional:
+In order to generate a 3D environment we employed `p5.js`, a JavaScript library for _creative coding_. In particular, we focused on its ability to simplify the `WebGL` implementation. 
+
+### Program Flow
+
+A typical p5.js JavaScript sketch is branched in three main functions: `setup`, `preload` and `draw`.
+
+The `setup()` function is called once when the program starts. It's used to define initial environment properties such as screen size and background color and to load media such as images and fonts as the program starts ([reference](https://p5js.org/reference/#/p5/setup)).
+
+Called directly before `setup()`, the `preload()` function is used to handle asynchronous loading of external files in a blocking way. If a _preload_ function is defined, `setup()` will wait until any load calls within have finished ([reference](https://p5js.org/reference/#/p5/preload)).
+
+Called directly after `setup()`, the `draw()` function continuously executes the lines of code contained inside its block until the program is stopped ([reference](https://p5js.org/reference/#/p5/draw)).
+
+### 3D Environment
+
+When creating the `canvas` in the `setup` function, the parameter `WEBGL` sets the environment to tridimensional:
 
 ```javascript
 function  setup() {
@@ -490,16 +506,16 @@ Additionally, in order to enable the user to control the camera in the context o
  easycam.setState(tri);
 ```
 
-The object named `tri` is nothing but a pre-declared camera state, which sets automatically the camera settings which we associated to the starting 3D perspective. The library offers a wide choice of customizxable parameters (for example, the _minimum and maximum distances from the center of view_).
+The object named `tri` is nothing but a pre-declared camera state, which sets automatically the camera settings which were associated to the starting 3D perspective. The library offers a wide choice of customizxable parameters regarding the camera state (for example, the _minimum and maximum distances from the center of view_).
 
-The planets have a dedicated function which takes an array of values (one for each planet), is passed in the instantiation of the object. In this function several p5 features are used:
+The planets have a dedicated function which takes an array of values (one for each planet) when instantiating the object. It employs several `p5.js` features:
 
-- The planet is created as polygonal sphere with the `sphere(diameter);` code;
-- The planet is textured by clamping an image, previously loaded in the `preload` function, with the p5 expressions `textureWrap(CLAMP);` and `texture(skin);`
-- The planet rotates around his axis by means of the function `rotateY(frameCount * rotation);`
-- The Earth is the only planet whose rotation axis is tilted with respect to the elliptical plane and this is achieved through the following code:`rotateZ(tilt);`
-- The ellipse is drawn by means of `ellipse(0, 0, orbitWidth*2, orbitHeight*2)`;
-- The planet is tranlsated along his revolution ellipse by the following expression:
+- The planet is created as a polygonal sphere via the `sphere(diameter)` call;
+- The planet is textured by clamping one of the previously loaded images (in the `preload` function), via the p5 function `textureWrap(CLAMP)` and `texture(skin)`;
+- The planet is put in motion around its axis by means of the function `rotateY(frameCount * rotation)`;
+- The Earth is the only planet whose rotation axis is tilted with respect to the elliptical plane. This is achieved through the following call: `rotateZ(tilt)`;
+- The elliptical orbit is drawn by means of `ellipse(0, 0, orbitWidth*2, orbitHeight*2)`;
+- The planet is tranlsated along its orbit by the following expression:
 
   ```javascript
    translate(
@@ -509,9 +525,9 @@ The planets have a dedicated function which takes an array of values (one for ea
    );
   ```
 
-  where `movePlanet` is a variable used to control if the planet is moving or not and which therefore can assume the values 0 or 1. Note that the revolutionRate value is linked to the `audioContext currentTime` as to sync the planets with the amplitude envelopes of the synths.
+  where `movePlanet` is a boolean variable employed as a flag, to check if the planet is moving or not. Note that the `revolutionRate` value is linked to the `audioContext` "`currentTime`" in order to sync the planets with the amplitude envelopes of the synths.
 
-The `planet()` function will finally be called one time for each planet inside the `draw()` function of p5.
+The `planet()` function is called one time per planet inside the `draw()` function.
 
 All the graphics are optimized to work with different screen dimensions.
 
@@ -519,15 +535,15 @@ All the graphics are optimized to work with different screen dimensions.
 
 ### Musical Style
 
-Given the concept of representing the sound through a sort of rhythmic wheel which consists of the planets of the Solar System, we decided to keep the musical style consistent with the environment and therefore we tried to achieve a space-like flavour for the sound. Ambient music has surely been our greatest influence in this field and in particular the drone-like, slowly-raising synths of the "Blade Runner" soundtrack by the great Vangelis, along with most of Brian Eno's works.
+We decided to keep the musical style consistent with the aesthetic of the environment. Hence, we tried to give a space-like flavour to the sound. Ambient music has surely been our greatest influence in this context. Particularly, the drone-like, slowly-raising synths of the "_Blade Runner_" soundtrack (Vangelis, 1982), along with most of _Brian Eno_'s works.
 
-### Framework's choice
+### Framework Choice
 
-The sound was originally implemented with the library `Tone.js` because of its intuitiveness and its various features, in particular the transport functions to play and pause the loops and the easiness of implementation. Unfortunately, as the project was increasing in complexity during the final stages of work, we discovered that `Tone` is very inefficient and heavy computationally-wise, so we re-implemented the sound using the `AudioContext` environment which did the job very nicely.
+The sound components was originally implemented via the library `Tone.js` because of its intuitiveness and various features. In particular, we were interested in the transport functions to play and pause the loops and their easiness of implementation. Unfortunately, during the final stages of work, as the project was increasing in complexity, we discovered that `Tone.js` is very inefficient from a computational perspective. Thus, we switched to the `AudioContext` environment which, instead, worked perfectly.
 
-### Notes calculation from Image Processing data
+### From the Image Processing to the Music
 
-From the image processing we get the following data:
+The parameter extraction process returns the following encapsulated data:
 
 - Detected key
 - Mode (major or minor)
