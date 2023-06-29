@@ -6,7 +6,7 @@ The system can be tested by the user in two ways:
 
 - Via the <a href="http://albertodoimo.github.io/" target="_blank" rel="noopener noreferrer">Hosted Website</a>.
 - Downloading the whole project from GitHub and running it using VS Code _Live Server_.
-- <a href="" target="_blank" rel="noopener noreferrer">Here</a> there is a demo video of the project.
+- <a href="https://youtu.be/5OYtXB34ICE" target="_blank" rel="noopener noreferrer">Here</a> there is a demo video of the project.
 
 
 Please note that:
