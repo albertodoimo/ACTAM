@@ -6,6 +6,8 @@ The system can be tested by the user in two ways:
 
 - Via the <a href="http://albertodoimo.github.io/" target="_blank" rel="noopener noreferrer">Hosted Website</a>.
 - Downloading the whole project from GitHub and running it using VS Code _Live Server_.
+- <a href="" target="_blank" rel="noopener noreferrer">Here</a> there is a demo video of the project.
+
 
 Please note that:
 
@@ -575,7 +577,7 @@ Moreover, some effects were created:
 - A **convolver reverb**, to which an impulse responce buffer was fed:
   `convolver = new  ConvolverNode(context,{buffer:impulse})`. The impulse buffer is actually being created by the function `impulseResponce(duration, decay)`, which basically fills every sample of the buffer with a random value between -1 and 1 scaled by a decreasing exponential whose slope is linked to the `duration` and `decay` parameters. `convolver` also has its `gainNode`;
 - A **delay**, connected through a feedback loop to its gain (so that _the gain value will control the amount of feedback_): `delay = context.createDelay`. The delay time can be set as follows: `delay.delayTime.value = ...`;
-- A **high-pass filter**, that is used to cut undesired frequencies before the output: `hi_filter= new  BiquadFilterNode(context)`which cutoff frequency can be set by: `hi_filter.frequency.value=...`;
+- A **low-pass filter**, that is used to cut undesired frequencies before the output: `low_filter= new  BiquadFilterNode(context)`which cutoff frequency can be set by: `low_filter.frequency.value=...`;
 
 The ***nodes network*** is represented in the graph below:
 
@@ -590,7 +592,7 @@ I-->C
 M[arp1Osc]-->N[arp1Gain]-->C
 N-->I
 O[arp2Osc]-->P[arp2Gain]-->C
-C-->Q[hi-pass filter]-->R[context.destination]
+C-->Q[low-pass filter]-->R[context.destination]
 ```
 
 ### Loops and Envelopes
