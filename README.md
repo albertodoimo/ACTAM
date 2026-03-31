@@ -4,7 +4,7 @@ This project was developed in the context of the "**_Advanced Coding Tools and M
 
 The system can be tested by the user in two ways:
 
-- Via the <a href="http://albertodoimo.github.io/" target="_blank" rel="noopener noreferrer">Hosted Website</a>.
+- Via the <a href="https://albertodoimo.github.io/ACTAM/" target="_blank" rel="noopener noreferrer">Hosted Website</a>.
 - Downloading the whole project from GitHub and running it using VS Code _Live Server_.
 - <a href="https://youtu.be/5OYtXB34ICE" target="_blank" rel="noopener noreferrer">Here</a> there is a demo video of the project.
 
